@@ -74,6 +74,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NoRouteToHostException;
@@ -108,7 +109,7 @@ public class System {
 
   private static boolean mInitialized = false;
   private static String mLastError = "";
-  private static Context mContext = null;
+  private static WeakReference<Context> mContext = null;
   private static volatile WifiLock mWifiLock = null;
   private static volatile WakeLock mWakeLock = null;
   private static Network mNetwork = null;
@@ -151,9 +152,13 @@ public class System {
   private final static LinkedList<SettingReceiver> mSettingReceivers = new LinkedList<SettingReceiver>();
 
   public static void init(Context context) throws Exception {
-    mContext = context;
+    mContext = new WeakReference<>(context);
     try {
       Logger.debug("initializing System...");
+      Context ctx = getContextSafe();
+      if (ctx == null) {
+        throw new IllegalStateException("Context is null during initialization");
+      }
       mStoragePath = getSettings().getString("PREF_SAVE_PATH", Environment.getExternalStorageDirectory().toString());
       mSessionName = "csploit-session-" + java.lang.System.currentTimeMillis();
       mKnownIssues = new KnownIssues();
@@ -163,7 +168,7 @@ public class System {
       mPorts = new HashMap<>();
 
       // if we are here, network initialization didn't throw any error, lock wifi
-      WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+      WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 
       if (mWifiLock == null)
         mWifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "wifiLock");
@@ -173,7 +178,7 @@ public class System {
 
       // wake lock if enabled
       if (getSettings().getBoolean("PREF_WAKE_LOCK", true)) {
-        PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        PowerManager powerManager = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
 
         if (mWakeLock == null)
           mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "wakeLock");
@@ -206,6 +211,17 @@ public class System {
 
       throw e;
     }
+  }
+
+  /**
+   * Safely retrieve the Context from WeakReference.
+   * Returns null if the Context has been garbage collected.
+   *
+   * @return The Context or null if garbage collected
+   */
+  @Nullable
+  private static Context getContextSafe() {
+    return mContext != null ? mContext.get() : null;
   }
 
   private static void beginLoadServicesAndVendors() {
@@ -514,11 +530,19 @@ public class System {
   }
 
   public static InputStream getRawResource(int id) {
-    return mContext.getResources().openRawResource(id);
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return ctx.getResources().openRawResource(id);
   }
 
   public static String getDefaultRubyPath() {
-    return mContext.getFilesDir().getAbsolutePath() + "/ruby";
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return ctx.getFilesDir().getAbsolutePath() + "/ruby";
   }
 
   public static String getRubyPath() {
@@ -526,7 +550,11 @@ public class System {
   }
 
   public static String getDefaultMsfPath() {
-    return mContext.getFilesDir().getAbsolutePath() + "/msf";
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return ctx.getFilesDir().getAbsolutePath() + "/msf";
   }
 
   public static String getMsfPath() {
@@ -534,11 +562,19 @@ public class System {
   }
 
   public static String getToolsPath() {
-    return mContext.getFilesDir().getAbsolutePath() + "/tools/";
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return ctx.getFilesDir().getAbsolutePath() + "/tools/";
   }
 
   public static String getCorePath() {
-    return mContext.getFilesDir().getAbsolutePath();
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return ctx.getFilesDir().getAbsolutePath();
   }
 
   public static void registerSettingListener(SettingReceiver receiver) {
@@ -574,8 +610,12 @@ public class System {
     BufferedReader reader = null;
     try {
       // preload network service and ports map
-
-      fr = new FileReader(mContext.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-services");
+      Context ctx = getContextSafe();
+      if (ctx == null) {
+        Logger.error("Context has been garbage collected in preloadServices");
+        return;
+      }
+      fr = new FileReader(ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-services");
       reader = new BufferedReader(fr);
       String line;
       Matcher matcher;
@@ -609,9 +649,13 @@ public class System {
       BufferedReader reader = null;
       try {
         mVendors = new HashMap<>();
-
+        Context ctx = getContextSafe();
+        if (ctx == null) {
+          Logger.error("Context has been garbage collected in preloadVendors");
+          return;
+        }
         fstream = new FileInputStream(
-        mContext.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-mac-prefixes");
+        ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-mac-prefixes");
 
         in = new DataInputStream(fstream);
         reader = new BufferedReader(new InputStreamReader(in));
@@ -654,7 +698,11 @@ public class System {
   }
 
   public static SharedPreferences getSettings() {
-    return PreferenceManager.getDefaultSharedPreferences(mContext);
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      throw new IllegalStateException("Context has been garbage collected");
+    }
+    return PreferenceManager.getDefaultSharedPreferences(ctx);
   }
 
   public static String getAppVersionName() {
@@ -719,7 +767,12 @@ public class System {
   }
 
   public static boolean isServiceRunning(String name) {
-    ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      Logger.error("Context has been garbage collected in isServiceRunning");
+      return false;
+    }
+    ActivityManager manager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
 
     //noinspection ConstantConditions
     for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -1075,7 +1128,7 @@ public class System {
   }
 
   public static Context getContext() {
-    return mContext;
+    return getContextSafe();
   }
 
   public static Network getNetwork() {
@@ -1178,7 +1231,9 @@ public class System {
   }
 
   public static void setCurrentPlugin(Plugin plugin) {
-    Logger.debug("Setting current plugin : " + mContext.getString(plugin.getName()));
+    Context ctx = getContextSafe();
+    String pluginName = (ctx != null) ? ctx.getString(plugin.getName()) : "unknown";
+    Logger.debug("Setting current plugin : " + pluginName);
 
     mCurrentPlugin = plugin;
   }

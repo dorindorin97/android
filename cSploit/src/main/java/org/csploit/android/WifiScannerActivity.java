@@ -41,7 +41,7 @@ public class WifiScannerActivity extends AppCompatActivity {
       }
       f = new WifiScannerFragment();
       getSupportFragmentManager().beginTransaction()
-              .add(R.id.mainframe, f).commit();
+              .add(R.id.mainframe, f).commitAllowingStateLoss();
     }
   }
 

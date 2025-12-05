@@ -41,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
             f = new SettingsFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mainframe, f).commit();
+                    .add(R.id.mainframe, f).commitAllowingStateLoss();
         }
     }
 

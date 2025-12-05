@@ -41,7 +41,7 @@ public class ActionActivity extends AppCompatActivity {
       }
       f = new ActionFragment();
       getSupportFragmentManager().beginTransaction()
-              .add(R.id.mainframe, f).commit();
+              .add(R.id.mainframe, f).commitAllowingStateLoss();
     }
   }
 
