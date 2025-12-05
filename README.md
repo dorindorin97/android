@@ -37,13 +37,15 @@
 
 | Link | Purpose |
 |------|---------|
-| 📖 [Development Guide](./DEVELOPMENT_GUIDE.md) | Building, development, and code standards |
+| 📖 [Documentation Index](./DOCS_INDEX.md) | **👈 Start here for all docs** |
+| 📚 [Development Guide](./DEVELOPMENT_GUIDE.md) | Building, development, and code standards |
 | 🚀 [Quick Start](./QUICKSTART.md) | Get started in 5 minutes |
 | 🔐 [Security Best Practices](./SECURITY.md) | Security guidelines for development |
 | 📋 [Changelog](./CHANGELOG.md) | Version history and updates |
 | 🤝 [Contributing Guide](./CONTRIBUTING.md) | How to contribute to cSploit |
 | 🛠️ [Helper Utilities](./HELPERS.md) | Helper class documentation |
 | 💾 [Improvements Archive](./IMPROVEMENTS_ARCHIVE.md) | Complete improvement history |
+| 🏗️ [Build Guide](./BUILD.md) | Build system and configuration |
 
 ## Tutorials
 
