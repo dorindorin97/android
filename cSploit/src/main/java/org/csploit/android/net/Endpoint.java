@@ -68,7 +68,7 @@ public class Endpoint implements Comparable<Endpoint>
       mHardware = hardware != null ? parseMacAddress(hardware) : null;
     }
     catch(UnknownHostException e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to parse endpoint address", e);
       mAddress = null;
     }
   }

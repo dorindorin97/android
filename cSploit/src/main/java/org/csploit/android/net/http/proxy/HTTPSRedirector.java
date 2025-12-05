@@ -183,7 +183,7 @@ public class HTTPSRedirector implements Runnable
                 reader.close();
               }
               catch(IOException e){
-                System.errorLogging(e);
+                LoggingHelper.e(TAG, "HTTPS redirector reader error", e);
               }
             }
           }).start();
@@ -194,7 +194,7 @@ public class HTTPSRedirector implements Runnable
       Logger.debug("HTTPS redirector stopped.");
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "HTTPS redirector error", e);
     }
   }
 }

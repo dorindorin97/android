@@ -236,7 +236,7 @@ public class MITM extends Plugin
                       // handle img tags
                       data = data.replaceAll
                         (
-                          "(?i)<img([^/]+)src=(['\"])[^'\"]+(['\"])",
+                          "(?i)<img([^/]+)src=(['"])[^'"]+(['"])",
                           "<img$1src=$2" + resource + "$3"
                         );
 
@@ -265,7 +265,7 @@ public class MITM extends Plugin
         }
       }
       catch(Exception e){
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to setup hijacker", e);
       }
     } else if(request == SELECT_SCRIPT && result == RESULT_OK){
       String fileName = null;
@@ -292,7 +292,7 @@ public class MITM extends Plugin
           js = buffer.toString().trim();
 
           if(js.startsWith("<script") == false && js.startsWith("<SCRIPT") == false)
-            js = "<script type=\"text/javascript\">\n" + js + "\n</script>\n";
+            js = "<script type="text/javascript">\n" + js + "\n</script>\n";
 
           mCurrentActivity.setVisibility(View.VISIBLE);
 
@@ -736,7 +736,7 @@ public class MITM extends Plugin
                                       // handle img tags
                                       data = data.replaceAll
                                         (
-                                          "(?i)<img([^/]+)src=(['\"])[^'\"]+(['\"])",
+                                          "(?i)<img([^/]+)src=(['"])[^'"]+(['"])",
                                           "<img$1src=$2" + resource + "$3"
                                         );
 
@@ -892,7 +892,7 @@ public class MITM extends Plugin
                     (
                       "Javascript",
                       getString(R.string.enter_js_code),
-                      "<script type=\"text/javascript\">\n" +
+                      "<script type="text/javascript">\n" +
                         "  alert('This site has been hacked with cSploit!');\n" +
                         "</script>",
                       true,
@@ -929,7 +929,7 @@ public class MITM extends Plugin
                               Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
 
                             } catch (ChildManager.ChildNotStartedException e) {
-                              System.errorLogging(e);
+                              LoggingHelper.e(TAG, "Failed to start redirect session", e);
                               Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                             }
                           } else
@@ -1003,7 +1003,7 @@ public class MITM extends Plugin
                 } catch(PatternSyntaxException e){
                   new ErrorDialog(getString(R.string.error), getString(R.string.error_filter) + ": " + e.getDescription() + " .", MITM.this).show();
                 } catch (ChildManager.ChildNotStartedException e) {
-                  System.errorLogging(e);
+                  LoggingHelper.e(TAG, "Failed to start filter session", e);
                   Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                 }
               } else

@@ -63,7 +63,7 @@ public class RemoteReader implements Runnable {
           try {
             RemoteReader.fromUrl(t.getUrl()).remove(t);
           } catch (MalformedURLException e) {
-            System.errorLogging(e);
+            LoggingHelper.e(TAG, "Failed to remove remote reader task", e);
           }
         }
         status = JobStatus.CANCELLED;

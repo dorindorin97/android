@@ -131,7 +131,7 @@ public class Inspector extends Plugin{
       mActivity.setVisibility(View.VISIBLE);
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Inspector child process failed", e);
       Toast.makeText(Inspector.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
     }
   }

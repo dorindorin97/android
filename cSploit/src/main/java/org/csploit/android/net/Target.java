@@ -332,7 +332,7 @@ public class Target implements Comparable<Target>
       }
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to parse target", e);
     }
 
     // determine if the target is reachable.
@@ -466,7 +466,7 @@ public class Target implements Comparable<Target>
         else if (mEndpoint.getAddress().equals(System.getNetwork().getLocalAddress()))
           return +1;
       } catch (Exception e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to compare targets", e);
       }
       return mEndpoint.compareTo(another.mEndpoint);
     }
@@ -582,7 +582,7 @@ public class Target implements Comparable<Target>
       return (mType == Type.ENDPOINT && mEndpoint.getAddress().equals(System.getNetwork().getGatewayAddress()));
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to check if router", e);
     }
 
     return false;
@@ -607,7 +607,7 @@ public class Target implements Comparable<Target>
         return R.drawable.target_remote;
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to get drawable resource", e);
     }
 
     return R.drawable.target_network;

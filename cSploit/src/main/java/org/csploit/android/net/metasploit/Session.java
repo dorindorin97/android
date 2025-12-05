@@ -104,10 +104,10 @@ public class Session extends Thread {
       }
     } catch (RPCClient.MSFException e) {
       Logger.warning("cannot stop session #"+mJobId);
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to stop MSF session", e);
     } catch (IOException e) {
       Logger.warning("cannot stop session #" + mJobId);
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to stop session IO", e);
     }
   }
 

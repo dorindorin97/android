@@ -66,7 +66,7 @@ public class ServerThread extends Thread
         Logger.warning("Empty HTTP request.");
     }
     catch(IOException e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "ServerThread request error", e);
     }
     finally{
       try{
@@ -75,7 +75,7 @@ public class ServerThread extends Thread
         mReader.close();
       }
       catch(IOException e){
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "ServerThread cleanup error", e);
       }
     }
   }

@@ -179,7 +179,7 @@ public class MultiAttackService extends IntentService {
       try {
         future.get();
       } catch (ExecutionException e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Multi-attack execution failed", e);
       }
 
       if(System.getMsfRpc() != null) {

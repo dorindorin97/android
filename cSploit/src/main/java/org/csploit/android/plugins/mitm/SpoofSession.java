@@ -84,7 +84,7 @@ public class SpoofSession
         System.getServer().setResource(mServerFileName, mServerMimeType);
         new Thread(System.getServer()).start();
       } catch(Exception e){
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to setup spoof server", e);
         mWithServer = false;
       }
     }

@@ -58,7 +58,7 @@ public class ChangelogDialog extends AlertDialog
       view.setText(GitHubParser.getcSploitRepo().getReleaseBody(System.getAppVersionName()));
     } catch (JSONException e) {
       view.setText(Html.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to load changelog", e);
     } catch (IOException e) {
       view.setText(Html.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
       Logger.error(e.getMessage());

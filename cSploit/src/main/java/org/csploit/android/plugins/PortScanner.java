@@ -151,7 +151,7 @@ public class PortScanner extends Plugin {
 
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Port scanner child process failed", e);
       Toast.makeText(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
     }
     mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
@@ -245,7 +245,7 @@ public class PortScanner extends Plugin {
 
               PortScanner.this.startActivity(browser);
             } catch (ActivityNotFoundException e) {
-              System.errorLogging(e);
+              LoggingHelper.e(TAG, "No browser activity found for URL", e);
 
               new ErrorDialog(
                       getString(R.string.error),

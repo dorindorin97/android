@@ -64,7 +64,7 @@ public class ArpSpoof extends Tool
       else
         commandLine = "-i " + iface + " -t " + target.getCommandLineRepresentation() + " " + gw;
     } catch(Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to build arp spoof command", e);
     }
 
     return super.async(commandLine, receiver);

@@ -34,7 +34,7 @@ public class Session
 
   public String getFileName(){
     String name = mDomain + "-" + (mUserName != null ? mUserName : mAddress);
-    return name.replaceAll("[ .\\\\/:*?\"<>|\\\\/:*?\"<>|]", "-");
+    return name.replaceAll("[ .\\\\/:*?"<>|\\\\/:*?"<>|]", "-");
   }
 
   public String save(String sessionName) throws IOException {

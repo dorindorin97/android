@@ -95,7 +95,7 @@ public final class NetworkHelper {
         return res;
       }
     } catch (IOException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to get gateway via route", e);
     } finally {
       IOUtils.closeQuietly(reader);
     }
@@ -120,7 +120,7 @@ public final class NetworkHelper {
       });
       process.join();
     } catch (ChildManager.ChildNotStartedException | InterruptedException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to get gateway via ip tool", e);
     }
 
     return sb.length() > 0 ? sb.toString() : null;

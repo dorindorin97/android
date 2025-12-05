@@ -121,7 +121,7 @@ public class Proxy implements Runnable{
 
       Log.d(TAG, "Proxy stopped.");
     } catch(IOException e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Proxy IO error", e);
     }
   }
 }

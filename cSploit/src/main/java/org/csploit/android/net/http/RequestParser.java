@@ -527,12 +527,12 @@ public class RequestParser
 
       String body_head = body.toLowerCase().substring(0, headEnd);
 
-      Pattern p = Pattern.compile("charset=([\"\'a-z0-9A-Z-]+)");
+      Pattern p = Pattern.compile("charset=(["\'a-z0-9A-Z-]+)");
       Matcher m = p.matcher(body_head);
       String str_match = "";
       if (m.find()) {
         str_match = m.toMatchResult().group(1);
-        return str_match.replaceAll("[\"']", "");
+        return str_match.replaceAll("["']", "");
       }
     }
 

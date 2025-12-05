@@ -82,7 +82,7 @@ public class CSploitApplication extends Application {
     } catch (Exception e) {
       // ignore exception when the user has wifi off
       if (!(e instanceof NoRouteToHostException))
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to initialize system", e);
     }
 
     // load system modules even if the initialization failed

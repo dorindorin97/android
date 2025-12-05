@@ -81,7 +81,7 @@ public class Hydra extends Tool
       command += " -P " + passWordlist;
 
     else
-      command += " -x \"" + minlength + ":" + maxlength + ":" + charset + "\" ";
+      command += " -x "" + minlength + ":" + maxlength + ":" + charset + "" ";
 
     command += " -s " + port + " -V -t 10 " + target.getCommandLineRepresentation() + " " + service;
 

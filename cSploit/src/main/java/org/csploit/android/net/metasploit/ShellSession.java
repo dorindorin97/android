@@ -60,7 +60,7 @@ public class ShellSession extends Session {
     }
 
     // send command
-    client.call("session.shell_write", mJobId,cmd.command+"\necho\necho \"$?"+token+"\"\n");
+    client.call("session.shell_write", mJobId,cmd.command+"\necho\necho "$?"+token+""\n");
 
     // read until token is found
     timeout = java.lang.System.currentTimeMillis() + TIMEOUT;
@@ -128,9 +128,9 @@ public class ShellSession extends Session {
     } catch (TimeoutException e) {
       Logger.error("Session timed out: " + e.getMessage());
     } catch (RPCClient.MSFException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Shell session MSF error", e);
     } catch (IOException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Shell session IO error", e);
     } finally {
       stopSession();
     }

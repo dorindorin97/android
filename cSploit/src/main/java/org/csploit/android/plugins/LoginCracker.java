@@ -389,7 +389,7 @@ public class LoginCracker extends Plugin {
           mUserWordlist = fileName;
         }
       } catch (Exception e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to select user wordlist", e);
       }
     } else if (request == SELECT_PASS_WORDLIST && result == RESULT_OK) {
       try {

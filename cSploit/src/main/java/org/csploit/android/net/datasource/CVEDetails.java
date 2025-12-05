@@ -15,8 +15,8 @@ class CVEDetails {
 
   public static class Receiver implements RemoteReader.Receiver {
     private static final Pattern TITLE = Pattern.compile("<title>([^<]+)");
-    private static final Pattern DESCRIPTION = Pattern.compile("<meta *name=\"description\" *content=\"[^:]+: ([^\"]+)");
-    private static final Pattern CVSSCORE = Pattern.compile("<meta *name=\"keywords\" *content=\"[^\"]+CVSS *([0-9]+\\.[0-9])");
+    private static final Pattern DESCRIPTION = Pattern.compile("<meta *name="description" *content="[^:]+: ([^"]+)");
+    private static final Pattern CVSSCORE = Pattern.compile("<meta *name="keywords" *content="[^"]+CVSS *([0-9]+\\.[0-9])");
     private static final String VERSION_PATTERN = "/version/[0-9]+/(%1$s-[^ ]+|[^ ]+-%1$s)-([^ ]+)\\.html";
 
     private final Target.Exploit exploit;

@@ -213,7 +213,7 @@ public class UpdateChecker extends Thread
 
       return update.version.equals(localVersion) ? null : update;
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to check Ruby update", e);
     }
     return null;
   }

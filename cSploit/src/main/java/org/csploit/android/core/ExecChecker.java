@@ -214,7 +214,7 @@ public class ExecChecker {
         return true;
       }
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to check executable", e);
     } finally {
       if(mounts!=null) {
         try { mounts.close(); }

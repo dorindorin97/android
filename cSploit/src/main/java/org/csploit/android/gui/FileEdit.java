@@ -65,7 +65,7 @@ public class FileEdit extends AppCompatActivity {
             }
         }
         catch (Exception e){
-            Toast.makeText(this, "Error loading \"" + _path + "\"\n\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error loading "" + _path + ""\n\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         finally {
             try {
@@ -90,7 +90,7 @@ public class FileEdit extends AppCompatActivity {
             return true;
         }
         catch (Exception e){
-            Toast.makeText(this, "Error saving \"" + _path + "\"\n\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error saving "" + _path + ""\n\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         finally {
             try {

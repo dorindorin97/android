@@ -571,7 +571,7 @@ public class SettingsFragment extends Fragment {
                 mMsfBranch.setDefaultValue((hasRelease ? "release" : "master"));
                 mMsfBranch.setEnabled(true);
             } catch (JSONException e) {
-                System.errorLogging(e);
+                LoggingHelper.e(TAG, "Failed to parse MSF branches", e);
             } catch (IOException e) {
                 Logger.error(e.getMessage());
             }

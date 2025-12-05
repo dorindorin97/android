@@ -115,12 +115,10 @@ public class DNSSpoofing extends AppCompatActivity {
 
 		try {
 			if (mBufferedWriter != null)
-				mBufferedWriter.close();
-		} catch (IOException e) {
-			System.errorLogging(e);
-		}
-
-		mSniffProgress.setVisibility(View.INVISIBLE);
+			mBufferedWriter.close();
+	} catch (IOException e) {
+		LoggingHelper.e(TAG, "Failed to stop DNS spoofing", e);
+	}		mSniffProgress.setVisibility(View.INVISIBLE);
 		mRunning = false;
 		mSniffToggleButton.setChecked(false);
 	}
@@ -226,7 +224,7 @@ public class DNSSpoofing extends AppCompatActivity {
       mRunning = true;
 
     } catch (ChildManager.ChildNotStartedException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "DNS spoofing child process failed", e);
       mSniffToggleButton.setChecked(false);
       Toast.makeText(DNSSpoofing.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
     }

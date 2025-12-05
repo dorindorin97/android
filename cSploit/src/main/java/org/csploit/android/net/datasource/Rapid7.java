@@ -47,7 +47,7 @@ class Rapid7
     private static final Pattern TITLE = Pattern.compile("<h1>(.+?)</h1>");
     private static final Pattern PARAGRAPH = Pattern.compile("<p>(.+?)</p>", Pattern.MULTILINE | Pattern.DOTALL);
     private static final Pattern ITEM = Pattern.compile("<li>(.*?)</li>", Pattern.MULTILINE | Pattern.DOTALL);
-    private static final Pattern LINK = Pattern.compile("<a +href=['\"]([^\"]+?)['\"][^>]*>([^<]+)</a>");
+    private static final Pattern LINK = Pattern.compile("<a +href=['"]([^"]+?)['"][^>]*>([^<]+)</a>");
 
     private final Search.Receiver<Target.Exploit> receiver;
     private final MsfExploit exploit;
@@ -232,7 +232,7 @@ class Rapid7
 
     private static final String  SEARCHFORMID = "search_form";
     private static final Pattern PAGES = Pattern.compile("[&?]page=([0-9]+)");
-    private static final Pattern RESULT = Pattern.compile("<a +href=['\"]/db/modules/(exploit/[^\"]+)['\"] *>([^<]+)</a>");
+    private static final Pattern RESULT = Pattern.compile("<a +href=['"]/db/modules/(exploit/[^"]+)['"] *>([^<]+)</a>");
 
     private final Search.Receiver<Target.Exploit> receiver;
     private final RemoteReader.Job job;
@@ -363,7 +363,7 @@ class Rapid7
     } catch (MalformedURLException e) {
       Logger.error("Bad URL: " + url);
     } catch (IllegalStateException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Rapid7 search failed", e);
     }
   }
 

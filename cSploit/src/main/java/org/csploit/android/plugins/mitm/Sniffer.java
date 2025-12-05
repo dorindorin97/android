@@ -410,7 +410,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
       out = new FileOutputStream(new File(System.getStoragePath(),new File(mPcapFileName).getName()));
       IOUtils.copy(in, out);
     } catch (IOException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to copy PCAP file", e);
     } finally {
       IOUtils.closeQuietly(in);
       IOUtils.closeQuietly(out);

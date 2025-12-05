@@ -123,14 +123,14 @@ public class Server implements Runnable
           new ServerThread(client, mResourceData, mResourceContentType).start();
         }
         catch(IOException e){
-          System.errorLogging(e);
+          LoggingHelper.e(TAG, "Server client accept error", e);
         }
       }
 
       Logger.debug("Server stopped.");
     }
     catch(IOException e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Server IO error", e);
     }
   }
 }

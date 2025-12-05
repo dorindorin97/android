@@ -35,7 +35,7 @@ public class IPTables extends Tool
       super.run("-t nat -A PREROUTING -j DNAT -p tcp --to " + to);
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to redirect traffic", e);
     }
   }
 
@@ -46,7 +46,7 @@ public class IPTables extends Tool
       super.run("-t nat -D PREROUTING -j DNAT -p tcp --to " + to);
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to undo traffic redirection", e);
     }
   }
 
@@ -68,7 +68,7 @@ public class IPTables extends Tool
       super.run("-t nat -A PREROUTING -j DNAT -p tcp --dport " + from + " --to " + System.getNetwork().getLocalAddressAsString() + ":" + to);
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to redirect port", e);
     }
   }
 
@@ -86,7 +86,7 @@ public class IPTables extends Tool
       super.run("-t nat -D PREROUTING -j DNAT -p tcp --dport " + from + " --to " + System.getNetwork().getLocalAddressAsString() + ":" + to);
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to undo port redirection", e);
     }
   }
 }

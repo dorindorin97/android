@@ -339,7 +339,7 @@ public class Network implements Comparable<Network> {
     try {
       return mInterface.getHardwareAddress(); //FIXME: #831
     } catch (SocketException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to get local hardware address", e);
     }
 
     return null;
@@ -382,7 +382,7 @@ public class Network implements Comparable<Network> {
     try {
       interfaces = NetworkInterface.getNetworkInterfaces();
     } catch (SocketException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to enumerate network interfaces", e);
     }
 
     if (interfaces == null)

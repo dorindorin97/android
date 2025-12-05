@@ -55,7 +55,7 @@ public class Console extends AppCompatActivity {
                 Console.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mOutput.append(Html.fromHtml("\n<font color=\"green\">Enter Command:&gt;</font>  "));
+                        mOutput.append(Html.fromHtml("\n<font color="green">Enter Command:&gt;</font>  "));
                         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                         mScrollView.scrollBy(0, -mInput.getLineHeight());
                         mInput.setText("");
@@ -98,12 +98,12 @@ public class Console extends AppCompatActivity {
 
         mReceiver = new ConsoleReceiver();
         mSession = (ShellSession) System.getCurrentSession();
-        mOutput.append(Html.fromHtml("<font color=\"green\">Enter Command:&gt;</font>\n\n"));
+        mOutput.append(Html.fromHtml("<font color="green">Enter Command:&gt;</font>\n\n"));
         mInput.setImeActionLabel(getResources().getString(R.string.run), KeyEvent.KEYCODE_ENTER);
         runButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOutput.append(Html.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n"));
+                mOutput.append(Html.fromHtml("<font color="red">" + mInput.getText().toString() + "</font>\n"));
                 mSession.addCommand(mInput.getText().toString(), mReceiver);
             }
         });
@@ -111,7 +111,7 @@ public class Console extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
-                    mOutput.append(Html.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n"));
+                    mOutput.append(Html.fromHtml("<font color="red">" + mInput.getText().toString() + "</font>\n"));
                     mSession.addCommand(mInput.getText().toString(), mReceiver);
                     return true;
                 }
@@ -123,7 +123,7 @@ public class Console extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    mOutput.append(Html.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n"));
+                    mOutput.append(Html.fromHtml("<font color="red">" + mInput.getText().toString() + "</font>\n"));
                     mSession.addCommand(mInput.getText().toString(), mReceiver);
                     return true;
                 }

@@ -265,7 +265,7 @@ public class PasswordSniffer extends AppCompatActivity {
 			if (mBufferedWriter != null)
 				mBufferedWriter.close();
 		} catch (IOException e) {
-			System.errorLogging(e);
+			LoggingHelper.e(TAG, "Failed to stop password sniffer", e);
 		}
 
 		mSniffProgress.setVisibility(View.INVISIBLE);
@@ -296,7 +296,7 @@ public class PasswordSniffer extends AppCompatActivity {
                 try {
                   mBufferedWriter.write(line + "\n");
                 } catch (IOException e) {
-                  System.errorLogging(e);
+                  LoggingHelper.e(TAG, "Failed to write sniffer log", e);
                 }
 
                 mAdapter.addChild(protocol, line);
@@ -342,7 +342,7 @@ public class PasswordSniffer extends AppCompatActivity {
       mRunning = true;
 
     } catch (ChildManager.ChildNotStartedException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Password sniffer child process failed", e);
       mSniffToggleButton.setChecked(false);
       Toast.makeText(PasswordSniffer.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
     }

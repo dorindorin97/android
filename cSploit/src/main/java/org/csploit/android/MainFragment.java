@@ -365,7 +365,7 @@ public class MainFragment extends Fragment {
             boolean isFatal = !(e instanceof NoRouteToHostException);
 
             if (isFatal) {
-                System.errorLogging(e);
+                LoggingHelper.e(TAG, "Failed to initialize system", e);
                 onInitializationError(System.getLastError());
             }
 
@@ -1118,7 +1118,7 @@ public class MainFragment extends Fragment {
                         }
                     });
                 } catch (Exception e) {
-                    System.errorLogging(e);
+                    LoggingHelper.e(TAG, "Failed to add event listener", e);
                 }
             }
         }

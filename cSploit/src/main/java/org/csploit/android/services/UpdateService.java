@@ -225,13 +225,13 @@ public class UpdateService extends IntentService
       System.getTools().raw.run("rm -rf '" + mCurrentTask.outputDir + "'");
       return;
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to cleanup output directory", e);
     }
 
     try {
       deleteRecursively(outputFile);
     } catch (IOException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to recursively delete output directory", e);
     }
   }
 
@@ -448,7 +448,7 @@ public class UpdateService extends IntentService
         try {
           read = System.getTools().raw.run(String.format("chmod 777 '%s'", mCurrentTask.path));
         } catch ( Exception e) {
-          System.errorLogging(e);
+          LoggingHelper.e(TAG, "Failed to chmod file", e);
         }
         if(read!=0)
           throw new SecurityException(String.format("bad file permissions for '%s', chmod returned: %d", mCurrentTask.path, read));
@@ -512,7 +512,7 @@ public class UpdateService extends IntentService
         if(reader!=null)
           reader.close();
       } catch (IOException e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to close reader", e);
       }
     }
   }
@@ -635,7 +635,7 @@ public class UpdateService extends IntentService
         if(connection!=null)
           connection.disconnect();
       } catch (IOException e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to close connection", e);
       }
     }
   }
@@ -898,7 +898,7 @@ public class UpdateService extends IntentService
     try {
       System.getTools().raw.run(String.format("rm -rf '%s/lib/ruby/gems/1.9.1/cache/'", System.getRubyPath()));
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to cleanup gems cache", e);
     }
   }
 
@@ -926,7 +926,7 @@ public class UpdateService extends IntentService
         fos = new FileOutputStream(f);
         fos.write(mCurrentTask.version.getBytes());
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to create VERSION file", e);
       throw new IOException("cannot create VERSION file");
     } finally {
       if(fos!=null) {
@@ -982,7 +982,7 @@ public class UpdateService extends IntentService
       Logger.warning(e.getClass().getName() + ": " + e.getMessage());
     } catch (NoSuchAlgorithmException | RuntimeException | ChildManager.ChildDiedException | ChildManager.ChildNotStartedException | InterruptedException | IOException e) {
       sendError(R.string.error_occured);
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Update service error", e);
     } finally {
       if(exitForError) {
         if(mCurrentTask instanceof MsfUpdate)

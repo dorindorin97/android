@@ -194,7 +194,7 @@ public class StreamThread implements Runnable
       Logger.error(ome.toString());
     }
     catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Stream thread error", e);
     }
     finally{
       try{

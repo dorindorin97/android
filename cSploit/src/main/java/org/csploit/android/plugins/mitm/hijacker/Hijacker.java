@@ -156,14 +156,12 @@ public class Hijacker extends AppCompatActivity {
 					reader.close();
 					input.close();
 
-					JSONObject response = new JSONObject(dataBuilder.toString());
+				JSONObject response = new JSONObject(dataBuilder.toString());
 
-					username = response.getString("name");
-				} catch (Exception e) {
-					System.errorLogging(e);
-				}
-
-				return username;
+				username = response.getString("name");
+			} catch (Exception e) {
+				LoggingHelper.e(TAG, "Failed to parse user name", e);
+			}				return username;
 			}
 
 			@Override
@@ -206,7 +204,7 @@ public class Hijacker extends AppCompatActivity {
 					reader.close();
 					input.close();
 				} catch (IOException e) {
-					System.errorLogging(e);
+					LoggingHelper.e(TAG, "Failed to load XDA user image", e);
 				}
 
 				return image;

@@ -29,9 +29,9 @@ public class Payload {
     try {
       retrieveOptions();
     } catch (RPCClient.MSFException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Failed to retrieve payload options", e);
     } catch (IOException e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Payload IO error", e);
     }
   }
 
@@ -51,7 +51,7 @@ public class Payload {
       try {
         o = new Option(entry.getKey(), entry.getValue());
       } catch (IllegalArgumentException e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Failed to parse payload option", e);
         continue;
       }
 
