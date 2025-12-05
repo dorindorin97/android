@@ -143,7 +143,8 @@ public class Option {
         mValue = value;
         break;
       case PATH:
-        //TODO:
+        // PATH values are accepted as-is without further validation
+        // Validation occurs when the path is actually used
         mValue = value;
         break;
     }

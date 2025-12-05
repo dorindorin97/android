@@ -138,7 +138,8 @@ public class ShellSession extends Session {
 
   @Override
   public int getResourceId() {
-    //TODO
+    // Return drawable for shell session icon/display
+    // Uses MSF exploit icon as default representation
     return R.drawable.exploit_msf;
   }
 

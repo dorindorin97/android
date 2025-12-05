@@ -215,7 +215,8 @@ public class RPCClient
           if("shell".equals(type)) {
             s = new ShellSession(id,openSessions.get(id));
           } else if("meterpreter".equals(type)) {
-            //TODO
+            // TODO: Create MeterpreterSession instead of generic Session
+            // Requires implementing proper meterpreter session handling
             s = new Session(id,openSessions.get(id));
           } else {
             s = new Session(id,openSessions.get(id));
