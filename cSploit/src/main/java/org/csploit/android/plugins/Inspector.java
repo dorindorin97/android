@@ -132,7 +132,7 @@ public class Inspector extends Plugin{
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "Inspector child process failed", e);
-      Toast.makeText(Inspector.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+      ToastHelper.childNotStarted(Inspector.this, getString(R.string.child_not_started));
     }
   }
 

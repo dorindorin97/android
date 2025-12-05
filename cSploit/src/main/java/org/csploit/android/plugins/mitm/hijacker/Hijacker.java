@@ -58,6 +58,7 @@ import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;

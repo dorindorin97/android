@@ -346,7 +346,7 @@ public class PasswordSniffer extends AppCompatActivity {
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "Password sniffer child process failed", e);
       mSniffToggleButton.setChecked(false);
-      Toast.makeText(PasswordSniffer.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+      ToastHelper.childNotStarted(PasswordSniffer.this, getString(R.string.child_not_started));
     }
 	}
 

@@ -76,7 +76,7 @@ public class Traceroute extends Plugin {
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "Traceroute child process failed", e);
-      Toast.makeText(Traceroute.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+      ToastHelper.childNotStarted(Traceroute.this, getString(R.string.child_not_started));
     }
   }
 

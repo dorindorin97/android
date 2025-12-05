@@ -230,7 +230,7 @@ public class DNSSpoofing extends AppCompatActivity {
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "DNS spoofing child process failed", e);
       mSniffToggleButton.setChecked(false);
-      Toast.makeText(DNSSpoofing.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+      ToastHelper.childNotStarted(DNSSpoofing.this, getString(R.string.child_not_started));
     }
 	}
 

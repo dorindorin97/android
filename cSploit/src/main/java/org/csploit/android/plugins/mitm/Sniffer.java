@@ -599,7 +599,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
             Sniffer.this.runOnUiThread( new Runnable() {
               @Override
               public void run() {
-                Toast.makeText(Sniffer.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                ToastHelper.childNotStarted(Sniffer.this, getString(R.string.child_not_started));
                 setStoppedState();
               }
             });

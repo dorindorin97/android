@@ -60,6 +60,7 @@ import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.RedirectionDialog;
 import org.csploit.android.gui.dialogs.RedirectionDialog.RedirectionDialogListener;
@@ -256,7 +257,7 @@ public class MITM extends Plugin
                     }
                   });
 
-                  Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                  ToastHelper.tapAgain(MITM.this);
                 }
               });
             }
@@ -302,7 +303,7 @@ public class MITM extends Plugin
           mCurrentActivity.setVisibility(View.VISIBLE);
           AnimationHelper.fadeIn(mCurrentActivity, 300);
 
-          Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+          ToastHelper.tapAgain(MITM.this);
 
           final String code = js;
           mSpoofSession = new SpoofSession();
@@ -597,9 +598,9 @@ public class MITM extends Plugin
 
                 activity.setVisibility(View.VISIBLE);
 
-                Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                ToastHelper.tapAgain(MITM.this);
               } catch (ChildManager.ChildNotStartedException e) {
-                Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                ToastHelper.childNotStarted(MITM.this, getString(R.string.child_not_started));
               }
             }
           } else {
@@ -655,7 +656,7 @@ public class MITM extends Plugin
                     address = url.getHost();
 
                     activity.setVisibility(View.VISIBLE);
-                    Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                    ToastHelper.tapAgain(MITM.this);
 
 
                     final String faddress = address;
@@ -768,10 +769,10 @@ public class MITM extends Plugin
                                 }
                               });
 
-                              Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                              ToastHelper.tapAgain(MITM.this);
 
                             } catch (ChildManager.ChildNotStartedException e) {
-                              Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                              ToastHelper.childNotStarted(MITM.this, getString(R.string.child_not_started));
                             }
                           } else
                             UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_image_url));
@@ -854,11 +855,11 @@ public class MITM extends Plugin
 
                         activity.setVisibility(View.VISIBLE);
 
-                        Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                        ToastHelper.tapAgain(MITM.this);
 
                       } catch (ChildManager.ChildNotStartedException e) {
                         LoggingHelper.e(TAG, "Error", e);
-                        Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                        ToastHelper.childNotStarted(MITM.this, getString(R.string.child_not_started));
                       }
                     } else
                       UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_video_url));
@@ -935,11 +936,11 @@ public class MITM extends Plugin
 
                               activity.setVisibility(View.VISIBLE);
 
-                              Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                              ToastHelper.tapAgain(MITM.this);
 
                             } catch (ChildManager.ChildNotStartedException e) {
                               LoggingHelper.e(TAG, "Failed to start redirect session", e);
-                              Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                              ToastHelper.childNotStarted(MITM.this, getString(R.string.child_not_started));
                             }
                           } else
                             UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_js_code));
@@ -1007,13 +1008,13 @@ public class MITM extends Plugin
 
                   activity.setVisibility(View.VISIBLE);
 
-                  Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
+                  ToastHelper.tapAgain(MITM.this);
 
                 } catch(PatternSyntaxException e){
                   UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filter) + ": " + e.getDescription() + " .");
                 } catch (ChildManager.ChildNotStartedException e) {
                   LoggingHelper.e(TAG, "Failed to start filter session", e);
-                  Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+                  ToastHelper.childNotStarted(MITM.this, getString(R.string.child_not_started));
                 }
               } else
                 UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filter));
