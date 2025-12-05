@@ -392,6 +392,11 @@ public class RPCClient
           break;
         case RAW:
           out = conv.readString();
+          break;
+        default:
+          LoggingHelper.w(TAG, "Unexpected MessagePack type in unMsg: " + src.getType());
+          out = null;
+          break;
       }
     }
     catch ( IOException ioe)

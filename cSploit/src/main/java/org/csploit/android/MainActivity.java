@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                     ToastHelper.error(this, getString(R.string.permissions_fail));
                     finish();
                 }
+                break;
+            }
+            default: {
+                LoggingHelper.w("MainActivity", "Unexpected permission request code: " + requestCode);
+                break;
             }
         }
     }

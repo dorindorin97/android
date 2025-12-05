@@ -300,6 +300,9 @@ public class MultiAttackService extends IntentService {
         case R.string.login_cracker:
           tasks |=CRACK;
           break;
+        default:
+          LoggingHelper.w("MultiAttackService", "Unexpected action string ID: " + stringId);
+          break;
       }
     }
 
