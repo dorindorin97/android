@@ -306,20 +306,18 @@ public final class SystemHelper {
      * @return CPU frequency, or 0 if unavailable
      */
     public static long getCpuFrequency() {
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new java.io.FileInputStream(
-                            "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")));
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new java.io.FileInputStream(
+                        "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")))) {
             String line = reader.readLine();
-            reader.close();
-            
+
             if (line != null) {
                 return Long.parseLong(line.trim()) / 1000;  // Convert to MHz
             }
         } catch (IOException e) {
             LoggingHelper.d(TAG, "CPU frequency not available", e);
         }
-        
+
         return 0;
     }
     
