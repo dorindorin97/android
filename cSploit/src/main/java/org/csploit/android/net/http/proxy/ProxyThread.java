@@ -234,6 +234,9 @@ public class ProxyThread extends Thread
         mReader.close();
       }
     }
-    catch(IOException e){ }
+    catch(IOException e){
+      // Socket close failures during shutdown are non-critical
+      android.util.Log.d("ProxyThread", "Stream close failed: " + e.getMessage());
+    }
   }
 }

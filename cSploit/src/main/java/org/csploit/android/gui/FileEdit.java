@@ -72,7 +72,10 @@ public class FileEdit extends AppCompatActivity {
                 if (inputReader != null)
                     inputReader.close();
             }
-            catch (Exception e){}
+            catch (Exception e){
+                // Log stream close failures at debug level
+                android.util.Log.d("FileEdit", "Failed to close input reader", e);
+            }
         }
 
         return builder.toString();

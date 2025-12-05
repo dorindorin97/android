@@ -262,15 +262,24 @@ public class PacketForger extends Plugin implements OnClickListener {
 		mRunning = false;
 		try {
 			if (mThread != null && mThread.isAlive()) {
-				if (mSocket != null)
-					mSocket.close();
+			if (mSocket != null)
+				mSocket.close();
 
-				if (mUdpSocket != null)
-					mUdpSocket.close();
+			if (mUdpSocket != null)
+				mUdpSocket.close();
 
-				mThread.stop();
-				mThread = null;
+			// Safely terminate thread instead of deprecated stop()
+			if (mThread != null && mThread.isAlive()) {
 				mRunning = false;
+				mThread.interrupt();
+				try {
+					mThread.join(1000); // Wait up to 1 second for thread to finish
+				} catch (InterruptedException e) {
+					LoggingHelper.e("PacketForger", "Thread interrupt failed", e);
+				}
+			}
+			mThread = null;
+			mRunning = false;
 			}
 		} catch (Exception e) {
 

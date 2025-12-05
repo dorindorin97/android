@@ -202,7 +202,10 @@ public class StreamThread implements Runnable
         mWriter.close();
         mReader.close();
       }
-      catch(IOException e){ }
+      catch(IOException e){
+        // Stream close failures during shutdown are non-critical
+        android.util.Log.d("StreamThread", "Stream close failed: " + e.getMessage());
+      }
     }
   }
 }

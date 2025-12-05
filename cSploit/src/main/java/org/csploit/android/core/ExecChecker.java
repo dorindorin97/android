@@ -218,7 +218,10 @@ public class ExecChecker {
     } finally {
       if(mounts!=null) {
         try { mounts.close(); }
-        catch (IOException ignored) { }
+        catch (IOException e) {
+          // Log close failures at debug level
+          LoggingHelper.d(TAG, "Failed to close mounts: " + e.getMessage());
+        }
       }
     }
 

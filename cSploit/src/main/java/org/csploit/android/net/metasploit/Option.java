@@ -59,8 +59,14 @@ public class Option {
       if(!mAttributes.containsKey("enums"))
         throw new IllegalArgumentException("missing enums field");
       //TODO: search if exists not string enums
-      enums = new String[((ArrayList<String>)mAttributes.get("enums")).size()];
-      enums = ((ArrayList<String>) mAttributes.get("enums")).toArray(enums);
+      Object enumsObj = mAttributes.get("enums");
+      if(enumsObj instanceof ArrayList) {
+        ArrayList<String> enumsList = (ArrayList<String>) enumsObj;
+        enums = new String[enumsList.size()];
+        enums = enumsList.toArray(enums);
+      } else {
+        throw new IllegalArgumentException("enums field must be an ArrayList<String>");
+      }
     }
     // get all other data
     mDesc = (String) mAttributes.get("desc");

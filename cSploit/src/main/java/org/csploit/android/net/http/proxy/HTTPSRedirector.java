@@ -87,7 +87,10 @@ public class HTTPSRedirector implements Runnable
       if(mSocket != null)
         mSocket.close();
     }
-    catch(IOException e){ }
+    catch(IOException e){
+      // Socket close failures are typically non-critical in shutdown context
+      android.util.Log.d("HTTPSRedirector", "Socket close failed: " + e.getMessage());
+    }
 
     mRunning = false;
     mSocket = null;
@@ -188,7 +191,9 @@ public class HTTPSRedirector implements Runnable
             }
           }).start();
         }
-        catch(Exception e){ }
+        catch(Exception e){
+          LoggingHelper.d(TAG, "HTTPS redirector thread start failed: " + e.getMessage());
+        }
       }
 
       Logger.debug("HTTPS redirector stopped.");

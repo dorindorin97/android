@@ -398,7 +398,9 @@ public class UpdateService extends IntentService
     } finally {
       try {
         counter.close();
-      } catch (IOException ignore) { }
+      } catch (IOException e) {
+        LoggingHelper.d("UpdateService", "Counter stream close failed: " + e.getMessage());
+      }
     }
 
     if(!mRunning)
