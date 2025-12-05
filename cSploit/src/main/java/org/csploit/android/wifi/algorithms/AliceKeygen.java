@@ -98,9 +98,11 @@ public class AliceKeygen extends Keygen{
         }
         md.update(mac);
         hash = md.digest();
+        StringBuilder keyBuilder = new StringBuilder();
         for(int i = 0; i < 24; ++i){
-          key += preInitCharset.charAt(hash[i] & 0xFF);
+          keyBuilder.append(preInitCharset.charAt(hash[i] & 0xFF));
         }
+        key = keyBuilder.toString();
         addPassword(key);
       }
 
@@ -130,10 +132,11 @@ public class AliceKeygen extends Keygen{
         LoggingHelper.e(TAG, "Unsupported encoding when updating message digest", e);
       }
       md.update(mac);
-      key = "";
       hash = md.digest();
+      StringBuilder keyBuilder2 = new StringBuilder();
       for(int i = 0; i < 24; ++i)
-        key += preInitCharset.charAt(hash[i] & 0xFF);
+        keyBuilder2.append(preInitCharset.charAt(hash[i] & 0xFF));
+      key = keyBuilder2.toString();
       addPassword(key);
     }
     return getResults();

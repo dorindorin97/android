@@ -317,12 +317,13 @@ public class PortScanner extends Plugin {
                         }
                       }
 
-                      mCustomPorts = "";
+                      StringBuilder portsBuilder = new StringBuilder();
                       for (int i = 0, last = ports.length - 1; i < ports.length; i++) {
-                        mCustomPorts += ports[i];
+                        portsBuilder.append(ports[i]);
                         if (i != last)
-                          mCustomPorts += ",";
+                          portsBuilder.append(",");
                       }
+                      mCustomPorts = portsBuilder.toString();
 
                       if (mCustomPorts.isEmpty()) {
                         mCustomPorts = null;
