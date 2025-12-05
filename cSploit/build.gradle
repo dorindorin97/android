@@ -2,14 +2,15 @@ apply plugin: 'com.android.application'
 
 dependencies {
     // AndroidX dependencies - updated versions
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    // Note: removed androidx.legacy:legacy-support-v4 - use AndroidX APIs directly
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.material:material:1.9.0'
-    
-    // Security library for encrypted preferences
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Security library for encrypted preferences and secure credential storage
+    // Provides AES-256-GCM encryption for sensitive data
+    implementation 'androidx.security:security-crypto:1.1.0-rc01'
     
     // Apache Commons - updated versions with security fixes
     implementation 'org.apache.commons:commons-compress:1.24.0'
