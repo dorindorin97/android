@@ -8,16 +8,34 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * this class store MSF payload metadata
+ * This class stores MSF payload metadata
  *
- * TODO: extends MsfModule
+ * TODO: REFACTORING - Extend MsfModule base class
+ * PROBLEM: Payload class has similar functionality to other MSF module types (Exploit, etc.)
+ * but doesn't inherit from a common base. Code for refreshing options and handling
+ * RPC connections is duplicated across module types.
+ * CURRENT WORKAROUND: Each module type implements its own refresh/RPC logic independently.
+ * PROPOSED SOLUTION: Create abstract MsfModule base class:
  *
  * public abstract class MsfModule {
- *   public onRpcConnected() {
+ *   protected RPCClient mRpc;
+ *   protected String mName;
+ *
+ *   public void onRpcConnected() {
  *     refresh();
  *   }
- *   void refresh();
+ *
+ *   protected abstract void refresh() throws IOException, MSFException;
+ *   public abstract Collection<Option> getOptions();
  * }
+ *
+ * BENEFITS:
+ * - Centralized module lifecycle management
+ * - Automatic refresh when RPC connection established
+ * - Common interface for all module types
+ * - Reduced code duplication
+ * IMPACT: Medium - Requires refactoring Payload and other module classes
+ * NOTE: Would improve maintainability and consistency across module implementations
  */
 public class Payload {
 

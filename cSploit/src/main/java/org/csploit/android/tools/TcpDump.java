@@ -53,8 +53,18 @@ public class TcpDump extends Tool{
     StringBuilder sb = new StringBuilder("-nvs 0 ");
 
     if(pcap != null) {
-      // TODO: find a way to receive tcpdump output when saving to a file
-      // NOTE: tcpdump -w - | tee file.pcap | tcpdump -r -
+      // TODO: ENHANCEMENT - Find a way to receive tcpdump output when saving to a file
+      // PROBLEM: When using tcpdump -w option to write to file, output is binary and not
+      // sent to stdout/stderr, so real-time packet monitoring is not possible.
+      // CURRENT WORKAROUND: Either monitor live output (no file) OR save to file (no live output).
+      // SUGGESTED SOLUTION: Use named pipe approach:
+      //   tcpdump -w - | tee file.pcap | tcpdump -r -
+      // This pipes binary output to file while also sending text summary to stdout.
+      // IMPLEMENTATION NOTES:
+      // - Would require creating FIFO pipes in temp directory
+      // - Need to handle cleanup of pipes properly
+      // - May have performance implications
+      // IMPACT: Low - Feature enhancement; single-purpose mode works fine
       sb.append("-Uw '");
       sb.append(pcap);
       sb.append("' ");

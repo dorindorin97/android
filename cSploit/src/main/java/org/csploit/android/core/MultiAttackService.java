@@ -268,7 +268,14 @@ public class MultiAttackService extends IntentService {
     mRunning = true;
 
     //fetch targets
-    // TODO: rewrite this service since target index may change
+    // TODO: ARCHITECTURAL ISSUE - Rewrite this service since target index may change
+    // PROBLEM: Indices passed via intent refer to positions in the targets list at the time
+    // the intent was created. If targets are added/removed/modified before this service
+    // processes them, the indices become invalid and may reference wrong targets or crash.
+    // CURRENT WORKAROUND: Assumes targets list is immutable during execution.
+    // SOLUTION: Use persistent Target IDs/UIDs instead of array indices, or pass Target
+    // objects directly via Parcelable instead of indices.
+    // IMPACT: Medium - Could cause incorrect target processing or ArrayIndexOutOfBoundsException
     List<Target> list = System.getTargets();
     Target[] targets = new Target[targetsIndex.length];
 
