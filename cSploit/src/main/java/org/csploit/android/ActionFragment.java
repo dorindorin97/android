@@ -19,15 +19,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.csploit.android.helpers.UIHelper;
 
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
-import org.csploit.android.net.Target;
 import org.csploit.android.helpers.UIHelper;
+import org.csploit.android.net.Target;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.UIHelper;
 
 public class ActionFragment extends Fragment {
 

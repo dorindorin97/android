@@ -27,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import org.csploit.android.helpers.UIHelper;
 
 import org.csploit.android.R;
 import org.csploit.android.core.Plugin;
@@ -42,10 +41,8 @@ import org.csploit.android.net.Target;
 import org.csploit.android.net.metasploit.RPCClient;
 import org.csploit.android.net.metasploit.Session;
 import org.csploit.android.net.metasploit.ShellSession;
-import org.csploit.android.helpers.UIHelper;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.UIHelper;
 
 public class Sessions extends Plugin {
 	private ListView mListView = null;
