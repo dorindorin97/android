@@ -252,6 +252,16 @@ public final class DeviceHelper {
     }
     
     /**
+     * Check if device has WiFi
+     * 
+     * @param context Android context
+     * @return true if WiFi is available
+     */
+    public static boolean hasWiFi(@NonNull Context context) {
+        return hasFeature(context, PackageManager.FEATURE_WIFI);
+    }
+    
+    /**
      * Check if device is tablet or phone
      * 
      * @param context Android context

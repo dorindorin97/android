@@ -72,6 +72,7 @@ import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.DeviceHelper;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -131,7 +132,7 @@ public class MainFragment extends Fragment {
     private boolean mIsDaemonBeating = false;
     private boolean mIsConnectivityAvailable = false;
     private boolean mIsUpdateDownloading = false;
-    private boolean mHaveAnyWifiInterface = true; // TODO: check is device have a wifi interface
+    private boolean mHaveAnyWifiInterface = false;  // Will be set in onCreateView based on device capabilities
     private boolean mOfflineMode = false;
 
     @Override
@@ -171,6 +172,12 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        
+        // Check if device has WiFi interface
+        if (getActivity() != null) {
+            mHaveAnyWifiInterface = DeviceHelper.hasWiFi(getActivity());
+        }
+        
         return inflater.inflate(R.layout.target_layout, container, false);
     }
 
