@@ -43,6 +43,7 @@ import org.csploit.android.core.System;
 import org.csploit.android.gui.FileEdit;
 import org.csploit.android.gui.dialogs.FatalDialog;
 import org.csploit.android.helpers.AnimationHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.tools.Ettercap.OnAccountListener;
 
 import java.io.BufferedWriter;
@@ -241,7 +242,7 @@ public class PasswordSniffer extends AppCompatActivity {
 		switch (item.getItemId()) {
 			case R.id.action_fields:
 				if (mSniffToggleButton.isEnabled() == false)
-					Toast.makeText(this, "The changes won't take effect until you stop the current traffic sniffing", Toast.LENGTH_SHORT).show();
+					ToastHelper.info(this, "The changes won't take effect until you stop the current traffic sniffing");
 
 				Intent _fields = new Intent(PasswordSniffer.this, FileEdit.class);
 				_fields.putExtra(FileEdit.KEY_FILEPATH, "/tools/ettercap/share/etter.fields");
@@ -317,7 +318,7 @@ public class PasswordSniffer extends AppCompatActivity {
             @Override
             public void run() {
               if(exitValue!=0) {
-                Toast.makeText(PasswordSniffer.this, "ettercap returned #" + exitValue, Toast.LENGTH_LONG).show();
+                ToastHelper.error(PasswordSniffer.this, "ettercap returned #" + exitValue);
               }
               setStoppedState();
             }
@@ -329,15 +330,14 @@ public class PasswordSniffer extends AppCompatActivity {
           PasswordSniffer.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              Toast.makeText(PasswordSniffer.this, "ettercap killed by signal #" + signal, Toast.LENGTH_LONG).show();
+              ToastHelper.error(PasswordSniffer.this, "ettercap killed by signal #" + signal);
               setStoppedState();
             }
           });
         }
       });
 
-      Toast.makeText(PasswordSniffer.this, "Logging to " + mFileOutput,
-              Toast.LENGTH_LONG).show();
+      ToastHelper.status(PasswordSniffer.this, "Logging to " + mFileOutput);
 
       mSniffProgress.setVisibility(View.VISIBLE);
       AnimationHelper.fadeIn(mSniffProgress, 300);

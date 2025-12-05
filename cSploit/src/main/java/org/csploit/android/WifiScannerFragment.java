@@ -124,7 +124,7 @@ public class WifiScannerFragment extends ListFragment
     public void onSuccessfulConnection(){
         if(mCurrentKey != null){
             mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3)));
-            Toast.makeText(getActivity(), getString(R.string.wifi_key_copied), Toast.LENGTH_SHORT).show();
+            ToastHelper.success(getActivity(), getString(R.string.wifi_key_copied));
             mClipboard.setText(mCurrentKey);
         } else
             mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + "</b> !"));

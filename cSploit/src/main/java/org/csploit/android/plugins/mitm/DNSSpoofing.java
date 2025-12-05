@@ -151,11 +151,11 @@ public class DNSSpoofing extends AppCompatActivity {
             fos.write(mTextDnsList.getText().toString().getBytes());
             fos.close();
 
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            ToastHelper.success(this, "Saved");
         }
         catch (Exception e){
             Logger.error("readDNSList() error: " + e.getLocalizedMessage());
-            Toast.makeText(this, "Error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            ToastHelper.error(this, "Error: " + e.getLocalizedMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class DNSSpoofing extends AppCompatActivity {
             Logger.info("DNSSpoofing.onevent() line: " + line);
 
             if (line.contains("spoofed to"))
-                Toast.makeText(DNSSpoofing.this, line, Toast.LENGTH_LONG).show();
+                ToastHelper.status(DNSSpoofing.this, line);
 
         }
 
@@ -176,7 +176,7 @@ public class DNSSpoofing extends AppCompatActivity {
         public void onStderr(String line)
         {
             if (line.contains("spoofed to"))
-                Toast.makeText(DNSSpoofing.this, line, Toast.LENGTH_LONG).show();
+                ToastHelper.status(DNSSpoofing.this, line);
         }
 
         @Override
@@ -189,7 +189,7 @@ public class DNSSpoofing extends AppCompatActivity {
             @Override
             public void run() {
               if(exitValue!=0) {
-                Toast.makeText(DNSSpoofing.this, "ettercap returned #" + exitValue, Toast.LENGTH_LONG).show();
+                ToastHelper.error(DNSSpoofing.this, "ettercap returned #" + exitValue);
               }
               setStoppedState();
             }
@@ -214,7 +214,7 @@ public class DNSSpoofing extends AppCompatActivity {
           DNSSpoofing.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              Toast.makeText(DNSSpoofing.this, "ettercap killed by signal #" + signal, Toast.LENGTH_LONG).show();
+              ToastHelper.error(DNSSpoofing.this, "ettercap killed by signal #" + signal);
               setStoppedState();
             }
           });

@@ -48,6 +48,7 @@ import android.widget.ToggleButton;
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
@@ -534,7 +535,7 @@ public class Hijacker extends AppCompatActivity {
       });
     } catch (ChildManager.ChildNotStartedException e) {
       Logger.error(e.getMessage());
-      Toast.makeText(Hijacker.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
+      ToastHelper.error(Hijacker.this, getString(R.string.child_not_started));
     }
   }
 

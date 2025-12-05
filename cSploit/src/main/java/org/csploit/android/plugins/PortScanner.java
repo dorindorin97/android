@@ -49,6 +49,8 @@ import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -136,8 +138,7 @@ public class PortScanner extends Plugin {
     mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
 
     if (mPortList.size() == 0)
-      Toast.makeText(this, getString(R.string.no_open_ports),
-              Toast.LENGTH_LONG).show();
+      ToastHelper.status(this, getString(R.string.no_open_ports));
   }
 
   private void setStartedState() {
@@ -155,7 +156,7 @@ public class PortScanner extends Plugin {
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "Port scanner child process failed", e);
-      Toast.makeText(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+      ToastHelper.error(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage());
     }
     mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
   }
@@ -312,7 +313,6 @@ public class PortScanner extends Plugin {
                           }
                         } catch (Exception e) {
                           UIHelper.error(PortScanner.this, "Error", e.toString());
-                                  PortScanner.this).show();
                           return;
                         }
                       }

@@ -52,6 +52,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.TwoStatePreference;
 
+import org.csploit.android.helpers.ToastHelper;
+
 public class SettingsFragment extends Fragment {
 
 
@@ -143,7 +145,7 @@ public class SettingsFragment extends Fragment {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     SharedPreferences themePrefs = getActivity().getBaseContext().getSharedPreferences("THEME", 0);
                     themePrefs.edit().putBoolean("isDark", (Boolean) newValue).apply();
-                    Toast.makeText(getActivity().getBaseContext(), getString(R.string.please_restart), Toast.LENGTH_LONG).show();
+                    ToastHelper.info(getActivity().getBaseContext(), getString(R.string.please_restart));
                     return true;
                 }
             });
@@ -268,13 +270,13 @@ public class SettingsFragment extends Fragment {
                 }
 
                 if (!folder.exists())
-                    Toast.makeText(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_exists), Toast.LENGTH_SHORT).show();
+                    ToastHelper.error(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_exists));
 
                 else if (!folder.canWrite())
-                    Toast.makeText(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_writable), Toast.LENGTH_SHORT).show();
+                    ToastHelper.error(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_writable));
 
                 else if (checker != null && !checker.canExecuteInDir(path))
-                    Toast.makeText(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_executable), Toast.LENGTH_LONG).show();
+                    ToastHelper.error(getActivity(), getString(R.string.pref_folder) + " " + path + " " + getString(R.string.pref_err_executable));
 
                 else {
                     //noinspection ConstantConditions
@@ -401,7 +403,7 @@ public class SettingsFragment extends Fragment {
             }
 
             if (message != null)
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                ToastHelper.status(getActivity(), message);
 
             System.onSettingChanged(key);
         }

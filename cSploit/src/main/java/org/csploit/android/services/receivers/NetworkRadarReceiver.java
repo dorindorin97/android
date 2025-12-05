@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.csploit.android.R;
 import org.csploit.android.core.*;
 import org.csploit.android.services.NetworkRadar;
+import org.csploit.android.helpers.ToastHelper;
 
 /**
  * receive notifications from NetworkRadar
@@ -49,13 +50,13 @@ public class NetworkRadarReceiver extends ManagedReceiver {
 
     switch (action) {
       case NetworkRadar.NRDR_STARTED:
-        Toast.makeText(context, R.string.net_discovery_started, Toast.LENGTH_SHORT).show();
+        ToastHelper.status(context, context.getString(R.string.net_discovery_started));
         break;
       case NetworkRadar.NRDR_STOPPED:
-        Toast.makeText(context, R.string.net_discovery_stopped, Toast.LENGTH_SHORT).show();
+        ToastHelper.status(context, context.getString(R.string.net_discovery_stopped));
         break;
       case NetworkRadar.NRDR_START_FAILED:
-        Toast.makeText(context, R.string.net_discovery_start_failed, Toast.LENGTH_LONG).show();
+        ToastHelper.error(context, context.getString(R.string.net_discovery_start_failed));
         break;
     }
   }

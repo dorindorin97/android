@@ -50,6 +50,8 @@ import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.net.Target;
 import org.csploit.android.plugins.mitm.SpoofSession.OnSessionReadyListener;
+
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.tools.TcpDump;
 
 import java.io.*;
@@ -366,9 +368,8 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
 
         setStoppedState();
 
-        Toast.makeText(Sniffer.this,
-                getString(R.string.selected_) + System.getCurrentTarget(),
-                Toast.LENGTH_SHORT).show();
+        ToastHelper.status(Sniffer.this,
+                getString(R.string.selected_) + System.getCurrentTarget());
 
         startActivity(new Intent(Sniffer.this,
                 ActionActivity.class));
@@ -479,7 +480,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
     Sniffer.this.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        Toast.makeText(Sniffer.this, text, Toast.LENGTH_LONG).show();
+        ToastHelper.status(Sniffer.this, text);
       }
     });
   }
@@ -505,7 +506,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
       pcapfile.createNewFile();
     }catch(IOException io)
     {
-      Toast.makeText(this, "File not created: " + io.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+      ToastHelper.error(this, "File not created: " + io.getLocalizedMessage());
       return;
     }
 

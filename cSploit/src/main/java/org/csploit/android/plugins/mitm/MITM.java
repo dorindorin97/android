@@ -50,6 +50,8 @@ import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ChoiceDialog.ChoiceDialogListener;
+
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.CustomFilterDialog;
@@ -584,7 +586,7 @@ public class MITM extends Plugin
                     MITM.this.runOnUiThread(new Runnable() {
                       @Override
                       public void run() {
-                        Toast.makeText(MITM.this, "arpspoof error", Toast.LENGTH_LONG).show();
+                        ToastHelper.error(MITM.this, "arpspoof error");
                         activity.setVisibility(View.INVISIBLE);
                       }
                     });

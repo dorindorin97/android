@@ -74,7 +74,7 @@ public class ActionFragment extends Fragment {
                         System.setCurrentPlugin(plugin);
 
                         if (plugin.hasLayoutToShow()) {
-                            Toast.makeText(getActivity(), getString(R.string.selected) + getString(plugin.getName()), Toast.LENGTH_SHORT).show();
+                            ToastHelper.status(getActivity(), getString(R.string.selected) + getString(plugin.getName()));
 
                             startActivity(new Intent(
                                     getActivity(),

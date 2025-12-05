@@ -31,6 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
+import org.csploit.android.helpers.ToastHelper;
+
 public class MainActivity extends AppCompatActivity {
 
   MainFragment f;
@@ -89,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.permissions_succeed, Toast.LENGTH_LONG).show();
+                    ToastHelper.success(this, getString(R.string.permissions_succeed));
                 } else {
-                    Toast.makeText(this, R.string.permissions_fail, Toast.LENGTH_LONG).show();
+                    ToastHelper.error(this, getString(R.string.permissions_fail));
                     finish();
                 }
             }

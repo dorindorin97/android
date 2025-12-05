@@ -95,17 +95,17 @@ public class Sessions extends Plugin {
 
                 @Override
                 public void onEnd(int exitValue) {
-                  Toast.makeText(Sessions.this,"command returned "+exitValue,Toast.LENGTH_LONG).show();
+                  ToastHelper.status(Sessions.this,"command returned "+exitValue);
                 }
 
                 @Override
                 public void onRpcClosed() {
-                  Toast.makeText(Sessions.this,"RPC channel has been closed",Toast.LENGTH_LONG).show();
+                  ToastHelper.status(Sessions.this,"RPC channel has been closed");
                 }
 
                 @Override
                 public void onTimedOut() {
-                  Toast.makeText(Sessions.this,"command timed out",Toast.LENGTH_LONG).show();
+                  ToastHelper.error(Sessions.this,"command timed out");
                 }
               });
               break;

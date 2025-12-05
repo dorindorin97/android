@@ -50,7 +50,7 @@ public class Console extends AppCompatActivity {
         @Override
         public void onEnd(int exitCode) {
             if (exitCode != 0)
-                Toast.makeText(Console.this, "command returned " + exitCode, Toast.LENGTH_SHORT).show();
+                ToastHelper.error(Console.this, "command returned " + exitCode);
             try {
                 Thread.sleep(200);
                 Console.this.runOnUiThread(new Runnable() {
