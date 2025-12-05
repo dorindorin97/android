@@ -95,7 +95,7 @@ public class UpdateChecker extends Thread
       if(isNewerThan(remoteVersion, localVersion ))
         return update;
     } catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Error", e);
     }
     return null;
   }
@@ -139,7 +139,7 @@ public class UpdateChecker extends Thread
       if(isNewerThan(remoteVersion, localVersion ))
         return update;
     } catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Error", e);
     }
 
     return null;
@@ -184,7 +184,7 @@ public class UpdateChecker extends Thread
       if(isNewerThan(remoteVersion, localVersion ))
         return update;
     } catch(Exception e){
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Error", e);
     }
     return null;
   }

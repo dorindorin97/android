@@ -406,7 +406,7 @@ public class LoginCracker extends Plugin {
           mPassWordlist = fileName;
         }
       } catch (Exception e) {
-        System.errorLogging(e);
+        LoggingHelper.e(TAG, "Error", e);
       }
     }
   }

@@ -92,7 +92,7 @@ public class Ettercap extends Tool
     try {
       sb.append(System.getNetwork().getInterface().getDisplayName());
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Error", e);
       throw new ChildManager.ChildNotStartedException();
     }
 
@@ -118,7 +118,7 @@ public class Ettercap extends Tool
     try {
       sb.append(System.getNetwork().getInterface().getDisplayName());
     } catch (Exception e) {
-      System.errorLogging(e);
+      LoggingHelper.e(TAG, "Error", e);
       throw new ChildManager.ChildNotStartedException();
     }
 

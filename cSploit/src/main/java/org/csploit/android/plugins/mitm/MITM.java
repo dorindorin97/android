@@ -857,7 +857,7 @@ public class MITM extends Plugin
                         Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
 
                       } catch (ChildManager.ChildNotStartedException e) {
-                        System.errorLogging(e);
+                        LoggingHelper.e(TAG, "Error", e);
                         Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                       }
                     } else

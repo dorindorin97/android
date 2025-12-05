@@ -218,7 +218,7 @@ public class SettingsFragment extends Fragment {
                                         ;
                                     size += Integer.parseInt(line.substring(start, end));
                                 } catch (Exception e) {
-                                    System.errorLogging(e);
+                                    LoggingHelper.e(TAG, "Error", e);
                                 }
                             }
 
@@ -533,7 +533,7 @@ public class SettingsFragment extends Fragment {
                         GitHubParser.getMsfRepo().getBranches();
                         getActivity().sendBroadcast(new Intent(SETTINGS_MSF_BRANCHES_AVAILABLE));
                     } catch (JSONException e) {
-                        System.errorLogging(e);
+                        LoggingHelper.e(TAG, "Error", e);
                     } catch (IOException e) {
                         Logger.error(e.getMessage());
                     }
