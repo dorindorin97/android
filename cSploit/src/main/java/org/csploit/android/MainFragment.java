@@ -69,7 +69,7 @@ import org.csploit.android.gui.dialogs.ListChoiceDialog;
 import org.csploit.android.gui.dialogs.MultipleChoiceDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.helpers.UIHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
@@ -212,9 +212,8 @@ public class MainFragment extends Fragment {
                     }
                 });
 
-                Toast.makeText(getActivity(),
-                        getString(R.string.selected_) + System.getCurrentTarget(),
-                        Toast.LENGTH_SHORT);
+                ToastHelper.status(getActivity(),
+                        getString(R.string.selected_) + System.getCurrentTarget());
 
             }
         });
@@ -453,7 +452,7 @@ public class MainFragment extends Fragment {
             @Override
             public void run() {
                 if (msg != null) {
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG);
+                    ToastHelper.status(getActivity(), msg);
                 }
                 notifyMenuChanged();
             }
@@ -736,10 +735,9 @@ public class MainFragment extends Fragment {
                                 try {
                                     System.reset();
 
-                                    Toast.makeText(
+                                    ToastHelper.status(
                                             getActivity(),
-                                            getString(R.string.new_session_started),
-                                            Toast.LENGTH_SHORT);
+                                            getString(R.string.new_session_started));
                                 } catch (Exception e) {
                                     new FatalDialog(getString(R.string.error), e
                                             .toString(), getActivity());
@@ -768,11 +766,10 @@ public class MainFragment extends Fragment {
                                     try {
                                         String filename = System.saveSession(name);
 
-                                        Toast.makeText(
+                                        ToastHelper.success(
                                                 getActivity(),
                                                 getString(R.string.session_saved_to)
-                                                        + filename + " .",
-                                                Toast.LENGTH_SHORT);
+                                                        + filename + " .");
                                     } catch (IOException e) {
                                         UIHelper.error(getString(R.string.error),
                                                 e.toString(), getActivity())
@@ -857,9 +854,7 @@ public class MainFragment extends Fragment {
 
     public void onBackPressed() {
         if (mLastBackPressTime < java.lang.System.currentTimeMillis() - 4000) {
-            mToast = Toast.makeText(getActivity(), getString(R.string.press_back),
-                    Toast.LENGTH_SHORT);
-            mToast.show();
+            ToastHelper.info(getActivity(), getString(R.string.press_back));
             mLastBackPressTime = java.lang.System.currentTimeMillis();
         } else {
             if (mToast != null)

@@ -93,7 +93,7 @@ public class DirectoryPicker extends ListActivity{
     if(!dir.canRead()){
       Context context = getApplicationContext();
       String msg = getString(R.string.could_not_read_folder);
-      if(context != null) Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+      if(context != null) ToastHelper.error(context, msg);
       return;
     }
 

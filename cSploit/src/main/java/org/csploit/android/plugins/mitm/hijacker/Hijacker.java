@@ -468,11 +468,10 @@ public class Hijacker extends AppCompatActivity {
 											String filename = session
 													.save(name);
 
-											Toast.makeText(
-													Hijacker.this,
-													getString(R.string.session_saved_to)
-															+ filename + " .",
-													Toast.LENGTH_SHORT).show();
+										ToastHelper.success(
+												Hijacker.this,
+												getString(R.string.session_saved_to)
+														+ filename + " .");
 										} catch (IOException e) {
 											UIHelper.error(Hijacker.this, getString(R.string.error), e.toString());
 										}

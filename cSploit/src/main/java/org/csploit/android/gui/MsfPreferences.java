@@ -9,7 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
-import android.util.Patterns;
+import org.csploit.android.helpers.ToastHelper;
 import android.widget.Toast;
 
 import org.csploit.android.R;
@@ -56,7 +56,7 @@ public class MsfPreferences extends PreferenceActivity {
             opt.setValue((String)newValue);
             return true;
           } else
-            Toast.makeText(getApplicationContext(),getString(R.string.error_invalid_address_or_port),Toast.LENGTH_LONG).show();
+            ToastHelper.error(getApplicationContext(),getString(R.string.error_invalid_address_or_port));
           break;
         case INTEGER:
           try {
@@ -64,7 +64,7 @@ public class MsfPreferences extends PreferenceActivity {
             opt.setValue(""+res);
             return true;
           } catch ( NumberFormatException e) {
-            Toast.makeText(getApplicationContext(),getString(R.string.pref_err_invalid_number),Toast.LENGTH_SHORT).show();
+            ToastHelper.error(getApplicationContext(),getString(R.string.pref_err_invalid_number));
           }
           break;
         case BOOLEAN:
@@ -81,9 +81,9 @@ public class MsfPreferences extends PreferenceActivity {
             opt.setValue(""+res);
             return true;
           } catch ( NumberFormatException e) {
-            Toast.makeText(getApplicationContext(),getString(R.string.pref_err_invalid_number),Toast.LENGTH_SHORT).show();
+            ToastHelper.error(getApplicationContext(),getString(R.string.pref_err_invalid_number));
           } catch (RuntimeException e) {
-            Toast.makeText(getApplicationContext(),getString(R.string.invalid_port),Toast.LENGTH_SHORT).show();
+            ToastHelper.error(getApplicationContext(),getString(R.string.invalid_port));
           }
           break;
       }

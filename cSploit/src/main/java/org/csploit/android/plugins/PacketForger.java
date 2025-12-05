@@ -31,7 +31,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Plugin;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.net.Endpoint;
@@ -206,14 +206,13 @@ public class PacketForger extends Plugin implements OnClickListener {
 						mBinaryData = null;
 
 						final String errorMessage = error;
-						PacketForger.this.runOnUiThread(new Runnable() {
-							public void run() {
-								Toast.makeText(PacketForger.this,
-										getString(R.string.request_sent),
-										Toast.LENGTH_SHORT).show();
-								setStoppedState(errorMessage);
-							}
-						});
+					PacketForger.this.runOnUiThread(new Runnable() {
+						public void run() {
+							ToastHelper.success(PacketForger.this,
+									getString(R.string.request_sent));
+							setStoppedState(errorMessage);
+						}
+					});
 					}
 				});
 
@@ -245,15 +244,13 @@ public class PacketForger extends Plugin implements OnClickListener {
 						hexBuilder.append("\\x")
 							.append(Integer.toHexString(0xFF & mBinaryData[i]).toUpperCase());
 
-					mData.setText(hexBuilder.toString());
+				mData.setText(hexBuilder.toString());
 
-					Toast.makeText(this,
-							getString(R.string.customize_wol_port),
-							Toast.LENGTH_SHORT).show();
-				} else
-					Toast.makeText(this,
-							getString(R.string.couldnt_send_wol_packet),
-							Toast.LENGTH_SHORT).show();
+				ToastHelper.status(this,
+						getString(R.string.customize_wol_port));
+			} else
+				ToastHelper.error(this,
+						getString(R.string.couldnt_send_wol_packet));
 			}
 		} else {
 			setStoppedState(null);
