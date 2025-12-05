@@ -54,9 +54,11 @@ import org.csploit.android.wifi.algorithms.Wlan6Keygen;
 import org.csploit.android.wifi.algorithms.ZyxelKeygen;
 import org.csploit.android.wifi.algorithms.helpers.AliceHandle;
 import org.csploit.android.wifi.algorithms.helpers.AliceMagicInfo;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class WirelessMatcher
 {
+  private static final String TAG = "WirelessMatcher";
   private final Map<String, ArrayList<AliceMagicInfo>> supportedAlices;
 
   public WirelessMatcher(InputStream aliceXml){
@@ -67,7 +69,7 @@ public class WirelessMatcher
       saxParser = factory.newSAXParser();
       saxParser.parse(aliceXml, aliceReader);
     } catch(Exception e){
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "Failed to parse Alice XML configuration", e);
     }
     supportedAlices = aliceReader.getSupportedAlices();
   }

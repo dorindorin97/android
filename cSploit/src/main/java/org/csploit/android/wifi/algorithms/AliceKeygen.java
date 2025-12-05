@@ -25,8 +25,10 @@ import java.util.List;
 
 import org.csploit.android.wifi.Keygen;
 import org.csploit.android.wifi.algorithms.helpers.AliceMagicInfo;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class AliceKeygen extends Keygen{
+  private static final String TAG = "AliceKeygen";
 
   private MessageDigest md;
   final private String ssidIdentifier;
@@ -92,7 +94,7 @@ public class AliceKeygen extends Keygen{
         try{
           md.update(serialStrBuilder.toString().getBytes("ASCII"));
         } catch(UnsupportedEncodingException e){
-          e.printStackTrace();
+          LoggingHelper.e(TAG, "Unsupported encoding when updating message digest", e);
         }
         md.update(mac);
         hash = md.digest();
@@ -125,7 +127,7 @@ public class AliceKeygen extends Keygen{
       try{
         md.update(serialStrBuilder.toString().getBytes("ASCII"));
       } catch(UnsupportedEncodingException e){
-        e.printStackTrace();
+        LoggingHelper.e(TAG, "Unsupported encoding when updating message digest", e);
       }
       md.update(mac);
       key = "";

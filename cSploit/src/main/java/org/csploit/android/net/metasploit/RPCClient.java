@@ -26,6 +26,7 @@ import org.msgpack.unpacker.Converter;
 
 import org.csploit.android.core.System;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Metasploit RPC Client for remote interaction with Metasploit Framework.
@@ -39,6 +40,7 @@ import org.csploit.android.core.Logger;
 @SuppressWarnings("rawtypes")
 public class RPCClient
 {
+  private static final String TAG = "RPCClient";
   private URL u;
   private URLConnection huc;
   private String token;
@@ -227,9 +229,9 @@ public class RPCClient
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "IOException while updating sessions", e);
     } catch (MSFException e) {
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "MSFException while updating sessions", e);
     }
   }
 

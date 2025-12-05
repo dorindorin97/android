@@ -24,12 +24,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.csploit.android.wifi.Keygen;
+import org.csploit.android.helpers.LoggingHelper;
 
 /*
  * Eircom algorithm published here:
  * http://www.bacik.org/eircomwep/howto.html
  */
 public class EircomKeygen extends Keygen{
+  private static final String TAG = "EircomKeygen";
 
   private MessageDigest md;
 
@@ -60,7 +62,7 @@ public class EircomKeygen extends Keygen{
     try{
       addPassword(getHexString(hash).substring(0, 26));
     } catch(UnsupportedEncodingException e){
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "Unsupported encoding when converting hash to string", e);
     }
     return getResults();
   }
