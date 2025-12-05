@@ -10,7 +10,6 @@ import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.ThreadHelper;
-import org.csploit.android.net.Endpoint;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.tools.NMap;
@@ -120,14 +119,6 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
         if (name != null && !name.equals(t.getAlias())) {
           t.setAlias(name);
           notify = true;
-        }
-
-        //TODO: remove me ( and imports )
-        Endpoint e = new Endpoint(ipAddress, macAddress);
-        if(!e.equals(t.getEndpoint())) {
-          Logger.warning(
-                  String.format("target '%s' changed it's mac address from '%s' to '%s'",
-                          t.toString(), t.getEndpoint().getHardwareAsString(), e.getHardwareAsString()));
         }
       }
 
