@@ -488,7 +488,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
     Sniffer.this.runOnUiThread(new Runnable(){
       @Override
       public void run(){
-        new ErrorDialog("Error", error, Sniffer.this).show();
+        UIHelper.error(Sniffer.this, "Error", error);
         setStoppedState();
       }
     });

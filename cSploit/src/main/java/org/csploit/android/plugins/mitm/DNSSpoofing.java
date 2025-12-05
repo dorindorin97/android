@@ -202,8 +202,7 @@ public class DNSSpoofing extends AppCompatActivity {
                   @Override
                   public void run() {
                       if (!DNSSpoofing.this.isFinishing()) {
-                          new ErrorDialog(getString(R.string.error), error,
-                                  DNSSpoofing.this).show();
+                          UIHelper.error(DNSSpoofing.this, getString(R.string.error), error);
                           setStoppedState();
                       }
                   }

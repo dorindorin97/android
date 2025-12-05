@@ -85,7 +85,7 @@ public class Sessions extends Plugin {
               String message = s.getDescription();
               if(s.getInfo().length()>0)
                 message+= "\n\nInfo:\n"+s.getInfo();
-              new ErrorDialog(s.getName(),message,Sessions.this).show();
+              UIHelper.error(Sessions.this, s.getName(), message);
               break;
             case R.string.clear_event_log:
 

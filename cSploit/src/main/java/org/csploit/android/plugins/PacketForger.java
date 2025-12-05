@@ -280,8 +280,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 		}
 
 		if (errorMessage != null && !isFinishing())
-			new ErrorDialog(getString(R.string.error), errorMessage, this)
-					.show();
+			UIHelper.error(this, getString(R.string.error), errorMessage);
 	}
 
 	@Override

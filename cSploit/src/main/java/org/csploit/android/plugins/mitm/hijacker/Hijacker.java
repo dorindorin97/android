@@ -473,16 +473,10 @@ public class Hijacker extends AppCompatActivity {
 															+ filename + " .",
 													Toast.LENGTH_SHORT).show();
 										} catch (IOException e) {
-											new ErrorDialog(
-													getString(R.string.error),
-													e.toString(), Hijacker.this)
-													.show();
+											UIHelper.error(Hijacker.this, getString(R.string.error), e.toString());
 										}
 									} else
-										new ErrorDialog(
-												getString(R.string.error),
-												getString(R.string.invalid_session),
-												Hijacker.this).show();
+										UIHelper.error(Hijacker.this, getString(R.string.error), getString(R.string.invalid_session));
 								}
 							}).show();
 				}

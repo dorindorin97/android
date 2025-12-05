@@ -332,7 +332,7 @@ public class WifiScannerFragment extends ListFragment
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                new ErrorDialog(getString(R.string.error), keygen.getErrorMessage().isEmpty() ? getString(R.string.wifi_error_keys) : keygen.getErrorMessage(), getActivity()).show();
+                                UIHelper.error(getActivity(), getString(R.string.error), keygen.getErrorMessage().isEmpty() ? getString(R.string.wifi_error_keys) : keygen.getErrorMessage());
                             }
                         });
                     }

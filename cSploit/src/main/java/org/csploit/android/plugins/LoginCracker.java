@@ -383,9 +383,8 @@ public class LoginCracker extends Plugin {
           fileName = intent.getData().getPath();
 
         if (fileName == null) {
-          new ErrorDialog(getString(R.string.error),
-                  getString(R.string.error_filepath),
-                  LoginCracker.this).show();
+          UIHelper.error(LoginCracker.this, getString(R.string.error),
+                  getString(R.string.error_filepath));
         } else {
           mUserWordlist = fileName;
         }
@@ -400,9 +399,8 @@ public class LoginCracker extends Plugin {
           fileName = intent.getData().getPath();
 
         if (fileName == null) {
-          new ErrorDialog(getString(R.string.error),
-                  getString(R.string.error_filepath),
-                  LoginCracker.this).show();
+          UIHelper.error(LoginCracker.this, getString(R.string.error),
+                  getString(R.string.error_filepath));
         } else {
           mPassWordlist = fileName;
         }
