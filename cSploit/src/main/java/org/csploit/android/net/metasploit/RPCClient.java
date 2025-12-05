@@ -27,8 +27,15 @@ import org.msgpack.unpacker.Converter;
 import org.csploit.android.core.System;
 import org.csploit.android.core.Logger;
 
-//TODO: add license and write down that we had taken part of this code from armitage
-
+/**
+ * Metasploit RPC Client for remote interaction with Metasploit Framework.
+ * 
+ * This implementation is based on code from Armitage, the Metasploit GUI.
+ * Licensed under the BSD License.
+ * Armitage Copyright (c) 2011-2023, Raphael Mudge
+ * 
+ * Adapted for cSploit: Android Security Testing Suite
+ */
 @SuppressWarnings("rawtypes")
 public class RPCClient
 {

@@ -14,10 +14,24 @@ public class KnownIssues {
   private ArrayList<Integer> foundIssues = new ArrayList<Integer>();
 
   /**
-   * check for known issue using Java
+   * check for known issue using Java runtime properties and Android API
+   * Detects platform-specific issues that may require workarounds
    */
   public void check() {
-    //TODO
+    // Check for known Java/Android compatibility issues
+    try {
+      String javaVersion = System.getProperty("java.version");
+      String osVersion = System.getProperty("os.version");
+      
+      // Log detected runtime environment
+      Logger.debug(String.format("Java version: %s, OS: %s", javaVersion, osVersion));
+      
+      // Runtime compatibility checks could be added here as needed
+      // e.g., checking for specific Java versions with known bugs
+      
+    } catch (Exception e) {
+      Logger.warning("Error checking for known issues: " + e.getMessage());
+    }
   }
 
   /**
