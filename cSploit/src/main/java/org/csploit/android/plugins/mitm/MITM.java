@@ -54,13 +54,13 @@ import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.CustomFilterDialog;
 import org.csploit.android.gui.dialogs.CustomFilterDialog.CustomFilterDialogListener;
-import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.FinishDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.helpers.AnimationHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.RedirectionDialog;
 import org.csploit.android.gui.dialogs.RedirectionDialog.RedirectionDialogListener;
 import org.csploit.android.net.Target;
@@ -217,7 +217,7 @@ public class MITM extends Plugin
 
         if(fileName == null){
           setStoppedState();
-          new ErrorDialog( getString(R.string.error), getString(R.string.error_filepath2), MITM.this).show();
+          UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filepath2));
         } else{
           mimeType = System.getImageMimeType(fileName);
           mSpoofSession = new SpoofSession(true, true, fileName, mimeType);
@@ -279,7 +279,7 @@ public class MITM extends Plugin
         fileName = intent.getData().getPath();
 
       if(fileName == null){
-        new ErrorDialog( getString(R.string.error), getString(R.string.error_filepath), MITM.this).show();
+        UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filepath));
       } else{
         try{
 
@@ -324,7 +324,7 @@ public class MITM extends Plugin
             }
           });
         } catch(Exception e){
-          new ErrorDialog(getString(R.string.error), getString(R.string.unexpected_file_error) + e.getMessage(), MITM.this).show();
+          UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.unexpected_file_error) + e.getMessage());
         }
       }
     } else if(request == SettingsFragment.SETTINGS_DONE){
@@ -380,7 +380,7 @@ public class MITM extends Plugin
     MITM.this.runOnUiThread(new Runnable(){
       @Override
       public void run(){
-        new ErrorDialog(getString(R.string.error), error, MITM.this).show();
+        UIHelper.error(MITM.this, getString(R.string.error), error);
 
         mCurrentActivity = null;
         setStoppedState();
@@ -563,9 +563,9 @@ public class MITM extends Plugin
 
           if(activity.getVisibility() == View.INVISIBLE){
             if (System.getCurrentTarget().getType() != Target.Type.ENDPOINT) {
-              new ErrorDialog(getString(R.string.error), getString(R.string.mitm_connection_kill_error), MITM.this).show();
+              UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.mitm_connection_kill_error));
             } else if(!System.getNetwork().haveGateway() && !System.getNetwork().isTetheringEnabled()) {
-              new ErrorDialog(getString(R.string.error), "Connection killer requires a gateway or active Tethering", MITM.this).show();
+              UIHelper.error(MITM.this, getString(R.string.error), "Connection killer requires a gateway or active Tethering");
             } else {
               setStoppedState();
 
@@ -677,10 +677,10 @@ public class MITM extends Plugin
                     });
 
                   } catch(Exception e){
-                    new ErrorDialog(getString(R.string.error), e.getMessage(), MITM.this).show();
+                    UIHelper.error(MITM.this, getString(R.string.error), e.getMessage());
                   }
                 } else
-                  new ErrorDialog(getString(R.string.error), getString(R.string.error_invalid_address_or_port), MITM.this).show();
+                  UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_invalid_address_or_port));
               }
             }).show();
           } else
@@ -712,7 +712,7 @@ public class MITM extends Plugin
                     mCurrentActivity = activity;
                     startActivityForResult(mImagePicker, SELECT_PICTURE);
                   } catch(ActivityNotFoundException e){
-                    new ErrorDialog(getString(R.string.error), getString(R.string.error_image_intent), MITM.this).show();
+                    UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_image_intent));
                   }
                 } else{
                   new InputDialog
@@ -774,7 +774,7 @@ public class MITM extends Plugin
                               Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                             }
                           } else
-                            new ErrorDialog(getString(R.string.error), getString(R.string.error_image_url), MITM.this).show();
+                            UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_image_url));
                         }
                       }
                     ).show();
@@ -861,7 +861,7 @@ public class MITM extends Plugin
                         Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                       }
                     } else
-                      new ErrorDialog(getString(R.string.error), getString(R.string.error_video_url), MITM.this).show();
+                      UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_video_url));
                   }
                 }
               ).show();
@@ -894,7 +894,7 @@ public class MITM extends Plugin
                     mCurrentActivity = activity;
                     startActivityForResult(mScriptPicker, SELECT_SCRIPT);
                   } catch(ActivityNotFoundException e){
-                    new ErrorDialog(getString(R.string.error), getString(R.string.error_file_intent), MITM.this).show();
+                    UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_file_intent));
                   }
                 } else{
                   new InputDialog
@@ -942,7 +942,7 @@ public class MITM extends Plugin
                               Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                             }
                           } else
-                            new ErrorDialog(getString(R.string.error), getString(R.string.error_js_code), MITM.this).show();
+                            UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_js_code));
                         }
                       }
                     ).show();
@@ -1010,13 +1010,13 @@ public class MITM extends Plugin
                   Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
 
                 } catch(PatternSyntaxException e){
-                  new ErrorDialog(getString(R.string.error), getString(R.string.error_filter) + ": " + e.getDescription() + " .", MITM.this).show();
+                  UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filter) + ": " + e.getDescription() + " .");
                 } catch (ChildManager.ChildNotStartedException e) {
                   LoggingHelper.e(TAG, "Failed to start filter session", e);
                   Toast.makeText(MITM.this, getString(R.string.child_not_started), Toast.LENGTH_LONG).show();
                 }
               } else
-                new ErrorDialog(getString(R.string.error), getString(R.string.error_filter), MITM.this).show();
+                UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.error_filter));
             }
           }
           ).show();
