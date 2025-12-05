@@ -51,63 +51,40 @@ public class FileEdit extends AppCompatActivity {
     public String loadFile (String _path) {
         final StringBuilder builder = new StringBuilder();
 
-        BufferedReader inputReader = null;
-
         if (_path == null){
             ToastHelper.error(this, "Error: No file path provided");
             return "";
         }
 
         try {
-            inputReader = new BufferedReader(new FileReader(_path));
-
-            String _line;
-            while ((_line = inputReader.readLine()) != null) {
-                builder.append(_line).append("\n");
+            try (BufferedReader inputReader = new BufferedReader(new FileReader(_path))) {
+                String line;
+                while ((line = inputReader.readLine()) != null) {
+                    builder.append(line).append("\n");
+                }
             }
         }
         catch (Exception e){
             ToastHelper.error(this, "Error loading \"" + _path + "\"\n\n" + e.getLocalizedMessage());
-        }
-        finally {
-            try {
-                if (inputReader != null)
-                    inputReader.close();
-            }
-            catch (Exception e){
-                // Log stream close failures at debug level
-                LoggingHelper.d(TAG, "Failed to close input reader");
-            }
         }
 
         return builder.toString();
     }
 
     public boolean saveFile (String _file_text, String _path){
-        FileOutputStream fos = null;
-        try{
+        try {
             File f = new File(_path);
-            fos = new FileOutputStream(f);
-            fos.write(_file_text.getBytes());
+            try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(_file_text.getBytes());
+            }
 
             ToastHelper.success(this, getString(R.string.saved));
-
             return true;
         }
         catch (Exception e){
             ToastHelper.error(this, "Error saving \"" + _path + "\"\n\n" + e.getLocalizedMessage());
+            return false;
         }
-        finally {
-            try {
-                if (fos != null)
-                    fos.close();
-            }
-            catch (Exception e){
-
-            }
-        }
-
-        return false;
     }
 
 	@Override

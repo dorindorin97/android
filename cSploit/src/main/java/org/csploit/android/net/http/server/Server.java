@@ -68,24 +68,22 @@ public class Server implements Runnable
 
     // preload resource data
     File file = new File(mResourcePath);
-    FileInputStream is = new FileInputStream(file);
     long size = file.length();
-    int offset = 0,
-      read = 0;
 
     if(size > MAX_FILE_SIZE)
       throw new IOException("Max allowed file size is " + MAX_FILE_SIZE + " bytes.");
 
     mResourceData = new byte[(int) size];
+    int offset = 0, read = 0;
 
-    while(offset < size && (read = is.read(mResourceData, offset, (int) (size - offset))) >= 0){
-      offset += read;
+    try (FileInputStream is = new FileInputStream(file)) {
+      while(offset < size && (read = is.read(mResourceData, offset, (int) (size - offset))) >= 0){
+        offset += read;
+      }
     }
 
     if(offset < size)
       throw new IOException("Could not completely read file " + file.getName() + " .");
-
-    is.close();
   }
 
   public String getResourceURL(){
@@ -99,7 +97,7 @@ public class Server implements Runnable
       if(mSocket != null)
         mSocket.close();
     } catch(IOException e){
-
+      Logger.debug("Server socket close failed: " + e.getMessage());
     }
 
     mRunning = false;

@@ -62,11 +62,9 @@ public class Session
 
     buffer = builder.toString();
 
-    FileOutputStream ostream = new FileOutputStream(filename);
-    GZIPOutputStream gzip = new GZIPOutputStream(ostream);
-
-    gzip.write(buffer.getBytes());
-    gzip.close();
+    try (GZIPOutputStream gzip = new GZIPOutputStream(new FileOutputStream(filename))) {
+      gzip.write(buffer.getBytes());
+    }
 
     return filename;
   }
@@ -79,48 +77,32 @@ public class Session
 
   private static boolean decodeBoolean( BufferedReader reader ) throws IOException {
     String line = decodeLine(reader);
-    try
-    {
+    try {
       return Boolean.parseBoolean(line);
+    } catch( Exception e ) {
+      return false;
     }
-    catch( Exception e )
-    {
-
-    }
-
-    return false;
   }
 
   private static int decodeInteger( BufferedReader reader ) throws IOException {
     String line = decodeLine(reader);
-    try
-    {
+    try {
       return Integer.parseInt(line);
+    } catch( Exception e ) {
+      return 0;
     }
-    catch( Exception e )
-    {
-
-    }
-
-    return 0;
   }
 
   public static Session load(String filename) throws Exception{
-    Session session;
     File file = new File( System.getStoragePath() + '/' + filename);
 
     if(file.exists() && file.length() > 0){
-      BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
-      String line;
-
-      // begin decoding procedure
-      try
-      {
-        line = reader.readLine();
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))))) {
+        String line = reader.readLine();
         if(line == null || !line.equals(System.SESSION_MAGIC))
           throw new Exception("Not a cSploit hijacker session file.");
 
-        session = new Session();
+        Session session = new Session();
 
         session.mUserName  = decodeLine( reader );
         session.mHTTPS     = decodeBoolean( reader );
@@ -135,16 +117,10 @@ public class Session
           }
         }
 
-        reader.close();
-      }
-      catch(Exception e){
-        reader.close();
-        throw e;
+        return session;
       }
     }
     else
       throw new Exception(filename + " does not exists or is empty.");
-
-    return session;
   }
 }

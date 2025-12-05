@@ -854,12 +854,9 @@ public class System {
 
     session = builder.toString();
 
-    FileOutputStream ostream = new FileOutputStream(filename);
-    GZIPOutputStream gzip = new GZIPOutputStream(ostream);
-
-    gzip.write(session.getBytes());
-
-    gzip.close();
+    try (GZIPOutputStream gzip = new GZIPOutputStream(new FileOutputStream(filename))) {
+      gzip.write(session.getBytes());
+    }
 
     mSessionName = sessionName;
 
@@ -888,12 +885,8 @@ public class System {
     File file = new File(mStoragePath + '/' + filename);
 
     if (file.exists() && file.length() > 0) {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))));
-      String line;
-
-      // begin decoding procedure
-      try {
-        line = reader.readLine();
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))))) {
+        String line = reader.readLine();
         if (line == null || !line.equals(SESSION_MAGIC))
           throw new Exception("Not a cSploit session file.");
 
@@ -909,11 +902,8 @@ public class System {
           }
         }
 
-        reader.close();
-
       } catch (Exception e) {
         reset();
-        reader.close();
         throw e;
       } finally {
         notifyTargetListChanged();

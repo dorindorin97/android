@@ -132,34 +132,30 @@ public class PacketForger extends Plugin implements OnClickListener {
 									.getCurrentTarget()
 									.getCommandLineRepresentation(),
 									port);
-							OutputStream writer = mSocket
-									.getOutputStream();
+							try (OutputStream writer = mSocket.getOutputStream()) {
+								writer.write(data.getBytes());
+								writer.flush();
 
-							writer.write(data.getBytes());
-							writer.flush();
+								if (waitResponse) {
+									try (BufferedReader reader = new BufferedReader(
+											new InputStreamReader(mSocket
+													.getInputStream()))) {
+										String line;
+										final StringBuilder responseBuilder = new StringBuilder();
+										while ((line = reader.readLine()) != null) {
+											responseBuilder.append(line).append("\n");
+										}
 
-							if (waitResponse) {
-								BufferedReader reader = new BufferedReader(
-										new InputStreamReader(mSocket
-												.getInputStream()));
-								String line;
-								final StringBuilder responseBuilder = new StringBuilder();
-								while ((line = reader.readLine()) != null) {
-									responseBuilder.append(line).append("\n");
+										final String text = responseBuilder.toString();
+										PacketForger.this
+												.runOnUiThread(new Runnable() {
+													public void run() {
+														mResponse.setText(text);
+													}
+												});
+									}
 								}
-
-								final String text = responseBuilder.toString();
-								PacketForger.this
-										.runOnUiThread(new Runnable() {
-											public void run() {
-												mResponse.setText(text);
-											}
-										});
-
-								reader.close();
 							}
-
-							writer.close();
 							mSocket.close();
 						} else if (protocol == UDP_PROTOCOL) {
 							mUdpSocket = new DatagramSocket();
