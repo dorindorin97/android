@@ -42,6 +42,7 @@ import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.FileEdit;
 import org.csploit.android.gui.dialogs.FatalDialog;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.tools.Ettercap.OnAccountListener;
 
 import java.io.BufferedWriter;
@@ -268,7 +269,7 @@ public class PasswordSniffer extends AppCompatActivity {
 			LoggingHelper.e(TAG, "Failed to stop password sniffer", e);
 		}
 
-		mSniffProgress.setVisibility(View.INVISIBLE);
+		AnimationHelper.fadeOut(mSniffProgress, 300, () -> mSniffProgress.setVisibility(View.INVISIBLE));
 		mRunning = false;
 		mSniffToggleButton.setChecked(false);
 	}
@@ -339,6 +340,7 @@ public class PasswordSniffer extends AppCompatActivity {
               Toast.LENGTH_LONG).show();
 
       mSniffProgress.setVisibility(View.VISIBLE);
+      AnimationHelper.fadeIn(mSniffProgress, 300);
       mRunning = true;
 
     } catch (ChildManager.ChildNotStartedException e) {

@@ -48,6 +48,7 @@ import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -94,6 +95,8 @@ public class PortScanner extends Plugin {
   private void displayParametersField() {
     mTextDoc.setVisibility(View.VISIBLE);
     mTextParameters.setVisibility(View.VISIBLE);
+    AnimationHelper.fadeIn(mTextDoc, 300);
+    AnimationHelper.fadeIn(mTextParameters, 300);
     mTextParameters.setText(mPreferences.getString(CUSTOM_PARAMETERS_TEXT, ""));
 
     mShowCustomParameters = true;
@@ -107,8 +110,8 @@ public class PortScanner extends Plugin {
     mShowCustomParameters = false;
     saveCustomParameters();
 
-    mTextDoc.setVisibility(View.GONE);
-    mTextParameters.setVisibility(View.GONE);
+    AnimationHelper.fadeOut(mTextDoc, 300, () -> mTextDoc.setVisibility(View.GONE));
+    AnimationHelper.fadeOut(mTextParameters, 300, () -> mTextParameters.setVisibility(View.GONE));
   }
 
   /**
@@ -128,7 +131,7 @@ public class PortScanner extends Plugin {
     }
     saveCustomParameters();
 
-    mScanProgress.setVisibility(View.INVISIBLE);
+    AnimationHelper.fadeOut(mScanProgress, 300, () -> mScanProgress.setVisibility(View.INVISIBLE));
     mRunning = false;
     mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
 

@@ -60,6 +60,7 @@ import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.gui.dialogs.RedirectionDialog;
 import org.csploit.android.gui.dialogs.RedirectionDialog.RedirectionDialogListener;
 import org.csploit.android.net.Target;
@@ -221,8 +222,10 @@ public class MITM extends Plugin
           mimeType = System.getImageMimeType(fileName);
           mSpoofSession = new SpoofSession(true, true, fileName, mimeType);
 
-          if(mCurrentActivity != null)
+          if(mCurrentActivity != null) {
             mCurrentActivity.setVisibility(View.VISIBLE);
+            AnimationHelper.fadeIn(mCurrentActivity, 300);
+          }
 
           mSpoofSession.start(new OnSessionReadyListener(){
             @Override
@@ -297,6 +300,7 @@ public class MITM extends Plugin
             js = "<script type="text/javascript">\n" + js + "\n</script>\n";
 
           mCurrentActivity.setVisibility(View.VISIBLE);
+          AnimationHelper.fadeIn(mCurrentActivity, 300);
 
           Toast.makeText(MITM.this, getString(R.string.tap_again), Toast.LENGTH_LONG).show();
 
@@ -410,7 +414,7 @@ public class MITM extends Plugin
       for(i = 0; i < rows; i++){
         if((row = mActionListView.getChildAt(i)) != null){
           holder = (ActionAdapter.ActionHolder) row.getTag();
-          holder.activity.setVisibility(View.INVISIBLE);
+          AnimationHelper.fadeOut(holder.activity, 300, () -> holder.activity.setVisibility(View.INVISIBLE));
         }
       }
     }

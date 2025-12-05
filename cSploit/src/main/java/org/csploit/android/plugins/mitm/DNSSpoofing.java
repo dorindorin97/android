@@ -34,6 +34,7 @@ import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ErrorDialog;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.tools.Ettercap;
 
 import java.io.BufferedReader;
@@ -115,10 +116,12 @@ public class DNSSpoofing extends AppCompatActivity {
 
 		try {
 			if (mBufferedWriter != null)
-			mBufferedWriter.close();
-	} catch (IOException e) {
-		LoggingHelper.e(TAG, "Failed to stop DNS spoofing", e);
-	}		mSniffProgress.setVisibility(View.INVISIBLE);
+				mBufferedWriter.close();
+		} catch (IOException e) {
+			LoggingHelper.e(TAG, "Failed to stop DNS spoofing", e);
+		}
+		
+		AnimationHelper.fadeOut(mSniffProgress, 300, () -> mSniffProgress.setVisibility(View.INVISIBLE));
 		mRunning = false;
 		mSniffToggleButton.setChecked(false);
 	}
@@ -221,6 +224,7 @@ public class DNSSpoofing extends AppCompatActivity {
 
 
       mSniffProgress.setVisibility(View.VISIBLE);
+      AnimationHelper.fadeIn(mSniffProgress, 300);
       mRunning = true;
 
     } catch (ChildManager.ChildNotStartedException e) {

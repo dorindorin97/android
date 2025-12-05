@@ -58,6 +58,7 @@ import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;
 import org.csploit.android.plugins.mitm.SpoofSession;
@@ -524,6 +525,7 @@ public class Hijacker extends AppCompatActivity {
             public void run() {
               mHijackToggleButton.setText(R.string.stop);
               mHijackProgress.setVisibility(View.VISIBLE);
+              AnimationHelper.fadeIn(mHijackProgress, 300);
               mRunning = true;
             }
           });
@@ -560,7 +562,7 @@ public class Hijacker extends AppCompatActivity {
 		if (System.getProxy() != null)
 			System.getProxy().setOnRequestListener(null);
 
-		mHijackProgress.setVisibility(View.INVISIBLE);
+		AnimationHelper.fadeOut(mHijackProgress, 300, () -> mHijackProgress.setVisibility(View.INVISIBLE));
 
 		mRunning = false;
 		mHijackToggleButton.setChecked(false);
