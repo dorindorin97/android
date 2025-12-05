@@ -59,6 +59,8 @@ public class ZyxelKeygen extends Keygen{
         .toUpperCase());
       return getResults();
     } catch(UnsupportedEncodingException e){
+      setErrorMessage("Error encoding password: " + e.getMessage());
+      android.util.Log.e("ZyxelKeygen", "Failed to encode password", e);
     }
     return null;
   }

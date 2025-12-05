@@ -77,6 +77,8 @@ public class PirelliKeygen extends Keygen{
     try{
       addPassword(getHexString(key));
     } catch(UnsupportedEncodingException e){
+      setErrorMessage("Error encoding password: " + e.getMessage());
+      android.util.Log.e("PirelliKeygen", "Failed to encode password", e);
     }
     return getResults();
   }

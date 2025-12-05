@@ -1,42 +1,36 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
-apply plugin:  'com.android.application'
+apply plugin: 'com.android.application'
 
 dependencies {
+    // AndroidX dependencies - updated versions
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation 'androidx.multidex:multidex:2.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'org.apache.commons:commons-compress:1.18'
-    implementation 'commons-net:commons-net:3.6'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    
+    // Apache Commons - updated versions with security fixes
+    implementation 'org.apache.commons:commons-compress:1.24.0'
+    implementation 'commons-net:commons-net:3.9.0'
+    
+    // Other dependencies - updated versions
     implementation 'com.github.zafarkhaja:java-semver:0.9.0'
     implementation 'org.unbescape:unbescape:1.1.6.RELEASE'
     implementation 'org.msgpack:msgpack:0.6.12'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
-    implementation 'org.tukaani:xz:1.8'
-    implementation 'ch.acra:acra-http:5.2.0'
-    implementation 'ch.acra:acra-notification:5.2.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'org.tukaani:xz:1.9'
+    
+    // ACRA crash reporting - updated
+    implementation 'ch.acra:acra-http:5.11.3'
+    implementation 'ch.acra:acra-notification:5.11.3'
+    
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.2'
+    namespace 'org.csploit.android'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,10 +43,10 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 4
-        versionName "1.7.0-unstable"
+        minSdkVersion 21  // Updated minimum SDK for better security and features
+        targetSdkVersion 33  // Modern target SDK
+        versionCode 5
+        versionName "1.7.1-stable"
         if(System.getenv("NIGHTLY_BUILD")) {
             versionName += "+" + System.getenv("NIGHTLY_BUILD_COMMIT").substring(0, 7)
         }
@@ -94,8 +88,11 @@ android {
             if (System.getenv("KEYSTORE_FILE") != null) {
                 signingConfig signingConfigs.release
             }
+            // Enable code optimization and obfuscation for release builds
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             multiDexEnabled true
-            return true
         }
     }
 }

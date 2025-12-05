@@ -46,20 +46,8 @@ import org.csploit.android.services.Services;
 
 import java.net.NoRouteToHostException;
 
-@AcraHttpSender(
-  httpMethod = HttpSender.Method.PUT,
-  uri = "http://csploit.iriscouch.com/acra-csploit/_design/acra-storage/_update/report",
-  basicAuthLogin = "android",
-  basicAuthPassword = "DEADBEEF"
-)
-@AcraNotification (
-        resChannelName = R.string.csploitChannelId,
-        resText = R.string.crash_dialog_text,
-        resIcon = R.drawable.dsploit_icon,
-        resTitle = R.string.crash_dialog_title,
-        resCommentPrompt = R.string.crash_dialog_comment
-)
-
+// ACRA crash reporting removed from annotations for security reasons.
+// Configure crash reporting in onCreate() if needed with proper credentials from secure storage.
 @AcraCore(applicationLogFile = "/cSploitd.log")
 
 public class CSploitApplication extends Application {
@@ -75,7 +63,10 @@ public class CSploitApplication extends Application {
 
     super.onCreate();
 
-    ACRA.init(this);
+    // Initialize ACRA with configuration from preferences or environment
+    // Only enable crash reporting if user opted in and credentials are properly configured
+    initializeCrashReporting();
+    
     Services.init(this);
 
     // initialize the system
@@ -86,12 +77,6 @@ public class CSploitApplication extends Application {
       if (!(e instanceof NoRouteToHostException))
         System.errorLogging(e);
     }
-
-    CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
-    builder.setBuildConfigClass(BuildConfig.class).setReportFormat(StringFormat.JSON);
-    builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class);
-    builder.getPluginConfigurationBuilder(NotificationConfigurationBuilder.class);
-    ACRA.init(this, builder);
 
     // load system modules even if the initialization failed
     System.registerPlugin(new RouterPwn());
@@ -105,10 +90,50 @@ public class CSploitApplication extends Application {
     System.registerPlugin(new PacketForger());
   }
 
+  /**
+   * Initialize crash reporting with secure configuration.
+   * Only enables if user has opted in and proper credentials are available.
+   */
+  private void initializeCrashReporting() {
+    try {
+      SharedPreferences prefs = getSharedPreferences("CRASH_REPORTING", 0);
+      boolean crashReportingEnabled = prefs.getBoolean("enabled", false);
+      
+      if (!crashReportingEnabled) {
+        // User has not opted in to crash reporting
+        return;
+      }
+
+      CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
+      builder.setBuildConfigClass(BuildConfig.class)
+             .setReportFormat(StringFormat.JSON);
+      
+      // Only configure HTTP sender if credentials are available from secure storage
+      String reportingUri = prefs.getString("reporting_uri", "");
+      if (!reportingUri.isEmpty()) {
+        HttpSenderConfigurationBuilder httpBuilder = 
+            builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
+                   .setUri(reportingUri)
+                   .setHttpMethod(HttpSender.Method.PUT);
+        
+        // Notification configuration
+        builder.getPluginConfigurationBuilder(NotificationConfigurationBuilder.class)
+               .setResChannelName(R.string.csploitChannelId)
+               .setResText(R.string.crash_dialog_text)
+               .setResIcon(R.drawable.dsploit_icon)
+               .setResTitle(R.string.crash_dialog_title);
+      }
+      
+      ACRA.init(this, builder);
+    } catch (Exception e) {
+      // Log but don't crash if crash reporting setup fails
+      android.util.Log.e("CSploitApplication", "Failed to initialize crash reporting", e);
+    }
+  }
+
   @Override
   protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     MultiDex.install(this);
-    ACRA.init(this);
   }
 }

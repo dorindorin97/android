@@ -75,7 +75,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-//TODO: completely rewrite this class, it's monstrous
+/**
+ * MITM (Man-in-the-Middle) Plugin
+ * 
+ * This class handles MITM attack functionalities including traffic interception,
+ * password sniffing, session hijacking, and traffic manipulation.
+ * 
+ * Note: This class is large and could benefit from further refactoring by:
+ * - Extracting action handlers into separate classes
+ * - Moving filter logic to dedicated filter manager
+ * - Separating UI concerns from business logic
+ * - Creating a proper service layer for network operations
+ */
 public class MITM extends Plugin
 {
   private static final int SELECT_PICTURE = 1010;
