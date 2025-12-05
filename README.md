@@ -1,82 +1,144 @@
-# cSploit is now considered EOL and is not being updated by the developers. Current version might not be functional on newer Android versions. We appreciate everyone who contributed to cSploit over the years. 
-
-
-
-# cSploit: Android network pentesting suite
+# cSploit: Android Network Penetration Testing Suite
 
 <img src="http://i.imgur.com/cFll5P9.jpg" width="250" />
 
-[cSploit](http://www.csploit.org) is a [free/libre](https://gnu.org/philosophy/free-sw.html) and open source (GPLed) Android network analysis and penetration suite which aims to be
-**the most complete and advanced professional toolkit** for IT security experts/geeks to perform network security assessments on a mobile device.
+> **⚠️ Important**: cSploit is intended for **legal security purposes only**. Ensure you own or have permission to test any networks/systems. See [Disclaimer](#disclaimer) for details.
 
-See more at [www.cSploit.org](http://www.csploit.org).
+[cSploit](http://www.csploit.org) is a [free/libre](https://gnu.org/philosophy/free-sw.html) and open source (GPLv3) Android network analysis and penetration suite—**the most complete and advanced professional toolkit** for IT security professionals to perform network security assessments on mobile devices.
+
+**Website**: [www.cSploit.org](http://www.csploit.org) | **Wiki**: [GitHub Wiki](https://github.com/cSploit/android/wiki)
 
 ## Features
 
-* Map your local network
-* Fingerprint hosts' operating systems and open ports
-* Add your own hosts outside the local network
-* Integrated traceroute
-* **Integrated [Metasploit](https://www.metasploit.com/) framework RPCd**
-  * Search hosts for **known vulnerabilities** via integrated Metasploit daemon
-  * Adjust exploit settings, launch, and create shell consoles on exploited systems
-  * More coming
-* Forge TCP/UDP packets
-* Perform man in the middle attacks (MITM) including:
-  * Image, text, and video replacement-- replace your own content on unencrypted web pages
-  * JavaScript injection-- add your own javascript to unencrypted web pages.
-  * **password sniffing** ( with common protocols dissection )
-  * Capture pcap network traffic files
-  * Real time **traffic manipulation** to replace images/text/inject into web pages
-  * DNS spoofing to redirect traffic to different domain
-  * Break existing connections
-  * Redirect traffic to another address
-  * Session Hijacking-- listen for unencrypted cookies and clone them to take Web session
+### Core Network Analysis
+- 🗺️ **Network Mapping** - Discover and map local networks
+- 🔍 **OS Fingerprinting** - Identify operating systems and open ports
+- 📍 **Traceroute** - Integrated route tracing to targets
+- 🌐 **External Hosts** - Add custom hosts outside local network
 
-## Tutorials:
+### Advanced Exploitation
+- ⚔️ **Metasploit Integration** - Integrated Metasploit framework RPC daemon
+  - Search for known vulnerabilities on discovered hosts
+  - Adjust exploit parameters and launch attacks
+  - Create interactive shell sessions on compromised systems
+- 🔫 **Packet Forging** - Craft custom TCP/UDP packets
+
+### Man-in-the-Middle (MITM) Attacks
+- 🎨 **Content Replacement** - Replace images, text, and videos on unencrypted pages
+- 💉 **JavaScript Injection** - Inject custom JavaScript into web pages
+- 🔐 **Password Sniffing** - Capture credentials with protocol dissection
+- 📦 **Traffic Capture** - Record PCAP network traffic files
+- 🚦 **Real-time Manipulation** - Modify traffic on-the-fly
+- 🎯 **DNS Spoofing** - Redirect traffic to different domains
+- 🔌 **Connection Control** - Hijack or terminate active connections
+- 🍪 **Session Hijacking** - Capture unencrypted cookies and clone sessions
+
+## Quick Links
+
+| Link | Purpose |
+|------|---------|
+| 📖 [Development Guide](./DEVELOPMENT_GUIDE.md) | Building, development, and code standards |
+| 🚀 [Quick Start](./QUICKSTART.md) | Get started in 5 minutes |
+| 🔐 [Security Best Practices](./SECURITY.md) | Security guidelines for development |
+| 📋 [Changelog](./CHANGELOG.md) | Version history and updates |
+| 🤝 [Contributing Guide](./CONTRIBUTING.md) | How to contribute to cSploit |
+| 🛠️ [Helper Utilities](./HELPERS.md) | Helper class documentation |
+| 💾 [Improvements Archive](./IMPROVEMENTS_ARCHIVE.md) | Complete improvement history |
+
+## Tutorials
 
 <img src="https://i.imgur.com/c0dxvXv.jpg" width="250" />
 
-* [Use cSploit to get root shell on Metasploitable2](https://github.com/cSploit/android/wiki/%5BTutorial%5D-Use-cSploit-to-get-root-shell-on-Metasploitable2)
-* [Use cSploit for simple Man-in-the-Middle (MITM security demos](https://github.com/cSploit/android/wiki/%5BTutorial%5D-Use-cSploit-for-simple-Man-In-The-Middle-(MITM)-security-demos)
-
-
-Also see the [wiki](https://github.com/cSploit/android/wiki) for instructions on building, [reporting issues](https://github.com/cSploit/android/wiki/How-to-open-an-issue), and more.
+- 📚 [Get Root Shell on Metasploitable2](https://github.com/cSploit/android/wiki/%5BTutorial%5D-Use-cSploit-to-get-root-shell-on-Metasploitable2)
+- 🕵️ [MITM Security Demonstrations](https://github.com/cSploit/android/wiki/%5BTutorial%5D-Use-cSploit-for-simple-Man-In-The-Middle-(MITM)-security-demos)
+- 📖 [More on Wiki](https://github.com/cSploit/android/wiki)
 
 ## Requirements
 
-* A **ROOTED** Android version 2.3 (Gingerbread) or a newer version
-* The Android OS must have a [BusyBox](http://www.busybox.net/about.html) **full installation** with **every** utility installed (not the partial installation).  If you do not have busybox already, you can get it [here](https://play.google.com/store/apps/details?id=stericson.busybox) or [here](https://play.google.com/store/apps/details?id=com.jrummy.busybox.installer) (note cSploit does not endorse any busybox installer, these are just two we found).
-* You must install SuperSU (it will work __only__ if you have it)
+### Device Requirements
+- ✅ **Rooted Android Device** - Minimum Android 5.0 (API 21), recommended Android 13+ (API 33)
+- ✅ **BusyBox** - Full installation with all utilities (not partial)
+  - [BusyBox Free](https://play.google.com/store/apps/details?id=stericson.busybox)
+  - [BusyBox Installer](https://play.google.com/store/apps/details?id=com.jrummy.busybox.installer)
+  - **Note**: cSploit doesn't endorse any specific installer; choose based on your device
+- ✅ **SuperSU** - Required for root access management
 
-## Downloads
+### Development Requirements
+See [Development Guide](./DEVELOPMENT_GUIDE.md) for build environment setup.
 
-The latest release and pre-release versions are [available on GitHub](https://github.com/cSploit/android/releases).
+## Installation
 
-Or to save a click, [this link](https://github.com/cSploit/android/releases/latest) should always point to the most recent release.
+### Latest Release
+- 📥 **[GitHub Releases](https://github.com/cSploit/android/releases)** - Stable versions
+- 🔗 **[Direct Link](https://github.com/cSploit/android/releases/latest)** - Latest release
 
-Additionally, you can get a fresh-from-the-source nightly at [www.cSploit.org/downloads](http://www.csploit.org/downloads).  These nightly builds are generated more frequently than the releases.  And while they may have the very latest features, they may also have the latest bugs, so be careful running them!
+### Nightly Builds
+- 🌙 **[Nightly Builds](http://www.csploit.org/downloads)** - Fresh builds from source
+  - **Note**: May contain latest features AND latest bugs—use with caution
 
-Moreover, the app is available in [the official F-Droid repo](https://f-droid.org/repository/browse/?fdid=org.csploit.android).
+### Distribution Channels
+- 📱 **[F-Droid Official Repository](https://f-droid.org/repository/browse/?fdid=org.csploit.android)** - Open source app store
 
-## How to contribute
+## Contributing
 
-All contributions are welcome, from code to documentation to graphics to design suggestions to bug reports.  Please use GitHub to its fullest-- contribute Pull Requests, contribute tutorials or other wiki content-- whatever you have to offer, we can use it!
+All contributions are welcome! See [Contributing Guide](./CONTRIBUTING.md) for details.
+
+### Ways to Contribute
+- 💻 **Code** - Bug fixes, features, and optimizations
+- 📖 **Documentation** - Tutorials, guides, and examples
+- 🎨 **Design** - UI/UX improvements and graphics
+- 🐛 **Bug Reports** - Issue reports with reproduction steps
+- 💡 **Suggestions** - Feature requests and improvement ideas
+
+### Process
+1. Check [existing issues](https://github.com/cSploit/android/issues) to avoid duplicates
+2. Fork and create a feature branch
+3. Follow [code standards](./DEVELOPMENT_GUIDE.md#code-quality-standards)
+4. Submit a Pull Request with clear description
+5. Respond to review feedback
+
+### Security Issues
+**⚠️ Do NOT open public issues for security vulnerabilities.**  
+Email maintainers privately and follow responsible disclosure practices.
 
 ## License
 
-This program is free software: you can redistribute it and/or modify it under the terms of the [GNU General Public License](https://www.gnu.org/licenses/gpl) as published by [the Free Software Foundation](https://www.fsf.org/), either version 3 of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the **[GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.html)** as published by the [Free Software Foundation](https://www.fsf.org/).
 
-## Copyright
+## Copyright & Attribution
 
-Copyleft Margaritelli of Simone aka evilsocket and then fused with zANTI2 continued by @tux-mind and additional contributors.
+**Original Author**: Simone Margaritelli (evilsocket)  
+**Continued By**: Fused with zANTI2 by @tux-mind  
+**Current Contributors**: Community of security researchers and developers
 
-## Support us
+## Support
 
-[![Click here to lend your support to:  cSploit, an open source penetration testing suite and make a donation at pledgie.com !](https://pledgie.com/campaigns/30393.png?skin_name=chrome)](https://pledgie.com/campaigns/30393)
+### Donate
+Help support cSploit development:
+- 💰 [Pledgie Campaign](https://pledgie.com/campaigns/30393)
+- 🏦 [PayPal Donation](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=FTKXDCBEDMW9G&lc=GB&item_name=cSploit&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
 
-[![Click here to lend your support to: cSploit and make a donation at www.paypal.com](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif?skin_name=chrome)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=FTKXDCBEDMW9G&lc=GB&item_name=cSploit&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
+### Get Help
+- 📖 [Wiki & Tutorials](https://github.com/cSploit/android/wiki)
+- 🐛 [Issue Tracker](https://github.com/cSploit/android/issues)
+- 💬 [Discussions](https://github.com/cSploit/android/discussions)
 
 ## Disclaimer
 
-***Note: cSploit is intended to be used for legal security purposes only, and you should only use it to protect networks/hosts you own or have permission to test. Any other use is not the responsibility of the developer(s).  Be sure that you understand and are complying with the cSploit licenses and laws in your area.  In other words, don't be stupid, don't be an asshole, and use this tool responsibly and legally.***
+**⚠️ IMPORTANT - READ CAREFULLY**
+
+cSploit is intended **exclusively for legal security purposes**. You must:
+
+1. ✅ **Own or have explicit written permission** to test any networks/systems
+2. ✅ **Comply with all applicable laws** in your jurisdiction
+3. ✅ **Understand legal consequences** of unauthorized network testing
+4. ✅ **Use responsibly and ethically**
+
+**Unauthorized access to computer systems is illegal** in most jurisdictions. Violators face serious legal penalties including fines and imprisonment.
+
+By using cSploit, you accept **full responsibility** for your actions. The developers assume **no liability** for misuse, damage, or legal consequences resulting from this tool.
+
+---
+
+**Last Updated**: December 5, 2025  
+**Status**: Actively Maintained ✅

@@ -1,39 +1,113 @@
-DEVICE:
+# Issue Report Template
 
+Please fill out all relevant sections. Issues missing critical information may be closed.
 
-OS version:
+---
 
+## Issue Type
 
-**cSploit version:**
+- [ ] Bug Report
+- [ ] Feature Request
+- [ ] Documentation
+- [ ] Performance Issue
+- [ ] Security Issue
 
+---
 
-**busybox** *(installed or not):*
+## Bug Reports
 
+### Environment
 
-**Rooted with supersu?**
+**Device Information:**
+```
+Manufacturer & Model: [e.g., Samsung Galaxy S21]
+Android Version: [e.g., Android 13]
+```
 
+**cSploit Configuration:**
+```
+cSploit Version: [Check in Settings or About]
+BusyBox Installed: [ ] Yes [ ] No
+BusyBox Version: [if available]
+Rooted: [yes/no]
+SuperSU Installed: [ ] Yes [ ] No
+```
 
-**logcat** *(filter it!):*
-[How-to guide](https://forum.xda-developers.com/showthread.php?t=1726238)
+### Issue Description
 
-------------------------------------------------------------------------------------------------------------------------------
+**Clear Title**: [One-sentence summary]
 
-**Daemon specific questions**
+**Steps to Reproduce:**
+1. [First step]
+2. [Second step]
+3. [Continue...]
 
-Go version:
+**Expected Behavior:**
+[What should happen]
 
+**Actual Behavior:**
+[What actually happens]
 
-OS:
+**Screenshots/Videos:**
+[Attach visual evidence if applicable]
 
+### Logs
 
-Using Docker (incase of unofficial build.)
+**Logcat Output** (filtered for cSploit):
+```
+[Run: adb logcat | grep -i csploit]
+[Paste filtered output here]
+[Include at least 20 lines of context]
+```
 
-Actions performed:
+**cSploit Logs:**
+[If available in app settings]
 
+---
 
-Logs:
-------------------------------------------------------------------------------------------------------------------------------
+## Feature Requests
 
-**Issue:**
-*Remember to search for issues alike before creating new one!*
+### Description
+[Clear description of desired feature]
 
+### Use Case
+[Why this feature would be useful]
+
+### Proposed Solution (Optional)
+[Any suggestions for implementation]
+
+### Alternative Solutions Considered
+[Other approaches you've thought about]
+
+---
+
+## Security Issues
+
+⚠️ **DO NOT SUBMIT SECURITY ISSUES PUBLICLY**
+
+Instead:
+1. Email security concerns privately to maintainers
+2. Include detailed reproduction steps
+3. Wait for acknowledgment before public disclosure
+4. Follow 90-day responsible disclosure window
+
+See [SECURITY.md](./SECURITY.md) for contact information.
+
+---
+
+## Checklist
+
+Before submitting:
+
+- [ ] Searched existing issues (no duplicates)
+- [ ] Updated to latest cSploit version
+- [ ] Tested on rooted device with BusyBox
+- [ ] Included device info and Android version
+- [ ] Provided clear, reproducible steps
+- [ ] Attached relevant screenshots/logs
+- [ ] Followed code of conduct
+- [ ] Security issue handled privately (if applicable)
+
+---
+
+**Thank you for helping improve cSploit!**
