@@ -18,8 +18,6 @@
  */
 package org.csploit.android.net.http.proxy;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class Proxy implements Runnable{
   private static final String TAG = "HTTP.PROXY";
@@ -82,7 +81,7 @@ public class Proxy implements Runnable{
   }
 
   public void stop(){
-    Log.d(TAG, "Stopping proxy ...");
+    LoggingHelper.d(TAG, "Stopping proxy ...");
 
     try{
       if(mSocket != null)
@@ -101,7 +100,7 @@ public class Proxy implements Runnable{
       if(mSocket == null)
         mSocket = new ServerSocket(mPort, BACKLOG, mAddress);
 
-      Log.d(TAG, "Proxy started on " + mAddress + ":" + mPort);
+      LoggingHelper.d(TAG, "Proxy started on " + mAddress + ":" + mPort);
 
       mRunning = true;
 
@@ -119,7 +118,7 @@ public class Proxy implements Runnable{
         }
       }
 
-      Log.d(TAG, "Proxy stopped.");
+      LoggingHelper.d(TAG, "Proxy stopped.");
     } catch(IOException e){
       LoggingHelper.e(TAG, "Proxy IO error", e);
     }
