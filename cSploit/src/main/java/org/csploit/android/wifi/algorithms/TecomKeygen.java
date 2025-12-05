@@ -24,14 +24,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.csploit.android.wifi.Keygen;
+import org.csploit.android.helpers.LoggingHelper;
 
 /*
- * This is the algorithm to generate the WPA passphrase 
+ * This is the algorithm to generate the WPA passphrase
  * for the Hitachi (TECOM) AH-4021 and Hitachi (TECOM) AH-4222.
  * The key is the 26 first characters from the SSID SHA1 hash.
  *  Link : http://rafale.org/~mattoufoutu/ebooks/Rafale-Mag/Rafale12/Rafale12.08.HTML
  */
 public class TecomKeygen extends Keygen{
+  private static final String TAG = "TecomKeygen";
 
   private MessageDigest md;
 
@@ -53,7 +55,7 @@ public class TecomKeygen extends Keygen{
     try{
       addPassword(getHexString(hash).substring(0, 26));
     } catch(UnsupportedEncodingException e){
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "Unsupported encoding when converting hash to string", e);
     }
     return getResults();
   }

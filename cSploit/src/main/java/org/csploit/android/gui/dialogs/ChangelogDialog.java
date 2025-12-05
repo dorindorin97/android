@@ -19,17 +19,18 @@
 package org.csploit.android.gui.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
 import androidx.core.text.HtmlCompat;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.csploit.android.R;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.GitHubParser;
 import org.json.JSONException;
 
@@ -37,9 +38,10 @@ import java.io.IOException;
 
 public class ChangelogDialog extends AlertDialog
 {
+  private static final String TAG = "ChangelogDialog";
   private final String ERROR_HTML = getContext().getString(R.string.something_went_wrong_changelog);
 
-  private ProgressDialog mLoader = null;
+  private AlertDialog mLoader = null;
 
   @SuppressLint("SetJavaScriptEnabled")
   public ChangelogDialog(final AppCompatActivity activity){
@@ -52,8 +54,15 @@ public class ChangelogDialog extends AlertDialog
 
     this.setView(view);
 
-    if(mLoader == null)
-      mLoader = ProgressDialog.show(activity, "", getContext().getString(R.string.loading_changelog));
+    if(mLoader == null) {
+      AlertDialog.Builder loaderBuilder = new AlertDialog.Builder(activity);
+      loaderBuilder.setTitle("")
+                   .setMessage(getContext().getString(R.string.loading_changelog))
+                   .setCancelable(false)
+                   .setView(new ProgressBar(activity));
+      mLoader = loaderBuilder.create();
+      mLoader.show();
+    }
 
     try {
       view.setText(GitHubParser.getcSploitRepo().getReleaseBody(System.getAppVersionName()));
@@ -62,7 +71,7 @@ public class ChangelogDialog extends AlertDialog
       LoggingHelper.e(TAG, "Failed to load changelog", e);
     } catch (IOException e) {
       view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
-      Logger.error(e.getMessage());
+      LoggingHelper.e(TAG, "Failed to load changelog", e);
     }
 
     mLoader.dismiss();

@@ -36,11 +36,13 @@ import javax.net.ssl.SSLSocketFactory;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;
 
 public class ProxyThread extends Thread
 {
+  private static final String TAG = "ProxyThread";
   private final static int MAX_REQUEST_SIZE = 8192;
   private final static int HTTP_SERVER_PORT = 80;
   private final static int HTTPS_SERVER_PORT = 443;
@@ -236,7 +238,7 @@ public class ProxyThread extends Thread
     }
     catch(IOException e){
       // Socket close failures during shutdown are non-critical
-      android.util.Log.d("ProxyThread", "Stream close failed: " + e.getMessage());
+      LoggingHelper.d(TAG, "Stream close failed: " + e.getMessage());
     }
   }
 }

@@ -55,7 +55,15 @@ public class Ettercap extends Tool
   }
 
 
-  // TODO: ettercap has only implemented the onAccount() event
+  // TODO: TOOL LIMITATION - Ettercap has only implemented the onAccount() event
+  // PROBLEM: OnDNSSpoofedReceiver abstract class defines an onAccount() abstract method,
+  // but ettercap DNS spoofing mode only generates Account events for captured credentials.
+  // Other events (process info, network events, etc.) from the MITM attack are not
+  // currently being sent by the ettercap tool itself.
+  // CURRENT WORKAROUND: Handler only processes Account, Message, Ready, and Newline events.
+  // Other events are ignored/logged as "unknown".
+  // IMPACT: Low - Ettercap DNS spoofing mode is limited to credential capture anyway.
+  // NOTE: This reflects a limitation in ettercap itself, not the wrapper implementation.
     public static abstract class OnDNSSpoofedReceiver extends Child.EventReceiver {
       @Override
       public void onEvent(Event e) {

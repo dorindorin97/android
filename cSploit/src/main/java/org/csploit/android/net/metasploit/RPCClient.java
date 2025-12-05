@@ -26,6 +26,7 @@ import org.msgpack.unpacker.Converter;
 
 import org.csploit.android.core.System;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Metasploit RPC Client for remote interaction with Metasploit Framework.
@@ -39,6 +40,7 @@ import org.csploit.android.core.Logger;
 @SuppressWarnings("rawtypes")
 public class RPCClient
 {
+  private static final String TAG = "RPCClient";
   private URL u;
   private URLConnection huc;
   private String token;
@@ -215,8 +217,16 @@ public class RPCClient
           if("shell".equals(type)) {
             s = new ShellSession(id,openSessions.get(id));
           } else if("meterpreter".equals(type)) {
-            // TODO: Create MeterpreterSession instead of generic Session
-            // Requires implementing proper meterpreter session handling
+            // TODO: ENHANCEMENT - Create MeterpreterSession instead of generic Session
+            // PROBLEM: Meterpreter sessions are being treated as generic Session objects,
+            // losing meterpreter-specific functionality like command execution, file ops, etc.
+            // CURRENT WORKAROUND: Using generic Session for all non-shell session types.
+            // SOLUTION: Implement MeterpreterSession class with:
+            // - Proper command execution methods (run, execute, background, etc.)
+            // - File transfer operations (upload, download)
+            // - Process management (ps, kill, getpid, etc.)
+            // - Registry manipulation (for Windows targets)
+            // IMPACT: Medium - Reduced meterpreter functionality in this tool
             s = new Session(id,openSessions.get(id));
           } else {
             s = new Session(id,openSessions.get(id));
@@ -227,9 +237,9 @@ public class RPCClient
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "IOException while updating sessions", e);
     } catch (MSFException e) {
-      e.printStackTrace();
+      LoggingHelper.e(TAG, "MSFException while updating sessions", e);
     }
   }
 
@@ -285,7 +295,17 @@ public class RPCClient
           }
           catch ( MessageTypeException mte)
           {
-            //FIXME: https://github.com/muga/msgpack-java-0.7/issues/2
+            // FIXME: LIBRARY ISSUE - msgpack-java-0.7 exception handling
+            // Issue: https://github.com/muga/msgpack-java-0.7/issues/2
+            // PROBLEM: MessageTypeException is thrown during MAP deserialization when
+            // encountering unexpected msgpack types. The exception is silently caught and
+            // ignored, potentially losing data or causing silent failures.
+            // ROOT CAUSE: msgpack-java-0.7 has incomplete error handling for complex types.
+            // CURRENT WORKAROUND: Catch and silently ignore, partial map data is used.
+            // IMPACT: Medium - Could cause incomplete or corrupted MSF RPC responses
+            // MITIGATION: Should log warning and potentially validate map completeness
+            // STATUS: Not fixed in library; consider upgrading to newer msgpack-java version
+            LoggingHelper.w(TAG, "MessageTypeException during MAP deserialization", mte);
           }
           finally
           {
@@ -340,7 +360,17 @@ public class RPCClient
           }
           catch ( MessageTypeException mte)
           {
-            //FIXME: https://github.com/muga/msgpack-java-0.7/issues/2
+            // FIXME: LIBRARY ISSUE - msgpack-java-0.7 exception handling (ARRAY variant)
+            // Issue: https://github.com/muga/msgpack-java-0.7/issues/2
+            // PROBLEM: MessageTypeException is thrown during ARRAY deserialization when
+            // encountering unexpected msgpack types. The exception is silently caught and
+            // ignored, potentially losing data or causing silent failures.
+            // ROOT CAUSE: msgpack-java-0.7 has incomplete error handling for complex types.
+            // CURRENT WORKAROUND: Catch and silently ignore, partial array data is used.
+            // IMPACT: Medium - Could cause incomplete or corrupted MSF RPC array responses
+            // MITIGATION: Should log warning and potentially validate array completeness
+            // STATUS: Not fixed in library; consider upgrading to newer msgpack-java version
+            LoggingHelper.w(TAG, "MessageTypeException during ARRAY deserialization", mte);
           }
           finally
           {
@@ -362,6 +392,11 @@ public class RPCClient
           break;
         case RAW:
           out = conv.readString();
+          break;
+        default:
+          LoggingHelper.w(TAG, "Unexpected MessagePack type in unMsg: " + src.getType());
+          out = null;
+          break;
       }
     }
     catch ( IOException ioe)

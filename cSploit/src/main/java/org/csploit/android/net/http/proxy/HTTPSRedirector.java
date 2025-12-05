@@ -49,6 +49,7 @@ import javax.net.ssl.SSLSocket;
 
 public class HTTPSRedirector implements Runnable
 {
+  private static final String TAG = "HTTPSRedirector";
   private static final int BACKLOG = 255;
 
   private static final String KEYSTORE_FILE = "csploit.p12";
@@ -91,7 +92,7 @@ public class HTTPSRedirector implements Runnable
     }
     catch(IOException e){
       // Socket close failures are typically non-critical in shutdown context
-      android.util.Log.d("HTTPSRedirector", "Socket close failed: " + e.getMessage());
+      LoggingHelper.d(TAG, "Socket close failed: " + e.getMessage());
     }
 
     mRunning = false;

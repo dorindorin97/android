@@ -16,8 +16,22 @@ public class Search {
 
   public interface Receiver<T> extends RemoteReader.EndReceiver {
     void onItemFound(T item);
-    /* TODO make (target|exploit|reference) extends Observable class.
-     * so we can drop this method and UI get updated when we call notify() on updated objects.
+    /* TODO: ARCHITECTURAL IMPROVEMENT - Make (Target|Exploit|Reference) extend Observable.
+     * PROBLEM: Current implementation requires manual notification of item changes via
+     * separate onFoundItemChanged() callback. If items are updated after initial discovery,
+     * UI components are not automatically notified.
+     * CURRENT WORKAROUND: Code must explicitly call onFoundItemChanged() when items change.
+     * SOLUTION: Implement Observer pattern where:
+     * - Target, Exploit, and Reference extend Observable
+     * - UI components register as Observers on specific items
+     * - When item data changes, automatic notification is triggered
+     * - No need for explicit onFoundItemChanged() callback
+     * BENEFITS:
+     * - Automatic UI updates when items change
+     * - Cleaner API; items manage their own change notifications
+     * - Easier to add multiple observers to same item
+     * IMPACT: Medium - Architecture improvement; requires refactoring model classes
+     * NOTE: Could use Android's LiveData/MutableLiveData for modern implementation
      */
     void onFoundItemChanged(T item);
   }

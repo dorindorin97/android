@@ -32,8 +32,10 @@ import java.util.zip.ZipInputStream;
 import org.csploit.android.R;
 import org.csploit.android.core.System;
 import org.csploit.android.wifi.Keygen;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class ThomsonKeygen extends Keygen{
+  private static final String TAG = "ThomsonKeygen";
   final private byte[] cp = new byte[12];
   private byte[] entry;
   final private byte[] table = new byte[1282];
@@ -251,7 +253,7 @@ public class ThomsonKeygen extends Keygen{
           addPassword(getHexString(hash).substring(0, 10)
             .toUpperCase());
         } catch(UnsupportedEncodingException e){
-          e.printStackTrace();
+          LoggingHelper.e(TAG, "Unsupported encoding in forthDic", e);
         }
       }
     }
@@ -295,7 +297,7 @@ public class ThomsonKeygen extends Keygen{
         addPassword(getHexString(hash).substring(0, 10)
           .toUpperCase());
       } catch(UnsupportedEncodingException e){
-        e.printStackTrace();
+        LoggingHelper.e(TAG, "Unsupported encoding in secondDic", e);
       }
     }
   }
@@ -335,7 +337,7 @@ public class ThomsonKeygen extends Keygen{
         addPassword(getHexString(hash).substring(0, 10)
           .toUpperCase());
       } catch(UnsupportedEncodingException e){
-        e.printStackTrace();
+        LoggingHelper.e(TAG, "Unsupported encoding in firstDic", e);
       }
     }
   }

@@ -33,7 +33,12 @@ import org.csploit.android.core.System;
 import org.csploit.android.helpers.NetworkHelper;
 
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.NoRouteToHostException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -337,7 +342,14 @@ public class Network implements Comparable<Network> {
   @Nullable
   public byte[] getLocalHardware() {
     try {
-      return mInterface.getHardwareAddress(); //FIXME: #831
+      // FIXME: #831 - Hardware address retrieval unreliable on some Android versions
+      // PROBLEM: NetworkInterface.getHardwareAddress() throws SocketException or returns
+      // null on certain Android devices/versions, particularly on some proprietary
+      // implementations with restricted network interface access.
+      // CURRENT WORKAROUND: Caught exception returns null, caller must handle gracefully
+      // ALTERNATIVE: Use WifiManager.getConnectionInfo().getMacAddress() but deprecated
+      // IMPACT: Low - Non-critical feature; impacts network identification but not core functionality
+      return mInterface.getHardwareAddress();
     } catch (SocketException e) {
       LoggingHelper.e(TAG, "Failed to get local hardware address", e);
     }

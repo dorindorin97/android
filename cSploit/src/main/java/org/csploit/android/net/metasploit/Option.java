@@ -58,14 +58,25 @@ public class Option {
     if(mType == types.ENUM) {
       if(!mAttributes.containsKey("enums"))
         throw new IllegalArgumentException("missing enums field");
-      //TODO: search if exists not string enums
+      // TODO: ENHANCEMENT - Search if exists non-string enums
+      // PROBLEM: Assumes all enum values are strings, but Metasploit may send
+      // enum options with integer values (for bitmask options, exit codes, etc.)
+      // CURRENT WORKAROUND: Cast all enums to String, throws exception for non-ArrayList
+      // SOLUTION: Support both String and Integer enum types:
+      // - Check type of enum values at runtime
+      // - Convert integers to string representation for display
+      // - Handle validation with type-aware comparison
+      // IMPACT: Low - Only affects advanced options with integer enums
       Object enumsObj = mAttributes.get("enums");
       if(enumsObj instanceof ArrayList) {
-        ArrayList<String> enumsList = (ArrayList<String>) enumsObj;
+        ArrayList enumsList = (ArrayList) enumsObj;
         enums = new String[enumsList.size()];
-        enums = enumsList.toArray(enums);
+        for(int i = 0; i < enumsList.size(); i++) {
+          Object val = enumsList.get(i);
+          enums[i] = val instanceof String ? (String)val : String.valueOf(val);
+        }
       } else {
-        throw new IllegalArgumentException("enums field must be an ArrayList<String>");
+        throw new IllegalArgumentException("enums field must be an ArrayList");
       }
     }
     // get all other data
@@ -104,7 +115,20 @@ public class Option {
     return Arrays.copyOf(enums, enums.length);
   }
 
-  // TODO: make more setValue methods each with the corresponding type.
+  // TODO: ENHANCEMENT - Make more setValue methods with corresponding types
+  // PROBLEM: Current implementation only has setValue(String), requiring all callers to
+  // convert values to strings first. This is error-prone and loses type safety.
+  // CURRENT WORKAROUND: Single string-based setValue with type conversion inside.
+  // SOLUTION: Add type-specific setValue overloads:
+  // - setValue(int) for PORT, INTEGER types
+  // - setValue(InetAddress) for ADDRESS type
+  // - setValue(boolean) for BOOLEAN type
+  // - setValue(Path) for PATH type
+  // BENEFITS:
+  // - Type safety at compile time
+  // - Clearer caller intent
+  // - Reduced string parsing/conversion
+  // IMPACT: Low - Enhancement for better API design
   public void setValue(String value) throws NumberFormatException {
     switch (mType) {
       case STRING:
@@ -130,11 +154,28 @@ public class Option {
           throw new NumberFormatException("boolean must be true or false");
         break;
       case ENUM:
-        //TODO: handle integer enums
-        ArrayList<String> valid = ((ArrayList<String>)mAttributes.get("enums"));
-        if(!valid.contains(value)) {
+        // TODO: ENHANCEMENT - Handle integer enums in addition to string enums
+        // PROBLEM: ENUM validation assumes all enum values are strings, but Metasploit
+        // may send options with integer enum values (exit codes, flags, etc.)
+        // CURRENT WORKAROUND: String comparison only; integer enums cause validation failure
+        // SOLUTION: Support both string and integer enum validation:
+        // - Get enums from mAttributes (may contain mixed types)
+        // - Check if provided value matches as string OR as integer
+        // - Log better error messages showing both types
+        ArrayList valid = ((ArrayList)mAttributes.get("enums"));
+        boolean found = false;
+        for(Object v : valid) {
+          if(v instanceof String && ((String)v).equals(value)) {
+            found = true;
+            break;
+          } else if(v instanceof Integer && String.valueOf(v).equals(value)) {
+            found = true;
+            break;
+          }
+        }
+        if(!found) {
           final StringBuilder validLineBuilder = new StringBuilder();
-          for(String v : valid) {
+          for(Object v : valid) {
             validLineBuilder.append(" ").append(v);
           }
           Logger.warning("expected: (" + validLineBuilder.toString() + ") got: " + value);

@@ -69,11 +69,13 @@ public class OnoKeygen extends Keygen{
     }
     randNumber = pseed[0] | (pseed[1] << 8) | (pseed[2] << 16) | (pseed[3] << 24);
     short tmp = 0;
+    StringBuilder keyBuilder = new StringBuilder();
     for(int j = 0; j < 5; j++){
       randNumber = (randNumber * 0x343fd + 0x269ec3) & 0xffffffff;
       tmp = (short) ((randNumber >> 16) & 0xff);
-      key += getHexString(tmp).toUpperCase();
+      keyBuilder.append(getHexString(tmp).toUpperCase());
     }
+    key = keyBuilder.toString();
     addPassword(key);
     key = "";
     try{
@@ -85,8 +87,10 @@ public class OnoKeygen extends Keygen{
     md.reset();
     md.update(padto64(val).getBytes());
     byte[] hash = md.digest();
+    StringBuilder keyBuilder2 = new StringBuilder();
     for(int i = 0; i < 13; ++i)
-      key += getHexString((short) hash[i]);
+      keyBuilder2.append(getHexString((short) hash[i]));
+    key = keyBuilder2.toString();
     addPassword(key.toUpperCase());
     return getResults();
   }

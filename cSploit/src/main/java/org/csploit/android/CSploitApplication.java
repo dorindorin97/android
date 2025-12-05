@@ -55,6 +55,8 @@ import java.net.NoRouteToHostException;
 
 public class CSploitApplication extends Application {
 
+  private static final String TAG = "CSploitApplication";
+
   @Override
   public void onCreate() {
     SharedPreferences themePrefs = getSharedPreferences("THEME", 0);
@@ -134,7 +136,7 @@ public class CSploitApplication extends Application {
       ACRA.init(this, builder);
     } catch (Exception e) {
       // Log but don't crash if crash reporting setup fails
-      android.util.Log.e("CSploitApplication", "Failed to initialize crash reporting", e);
+      LoggingHelper.e(TAG, "Failed to initialize crash reporting", e);
     }
   }
 

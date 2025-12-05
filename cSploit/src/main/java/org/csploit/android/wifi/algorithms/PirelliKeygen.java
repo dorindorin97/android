@@ -23,10 +23,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.wifi.Keygen;
 
 public class PirelliKeygen extends Keygen{
 
+  private static final String TAG = "PirelliKeygen";
   private MessageDigest md;
   final private String ssidIdentifier;
 
@@ -78,7 +80,7 @@ public class PirelliKeygen extends Keygen{
       addPassword(getHexString(key));
     } catch(UnsupportedEncodingException e){
       setErrorMessage("Error encoding password: " + e.getMessage());
-      android.util.Log.e("PirelliKeygen", "Failed to encode password", e);
+      LoggingHelper.e(TAG, "Failed to encode password", e);
     }
     return getResults();
   }

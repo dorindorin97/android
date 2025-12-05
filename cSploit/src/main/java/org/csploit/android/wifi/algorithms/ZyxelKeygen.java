@@ -23,10 +23,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.wifi.Keygen;
 
 public class ZyxelKeygen extends Keygen{
 
+  private static final String TAG = "ZyxelKeygen";
   final private String ssidIdentifier;
   private MessageDigest md;
 
@@ -60,7 +62,7 @@ public class ZyxelKeygen extends Keygen{
       return getResults();
     } catch(UnsupportedEncodingException e){
       setErrorMessage("Error encoding password: " + e.getMessage());
-      android.util.Log.e("ZyxelKeygen", "Failed to encode password", e);
+      LoggingHelper.e(TAG, "Failed to encode password", e);
     }
     return null;
   }

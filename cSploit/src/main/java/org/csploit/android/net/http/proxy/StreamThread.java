@@ -22,6 +22,7 @@ import org.csploit.android.core.Logger;
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.ByteBuffer;
 import org.csploit.android.net.http.RequestParser;
 
@@ -32,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 
 public class StreamThread implements Runnable
 {
+  private static final String TAG = "StreamThread";
   private final static String[] FILTERED_CONTENT_TYPES = new String[]
     {
       "/html",
@@ -208,7 +210,7 @@ public class StreamThread implements Runnable
       }
       catch(IOException e){
         // Stream close failures during shutdown are non-critical
-        android.util.Log.d("StreamThread", "Stream close failed: " + e.getMessage());
+        LoggingHelper.d(TAG, "Stream close failed: " + e.getMessage());
       }
     }
   }

@@ -77,7 +77,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new PrefsFrag())
-                .commit();
+                .commitAllowingStateLoss();
     }
 
 

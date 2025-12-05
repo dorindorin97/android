@@ -110,6 +110,7 @@ import static org.csploit.android.services.UpdateChecker.UPDATE_NOT_AVAILABLE;
 
 @SuppressLint("NewApi")
 public class MainFragment extends Fragment {
+    private static final String TAG = "MainFragment";
     private String EMPTY_LIST_MESSAGE = "";
     private static final int WIFI_CONNECTION_REQUEST = 1012;
     private boolean isAnyNetInterfaceAvailable = false;
@@ -802,7 +803,7 @@ public class MainFragment extends Fragment {
                             try {
                                 System.loadSession(session);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                LoggingHelper.e(TAG, "Failed to load session", e);
                                 UIHelper.error(getString(R.string.error),
                                         e.getMessage(), getActivity())
                                         .show();

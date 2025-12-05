@@ -18,7 +18,6 @@
  */
 package org.csploit.android;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -33,6 +32,7 @@ import androidx.fragment.app.ListFragment;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import android.text.ClipboardManager;
 import android.text.Html;
 import androidx.core.text.HtmlCompat;
@@ -320,10 +320,15 @@ public class WifiScannerFragment extends ListFragment
 
     private void performCracking(final Keygen keygen, final ScanResult ap){
 
-        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "", getString(R.string.generating_keys), true, false);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("")
+               .setMessage(getString(R.string.generating_keys))
+               .setCancelable(false)
+               .setView(new ProgressBar(getActivity()));
+        final AlertDialog dialog = builder.create();
 
         ConcurrencyHelper.submitAsync(() -> {
-            dialog.show();
+            getActivity().runOnUiThread(dialog::show);
 
             try{
                 List<String> keys = keygen.getKeys();

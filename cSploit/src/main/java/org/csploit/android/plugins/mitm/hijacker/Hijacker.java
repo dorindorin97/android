@@ -79,6 +79,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Hijacker extends AppCompatActivity {
+	private static final String TAG = "Hijacker";
 	private ToggleButton mHijackToggleButton = null;
 	private ProgressBar mHijackProgress = null;
 	private SessionListAdapter mAdapter = null;
@@ -595,7 +596,7 @@ public class Hijacker extends AppCompatActivity {
 										mAdapter.notifyDataSetChanged();
 									}
 								} catch (Exception e) {
-									e.printStackTrace();
+									LoggingHelper.e(TAG, "Failed to load session", e);
 									UIHelper.error(Hijacker.this, "Error", e.getMessage());
 								}
 							}

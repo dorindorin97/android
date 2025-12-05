@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
       }
       f = new MainFragment();
       getSupportFragmentManager().beginTransaction()
-              .add(R.id.mainframe, f).commit();
+              .add(R.id.mainframe, f).commitAllowingStateLoss();
     }
     verifyPerms();
   }
@@ -71,13 +71,11 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
               Manifest.permission.WAKE_LOCK)
               != PackageManager.PERMISSION_GRANTED)
       {
           ActivityCompat.requestPermissions(this,
-                  new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE,
+                  new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,
                   Manifest.permission.WAKE_LOCK},
                   MY_PERMISSIONS_WANTED);
         }
@@ -86,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_WANTED: {
                 // If request is cancelled, the result arrays are empty.
@@ -96,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                     ToastHelper.error(this, getString(R.string.permissions_fail));
                     finish();
                 }
+                break;
+            }
+            default: {
+                LoggingHelper.w("MainActivity", "Unexpected permission request code: " + requestCode);
+                break;
             }
         }
     }
