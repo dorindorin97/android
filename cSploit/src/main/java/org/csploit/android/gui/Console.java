@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.csploit.android.R;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.FatalDialog;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.metasploit.ShellSession;
 
 /**
@@ -63,7 +64,8 @@ public class Console extends AppCompatActivity {
                         mInput.requestFocus();
                     }
                 });            } catch (InterruptedException e) {
-                e.printStackTrace();
+                LoggingHelper.d("Console", "Sleep interrupted", e);
+                Thread.currentThread().interrupt();
             }
         }
 
