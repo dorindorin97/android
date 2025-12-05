@@ -54,7 +54,6 @@ import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.CustomFilterDialog;
 import org.csploit.android.gui.dialogs.CustomFilterDialog.CustomFilterDialogListener;
-import org.csploit.android.gui.dialogs.FinishDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.helpers.AnimationHelper;
@@ -359,7 +358,7 @@ public class MITM extends Plugin
 
             @Override
             public void onCancel(){
-              new FinishDialog(getString(R.string.error), getString(R.string.error_mitm_ports), MITM.this).show();
+              UIHelper.finish(MITM.this, getString(R.string.error), getString(R.string.error_mitm_ports));
             }
           }).show();
         }

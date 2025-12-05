@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import org.csploit.android.helpers.UIHelper;
 
 import org.csploit.android.R;
 import org.csploit.android.core.Plugin;
@@ -34,14 +35,15 @@ import org.csploit.android.core.System;
 import org.csploit.android.gui.Console;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ErrorDialog;
-import org.csploit.android.gui.dialogs.FinishDialog;
 import org.csploit.android.gui.dialogs.ListChoiceDialog;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.metasploit.RPCClient;
 import org.csploit.android.net.metasploit.Session;
 import org.csploit.android.net.metasploit.ShellSession;
+import org.csploit.android.helpers.UIHelper;
 
 import java.util.ArrayList;
+import org.csploit.android.helpers.UIHelper;
 
 public class Sessions extends Plugin {
 	private ListView mListView = null;
@@ -146,7 +148,7 @@ public class Sessions extends Plugin {
     UIThread = this;
 
     if(System.getMsfRpc()==null) {
-      new FinishDialog(getString(R.string.error),"MSF RPC not connected",Sessions.this).show();
+      UIHelper.finish(Sessions.this, getString(R.string.error), "MSF RPC not connected");
       return;
 		}
 
@@ -169,7 +171,7 @@ public class Sessions extends Plugin {
           @Override
           public void run() {
             if(mResults.isEmpty()) {
-              new FinishDialog(getString(R.string.warning),getString(R.string.no_opened_sessions),Sessions.this).show();
+              UIHelper.finish(Sessions.this, getString(R.string.warning), getString(R.string.no_opened_sessions));
             } else {
               mAdapter.notifyDataSetChanged();
             }
@@ -186,7 +188,7 @@ public class Sessions extends Plugin {
     if(this!=UIThread)
       UIThread.onRpcChange(currentValue);
     else if(currentValue == null)
-      new FinishDialog(getString(R.string.error),getString(R.string.msfrpc_disconnected),Sessions.this).show();
+      UIHelper.finish(Sessions.this, getString(R.string.error), getString(R.string.msfrpc_disconnected));
 	}
 
   @Override

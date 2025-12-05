@@ -499,4 +499,34 @@ public final class UIHelper {
             return "Length must be between " + minLength + " and " + maxLength;
         }
     }
+
+    /**
+     * Show finish dialog (shows message and closes activity on OK)
+     * 
+     * @param context Android context (must be Activity)
+     * @param title dialog title
+     * @param message message to display
+     */
+    public static void finish(@NonNull Context context, @NonNull String title,
+                            @NonNull String message) {
+        if (!(context instanceof android.app.Activity)) {
+            LoggingHelper.e(TAG, "Context must be Activity for finish dialog");
+            return;
+        }
+        
+        android.app.Activity activity = (android.app.Activity) context;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    activity.finish();
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        LoggingHelper.w(TAG, "Finish dialog: " + title + " - " + message);
+    }
 }

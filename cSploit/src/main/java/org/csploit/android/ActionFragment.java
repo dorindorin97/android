@@ -19,13 +19,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.csploit.android.helpers.UIHelper;
 
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
-import org.csploit.android.gui.dialogs.FinishDialog;
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.UIHelper;
 
 import java.util.ArrayList;
+import org.csploit.android.helpers.UIHelper;
 
 public class ActionFragment extends Fragment {
 
@@ -85,7 +87,7 @@ public class ActionFragment extends Fragment {
                 }
             });
         } else {
-            new FinishDialog(getString(R.string.warning), getString(R.string.something_went_wrong), getActivity()).show();
+            UIHelper.finish(getActivity(), getString(R.string.warning), getString(R.string.something_went_wrong));
         }
     }
 
