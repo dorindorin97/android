@@ -58,6 +58,8 @@ import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.FinishDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.gui.dialogs.RedirectionDialog;
 import org.csploit.android.gui.dialogs.RedirectionDialog.RedirectionDialogListener;
 import org.csploit.android.net.Target;
@@ -322,49 +324,52 @@ public class MITM extends Plugin
         }
       }
     } else if(request == SettingsFragment.SETTINGS_DONE){
-      new CheckForOpenPortsTask().execute();
+      checkForOpenPorts();
     }
   }
 
-  public class CheckForOpenPortsTask extends AsyncTask<Void, Void, Boolean>{
-    private String mMessage = null;
+  private void checkForOpenPorts(){
+    ConcurrencyHelper.executeAsync(() -> {
+      // Check if needed ports are available
+      if(!System.isPortAvailable(System.HTTP_PROXY_PORT))
+        return getString(R.string.the_port) + System.HTTP_PROXY_PORT + getString(R.string.error_proxy_port);
 
-    @Override
-    protected Boolean doInBackground(Void... dummy){
-            /*
-             * Check if needed ports are available, otherwise inform the user.
-	         */
-      if(System.isPortAvailable(System.HTTP_PROXY_PORT) == false)
-        mMessage = getString(R.string.the_port) + System.HTTP_PROXY_PORT + getString(R.string.error_proxy_port);
+      if(!System.isPortAvailable(System.HTTP_SERVER_PORT))
+        return getString(R.string.the_port) + System.HTTP_SERVER_PORT + getString(R.string.error_mitm_port);
 
-      else if(System.isPortAvailable(System.HTTP_SERVER_PORT) == false)
-        mMessage = getString(R.string.the_port) + System.HTTP_SERVER_PORT + getString(R.string.error_mitm_port);
+      if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) && 
+         !System.isPortAvailable(System.HTTPS_REDIR_PORT))
+        return getString(R.string.the_port) + System.HTTPS_REDIR_PORT + getString(R.string.error_https_port);
 
-      else if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) && System.isPortAvailable(System.HTTPS_REDIR_PORT) == false)
-        mMessage = getString(R.string.the_port) + System.HTTPS_REDIR_PORT + getString(R.string.error_https_port);
+      return null;
+    }, new ConcurrencyHelper.AsyncCallback<String>() {
+      @Override
+      public void onSuccess(String portMessage) {
+        if(portMessage != null) {
+          new ConfirmDialog(getString(R.string.warning), portMessage, MITM.this, new ConfirmDialogListener(){
+            @Override
+            public void onConfirm(){
+              startActivityForResult(new Intent(MITM.this, SettingsActivity.class), SettingsFragment.SETTINGS_DONE);
+            }
 
-      else
-        mMessage = null;
-
-      return true;
-    }
-
-    @Override
-    protected void onPostExecute(Boolean result){
-      if(mMessage != null){
-        new ConfirmDialog( getString(R.string.warning), mMessage, MITM.this, new ConfirmDialogListener(){
-          @Override
-          public void onConfirm(){
-            startActivityForResult(new Intent(MITM.this, SettingsActivity.class), SettingsFragment.SETTINGS_DONE);
-          }
-
-          @Override
-          public void onCancel(){
-            new FinishDialog(getString(R.string.error), getString(R.string.error_mitm_ports), MITM.this).show();
-          }
-        }).show();
+            @Override
+            public void onCancel(){
+              new FinishDialog(getString(R.string.error), getString(R.string.error_mitm_ports), MITM.this).show();
+            }
+          }).show();
+        }
       }
-    }
+
+      @Override
+      public void onError(Exception error) {
+        LoggingHelper.e(TAG, "Failed to check ports", error);
+      }
+
+      @Override
+      public void onCancelled() {
+        LoggingHelper.d(TAG, "Port check cancelled");
+      }
+    });
   }
 
   private void setSpoofErrorState(final String error){

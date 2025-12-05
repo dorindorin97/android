@@ -56,6 +56,8 @@ import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;
 import org.csploit.android.plugins.mitm.SpoofSession;
@@ -114,123 +116,124 @@ public class Hijacker extends AppCompatActivity {
 		private int mLayoutId = 0;
 		private HashMap<String, Session> mSessions = null;
 
-		public class FacebookUserTask extends AsyncTask<Session, Void, Boolean> {
-			private Bitmap getUserImage(String uri) {
-				Bitmap image = null;
-				try {
-					URL url = new URL(uri);
-					URLConnection conn = url.openConnection();
-					conn.connect();
-
-					InputStream input = conn.getInputStream();
-					BufferedInputStream reader = new BufferedInputStream(input);
-
-					image = Bitmap.createScaledBitmap(
-							BitmapFactory.decodeStream(reader), 48, 48, false);
-
-					reader.close();
-					input.close();
-				} catch (IOException e) {
-					System.errorLogging(e);
-				}
-
-				return image;
+	private void loadFacebookUserData(Session session) {
+		ConcurrencyHelper.executeAsync(() -> {
+			Bitmap image = null;
+			String name = null;
+			
+			HttpCookie user = session.mCookies.get("c_user");
+			if (user != null) {
+				String fbUserId = user.getValue();
+				image = loadImageFromUrl("https://graph.facebook.com/" + fbUserId + "/picture");
+				name = loadUserNameFromUrl("https://graph.facebook.com/" + fbUserId + "/");
 			}
-
-			private String getUserName(String uri) {
-				String username = null;
-
-				try {
-					URL url = new URL(uri);
-					URLConnection conn = url.openConnection();
-					conn.connect();
-
-					InputStream input = conn.getInputStream();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(input));
-					String line;
-					final StringBuilder dataBuilder = new StringBuilder();
-					while ((line = reader.readLine()) != null)
-						dataBuilder.append(line);
-
-					reader.close();
-					input.close();
-
-				JSONObject response = new JSONObject(dataBuilder.toString());
-
-				username = response.getString("name");
-			} catch (Exception e) {
-				LoggingHelper.e(TAG, "Failed to parse user name", e);
-			}				return username;
-			}
-
+			
+			return new Object[] { image, name };
+		}, new ConcurrencyHelper.AsyncCallback<Object[]>() {
 			@Override
-			protected Boolean doInBackground(Session... sessions) {
-				Session session = sessions[0];
-				HttpCookie user = session.mCookies.get("c_user");
-
-				if (user != null) {
-					String fbUserId = user.getValue(), fbGraphUrl = "https://graph.facebook.com/"
-							+ fbUserId + "/", fbPictureUrl = fbGraphUrl
-							+ "picture";
-
-					session.mUserName = getUserName(fbGraphUrl);
-					session.mPicture = getUserImage(fbPictureUrl);
-				}
-
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
+			public void onSuccess(Object[] result) {
+				session.mPicture = (Bitmap) result[0];
+				session.mUserName = (String) result[1];
 				mAdapter.notifyDataSetChanged();
 			}
-		}
+			
+			@Override
+			public void onError(Exception error) {
+				LoggingHelper.e(TAG, "Failed to load Facebook user data", error);
+			}
+			
+			@Override
+			public void onCancelled() {
+				LoggingHelper.d(TAG, "Facebook user load cancelled");
+			}
+		});
+	}
 
-		public class XdaUserTask extends AsyncTask<Session, Void, Boolean> {
-			private Bitmap getUserImage(String uri) {
-				Bitmap image = null;
-				try {
-					URL url = new URL(uri);
-					URLConnection conn = url.openConnection();
-					conn.connect();
-
-					InputStream input = conn.getInputStream();
-					BufferedInputStream reader = new BufferedInputStream(input);
-
-					image = Bitmap.createScaledBitmap(
-							BitmapFactory.decodeStream(reader), 48, 48, false);
-
-					reader.close();
-					input.close();
-				} catch (IOException e) {
-					LoggingHelper.e(TAG, "Failed to load XDA user image", e);
+	private void loadXdaUserData(Session session) {
+		ConcurrencyHelper.executeAsync(() -> {
+			Bitmap image = null;
+			String name = null;
+			
+			HttpCookie userid = session.mCookies.get("bbuserid");
+			if (userid != null) {
+				image = loadImageFromUrl("http://media.xda-developers.com/customavatars/avatar" +
+						userid.getValue() + "_1.gif");
+			}
+			
+			HttpCookie username = session.mCookies.get("xda_wikiUserName");
+			if (username != null) {
+				name = username.getValue().toLowerCase();
+			}
+			
+			return new Object[] { image, name };
+		}, new ConcurrencyHelper.AsyncCallback<Object[]>() {
+			@Override
+			public void onSuccess(Object[] result) {
+				session.mPicture = (Bitmap) result[0];
+				if (result[1] != null) {
+					session.mUserName = (String) result[1];
 				}
-
-				return image;
-			}
-
-			@Override
-			protected Boolean doInBackground(Session... sessions) {
-				Session session = sessions[0];
-				HttpCookie userid = session.mCookies.get("bbuserid"), username = session.mCookies
-						.get("xda_wikiUserName");
-
-				if (userid != null)
-					session.mPicture = getUserImage("http://media.xda-developers.com/customavatars/avatar"
-							+ userid.getValue() + "_1.gif");
-
-				if (username != null)
-					session.mUserName = username.getValue().toLowerCase();
-
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
 				mAdapter.notifyDataSetChanged();
 			}
+			
+			@Override
+			public void onError(Exception error) {
+				LoggingHelper.e(TAG, "Failed to load XDA user data", error);
+			}
+			
+			@Override
+			public void onCancelled() {
+				LoggingHelper.d(TAG, "XDA user load cancelled");
+			}
+		});
+	}
+
+	private Bitmap loadImageFromUrl(String uri) {
+		try {
+			URL url = new URL(uri);
+			URLConnection conn = url.openConnection();
+			conn.connect();
+
+			InputStream input = conn.getInputStream();
+			BufferedInputStream reader = new BufferedInputStream(input);
+
+			Bitmap image = Bitmap.createScaledBitmap(
+					BitmapFactory.decodeStream(reader), 48, 48, false);
+
+			reader.close();
+			input.close();
+			
+			return image;
+		} catch (IOException e) {
+			LoggingHelper.e(TAG, "Failed to load image from URL", e);
+			return null;
 		}
+	}
+
+	private String loadUserNameFromUrl(String uri) {
+		try {
+			URL url = new URL(uri);
+			URLConnection conn = url.openConnection();
+			conn.connect();
+
+			InputStream input = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(input));
+			String line;
+			StringBuilder dataBuilder = new StringBuilder();
+			while ((line = reader.readLine()) != null)
+				dataBuilder.append(line);
+
+			reader.close();
+			input.close();
+
+			JSONObject response = new JSONObject(dataBuilder.toString());
+			return response.getString("name");
+		} catch (Exception e) {
+			LoggingHelper.e(TAG, "Failed to load user name from URL", e);
+			return null;
+		}
+	}
 
 		public class SessionHolder {
 			ImageView favicon;
@@ -309,19 +312,17 @@ public class Hijacker extends AppCompatActivity {
 			} else
 				holder = (SessionHolder) row.getTag();
 
-			if (!session.mInited) {
-				session.mInited = true;
+		if (!session.mInited) {
+			session.mInited = true;
 
-				if (session.mDomain.contains("facebook.")
-						&& session.mCookies.get("c_user") != null)
-					new FacebookUserTask().execute(session);
+			if (session.mDomain.contains("facebook.")
+					&& session.mCookies.get("c_user") != null)
+				loadFacebookUserData(session);
 
-				else if (session.mDomain.contains("xda-developers.")
-						&& session.mCookies.get("bbuserid") != null)
-					new XdaUserTask().execute(session);
-			}
-
-			Bitmap picture;
+			else if (session.mDomain.contains("xda-developers.")
+					&& session.mCookies.get("bbuserid") != null)
+				loadXdaUserData(session);
+		}			Bitmap picture;
 
 			if (session.mPicture != null)
 				picture = session.mPicture;
