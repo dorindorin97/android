@@ -2,23 +2,31 @@ package org.csploit.android.services;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.MenuItem;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.SecureCredentialsHelper;
 import org.csploit.android.net.metasploit.RPCClient;
 import org.csploit.android.tools.MsfRpcd;
 
 /**
- * The MSFRPC daemon manager
+ * The MSFRPC daemon manager.
+ * Manages secure RPC daemon connection and credentials storage.
  */
 public class MsfRpcdService extends NativeService implements MenuControllableService {
 
   public static final String STATUS_ACTION = "MsfRpcdService.action.STATUS";
   public static final String STATUS = "MsfRpcdService.data.STATUS";
+
+  // Credential storage keys
+  private static final String CRED_KEY_HOST = "MSF_RPC_HOST";
+  private static final String CRED_KEY_USER = "MSF_RPC_USER";
+  private static final String CRED_KEY_PASSWORD = "MSF_RPC_PASSWORD";
+  private static final String CRED_KEY_PORT = "MSF_RPC_PORT";
+  private static final String CRED_KEY_SSL = "MSF_RPC_SSL";
 
   final String host, user, password;
   final int port;
@@ -92,13 +100,13 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
   }
 
   public MsfRpcdService(Context context) {
-    SharedPreferences prefs = System.getSettings();
+    SecureCredentialsHelper credHelper = new SecureCredentialsHelper(context);
 
-    host = prefs.getString("MSF_RPC_HOST", "127.0.0.1");
-    user = prefs.getString("MSF_RPC_USER", "msf");
-    password = prefs.getString("MSF_RPC_PSWD", "msf");
-    port = System.MSF_RPC_PORT;
-    ssl = prefs.getBoolean("MSF_RPC_SSL", false);
+    host = credHelper.retrieveCredential(CRED_KEY_HOST, "127.0.0.1");
+    user = credHelper.retrieveCredential(CRED_KEY_USER, "msf");
+    password = credHelper.retrieveCredential(CRED_KEY_PASSWORD, "msf");
+    port = credHelper.retrieveCredential(CRED_KEY_PORT, System.MSF_RPC_PORT);
+    ssl = credHelper.retrieveCredential(CRED_KEY_SSL, false);
 
     this.context = context;
   }

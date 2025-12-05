@@ -99,6 +99,8 @@ public class Network implements Comparable<Network> {
   private IP4Address mLocal = null;
   private IP4Address mBase = null;
   private Method mTetheredIfacesMethod = null;
+  private byte[] mCachedHardwareAddress = null;
+  private boolean mHardwareAddressResolved = false;
 
   /**
    * see http://en.wikipedia.org/wiki/Reserved_IP_addresses
@@ -341,19 +343,49 @@ public class Network implements Comparable<Network> {
 
   @Nullable
   public byte[] getLocalHardware() {
-    try {
-      // FIXME: #831 - Hardware address retrieval unreliable on some Android versions
-      // PROBLEM: NetworkInterface.getHardwareAddress() throws SocketException or returns
-      // null on certain Android devices/versions, particularly on some proprietary
-      // implementations with restricted network interface access.
-      // CURRENT WORKAROUND: Caught exception returns null, caller must handle gracefully
-      // ALTERNATIVE: Use WifiManager.getConnectionInfo().getMacAddress() but deprecated
-      // IMPACT: Low - Non-critical feature; impacts network identification but not core functionality
-      return mInterface.getHardwareAddress();
-    } catch (SocketException e) {
-      LoggingHelper.e(TAG, "Failed to get local hardware address", e);
+    // Return cached result if already resolved
+    if (mHardwareAddressResolved) {
+      return mCachedHardwareAddress;
     }
 
+    mHardwareAddressResolved = true;
+
+    // Try primary method: NetworkInterface.getHardwareAddress()
+    try {
+      byte[] hwAddr = mInterface.getHardwareAddress();
+      if (hwAddr != null && hwAddr.length > 0) {
+        mCachedHardwareAddress = hwAddr;
+        Logger.debug("Successfully retrieved hardware address via NetworkInterface");
+        return mCachedHardwareAddress;
+      }
+    } catch (SocketException e) {
+      Logger.warning("NetworkInterface.getHardwareAddress() failed: " + e.getMessage());
+    }
+
+    // Fallback method: Try WifiManager for WiFi interface (deprecated but reliable)
+    if (mWifiInfo != null) {
+      try {
+        String macAddress = mWifiInfo.getMacAddress();
+        if (macAddress != null && !macAddress.isEmpty() && !"02:00:00:00:00:00".equals(macAddress)) {
+          // Convert MAC string to byte array
+          String[] parts = macAddress.split(":");
+          if (parts.length == 6) {
+            byte[] hwAddr = new byte[6];
+            for (int i = 0; i < 6; i++) {
+              hwAddr[i] = (byte) Integer.parseInt(parts[i], 16);
+            }
+            mCachedHardwareAddress = hwAddr;
+            Logger.debug("Successfully retrieved hardware address via WifiManager");
+            return mCachedHardwareAddress;
+          }
+        }
+      } catch (Exception e) {
+        Logger.warning("WifiManager MAC retrieval failed: " + e.getMessage());
+      }
+    }
+
+    // No hardware address available
+    Logger.debug("Could not retrieve hardware address - using null");
     return null;
   }
 
