@@ -84,10 +84,10 @@ public class Sessions extends Plugin {
               overridePendingTransition(R.anim.fadeout, R.anim.fadein);
               break;
             case R.string.show_full_description:
-              String message = s.getDescription();
+              StringBuilder message = new StringBuilder(s.getDescription());
               if(s.getInfo().length()>0)
-                message+= "\n\nInfo:\n"+s.getInfo();
-              UIHelper.error(Sessions.this, s.getName(), message);
+                message.append("\n\nInfo:\n").append(s.getInfo());
+              UIHelper.error(Sessions.this, s.getName(), message.toString());
               break;
             case R.string.clear_event_log:
 

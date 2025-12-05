@@ -130,16 +130,16 @@ public class NMap extends Tool {
   }
 
   public Child synScan( Target target, SynScanReceiver receiver, String custom ) throws ChildManager.ChildNotStartedException {
-    String command = "-sS -P0 --privileged --send-ip --system-dns -vvv ";
+    StringBuilder command = new StringBuilder("-sS -P0 --privileged --send-ip --system-dns -vvv ");
 
     if( custom != null )
-      command += "-p " + custom + " ";
+      command.append("-p ").append(custom).append(" ");
 
-    command += target.getCommandLineRepresentation();
+    command.append(target.getCommandLineRepresentation());
 
-    Logger.debug( "synScan - " + command );
+    Logger.debug( "synScan - " + command.toString() );
 
-    return super.async( command, receiver );
+    return super.async( command.toString(), receiver );
   }
 
   public Child synScan( Target target, SynScanReceiver receiver) throws ChildManager.ChildNotStartedException {
@@ -147,16 +147,16 @@ public class NMap extends Tool {
   }
 
   public Child customScan( Target target, SynScanReceiver receiver, String custom ) throws ChildManager.ChildNotStartedException {
-    String command = "-vvv ";
+    StringBuilder command = new StringBuilder("-vvv ");
 
     if( custom != null )
-      command += custom + " ";
+      command.append(custom).append(" ");
 
-    command += target.getCommandLineRepresentation();
+    command.append(target.getCommandLineRepresentation());
 
-    Logger.debug( "customScan - " + command );
+    Logger.debug( "customScan - " + command.toString() );
 
-    return super.async( command, receiver );
+    return super.async( command.toString(), receiver );
   }
 
   public Child inpsect( Target target, InspectionReceiver receiver, boolean focusedScan ) throws ChildManager.ChildNotStartedException {
