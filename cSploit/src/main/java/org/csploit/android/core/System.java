@@ -482,18 +482,19 @@ public class System {
   }
 
   public static String getPlatform() {
-    int api = Build.VERSION.SDK_INT;
+    int api = org.csploit.android.helpers.DeviceHelper.getApiLevel();
     String abi = Build.CPU_ABI;
 
     return String.format("android%d.%s", api, abi);
   }
 
   public static String getCompatiblePlatform() {
-    int api = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ?
+    int currentApi = org.csploit.android.helpers.DeviceHelper.getApiLevel();
+    int minApi = (currentApi >= Build.VERSION_CODES.JELLY_BEAN ?
             Build.VERSION_CODES.JELLY_BEAN : Build.VERSION_CODES.GINGERBREAD);
     String abi = Build.CPU_ABI;
 
-    return String.format("android%d.%s", api, abi);
+    return String.format("android%d.%s", minApi, abi);
   }
 
   public static boolean isARM() {
@@ -659,17 +660,7 @@ public class System {
   public static String getAppVersionName() {
     if (mApkVersion != null)
       return mApkVersion;
-    try {
-      PackageManager manager = mContext.getPackageManager();
-      PackageInfo info = manager != null ? manager.getPackageInfo(mContext.getPackageName(), 0) : null;
-
-      if (info != null)
-        return (mApkVersion = info.versionName);
-    } catch (NameNotFoundException e) {
-      errorLogging(e);
-    }
-
-    return "0.0.1";
+    return (mApkVersion = org.csploit.android.helpers.AppHelper.getVersionName(mContext));
   }
 
   /**
