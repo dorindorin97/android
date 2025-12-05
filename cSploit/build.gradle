@@ -8,6 +8,9 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.material:material:1.9.0'
     
+    // Security library for encrypted preferences
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    
     // Apache Commons - updated versions with security fixes
     implementation 'org.apache.commons:commons-compress:1.24.0'
     implementation 'commons-net:commons-net:3.9.0'
