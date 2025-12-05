@@ -1,9 +1,12 @@
 [main]
 host = https://www.transifex.com
+# Transifex client configuration (v1.6+)
+# Updated: December 2025
 
 [csploit.strings]
 file_filter = cSploit/res/values-<lang>/strings.xml
 source_file = cSploit/res/values/strings.xml
 source_lang = en
-trans.zh    = cSploit/res/values-zh-rCN/strings.xml
 type = ANDROID
+# Language mappings
+trans.zh_CN = cSploit/res/values-zh-rCN/strings.xml
