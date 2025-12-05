@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 
 public class FileEdit extends AppCompatActivity {
+    private static final String TAG = "FileEdit";
     private Button mCmdSave = null;
     private EditText mFileEditText = null;
     public final static String KEY_FILEPATH = "FilePath";
@@ -74,7 +76,7 @@ public class FileEdit extends AppCompatActivity {
             }
             catch (Exception e){
                 // Log stream close failures at debug level
-                android.util.Log.d("FileEdit", "Failed to close input reader", e);
+                LoggingHelper.d(TAG, "Failed to close input reader");
             }
         }
 
