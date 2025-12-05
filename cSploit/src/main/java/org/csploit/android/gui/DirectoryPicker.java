@@ -20,7 +20,6 @@
  */
 package org.csploit.android.gui;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.csploit.android.R;
 
@@ -39,7 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DirectoryPicker extends ListActivity{
+public class DirectoryPicker extends AppCompatActivity {
   public static final String START_DIR = "startDir";
   public static final String ONLY_DIRS = "onlyDirs";
   public static final String SHOW_HIDDEN = "showHidden";
@@ -52,7 +51,7 @@ public class DirectoryPicker extends ListActivity{
   private String  mAffectedPref = null;
 
   @Override
-  public void onCreate(Bundle savedInstanceState){
+  protected void onCreate(Bundle savedInstanceState){
     super.onCreate(savedInstanceState);
 
     String preferredStartDir = null;
@@ -76,7 +75,7 @@ public class DirectoryPicker extends ListActivity{
 
     setContentView(R.layout.dirpicker_chooser_list);
     setTitle(dir.getAbsolutePath());
-    Button btnChoose = (Button) findViewById(R.id.btnChoose);
+    Button btnChoose = findViewById(R.id.btnChoose);
     String name = dir.getName();
     if(name.length() == 0)
       name = "/";
@@ -87,7 +86,7 @@ public class DirectoryPicker extends ListActivity{
       }
     });
 
-    ListView lv = getListView();
+    ListView lv = findViewById(android.R.id.list);
     lv.setTextFilterEnabled(true);
 
     if(!dir.canRead()){
@@ -100,7 +99,7 @@ public class DirectoryPicker extends ListActivity{
     final ArrayList<File> files = filter(dir.listFiles(), onlyDirs,
       showHidden);
     String[] names = names(files);
-    setListAdapter(new ArrayAdapter<String>(this, R.layout.dirpicker_list_item, names));
+    lv.setAdapter(new ArrayAdapter<String>(this, R.layout.dirpicker_list_item, names));
 
     lv.setOnItemClickListener(new OnItemClickListener(){
       public void onItemClick(AdapterView<?> parent, View view,
