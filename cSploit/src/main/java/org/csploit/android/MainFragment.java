@@ -61,13 +61,14 @@ import org.csploit.android.gui.dialogs.AboutDialog;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
-import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.FatalDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.gui.dialogs.ListChoiceDialog;
 import org.csploit.android.gui.dialogs.MultipleChoiceDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
@@ -146,7 +147,7 @@ public class MainFragment extends Fragment {
             public void run() {
                 new FatalDialog(getString(R.string.initialization_error),
                         message, message.contains(">"),
-                        getActivity()).show();
+                        getActivity());
             }
         });
     }
@@ -212,7 +213,7 @@ public class MainFragment extends Fragment {
 
                 Toast.makeText(getActivity(),
                         getString(R.string.selected_) + System.getCurrentTarget(),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT);
 
             }
         });
@@ -451,7 +452,7 @@ public class MainFragment extends Fragment {
             @Override
             public void run() {
                 if (msg != null) {
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG);
                 }
                 notifyMenuChanged();
             }
@@ -483,7 +484,7 @@ public class MainFragment extends Fragment {
                             @Override
                             public void onCancel() {
                             }
-                        }).show();
+                        });
             }
         });
     }
@@ -518,10 +519,10 @@ public class MainFragment extends Fragment {
                     System.setIfname(mIfaces[index]);
                     onNetworkInterfaceChanged();
                 }
-            }).show();
+            });
         } else {
-            new ErrorDialog(getString(android.R.string.dialog_alert_title),
-                    getString(R.string.iface_error_no_available), getActivity()).show();
+            UIHelper.error(getString(android.R.string.dialog_alert_title),
+                    getString(R.string.iface_error_no_available), getActivity());
         }
     }
 
@@ -541,7 +542,7 @@ public class MainFragment extends Fragment {
                 target.setAlias(input);
                 mTargetAdapter.notifyDataSetChanged();
             }
-        }).show();
+        });
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -601,9 +602,9 @@ public class MainFragment extends Fragment {
 
                                     getActivity().startService(intent);
                                 }
-                            })).show();
+                            }));
                         } else {
-                            (new ErrorDialog(getString(R.string.error), "no common actions found", getActivity())).show();
+                            (UIHelper.error(getString(R.string.error), "no common actions found", getActivity()));
                         }
                     } else {
                         targetAliasPrompt((Target) mTargetAdapter.getItem(selected[0]));
@@ -699,11 +700,11 @@ public class MainFragment extends Fragment {
                                         }
                                     });
                                 } else
-                                    new ErrorDialog(getString(R.string.error),
+                                    UIHelper.error(getString(R.string.error),
                                             getString(R.string.invalid_target),
-                                            getActivity()).show();
+                                            getActivity());
                             }
-                        }).show();
+                        });
                 return true;
 
             case R.id.scan:
@@ -737,10 +738,10 @@ public class MainFragment extends Fragment {
                                     Toast.makeText(
                                             getActivity(),
                                             getString(R.string.new_session_started),
-                                            Toast.LENGTH_SHORT).show();
+                                            Toast.LENGTH_SHORT);
                                 } catch (Exception e) {
                                     new FatalDialog(getString(R.string.error), e
-                                            .toString(), getActivity()).show();
+                                            .toString(), getActivity());
                                 }
                             }
 
@@ -748,7 +749,7 @@ public class MainFragment extends Fragment {
                             public void onCancel() {
                             }
 
-                        }).show();
+                        });
 
                 return true;
 
@@ -770,18 +771,18 @@ public class MainFragment extends Fragment {
                                                 getActivity(),
                                                 getString(R.string.session_saved_to)
                                                         + filename + " .",
-                                                Toast.LENGTH_SHORT).show();
+                                                Toast.LENGTH_SHORT);
                                     } catch (IOException e) {
-                                        new ErrorDialog(getString(R.string.error),
+                                        UIHelper.error(getString(R.string.error),
                                                 e.toString(), getActivity())
                                                 .show();
                                     }
                                 } else
-                                    new ErrorDialog(getString(R.string.error),
+                                    UIHelper.error(getString(R.string.error),
                                             getString(R.string.invalid_session),
-                                            getActivity()).show();
+                                            getActivity());
                             }
-                        }).show();
+                        });
                 return true;
 
             case R.id.restore_session:
@@ -801,14 +802,14 @@ public class MainFragment extends Fragment {
                                 System.loadSession(session);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                new ErrorDialog(getString(R.string.error),
+                                UIHelper.error(getString(R.string.error),
                                         e.getMessage(), getActivity())
                                         .show();
                             }
                         }
-                    }).show();
+                    });
                 } else
-                    new ErrorDialog(getString(R.string.error),
+                    UIHelper.error(getString(R.string.error),
                             getString(R.string.no_session_found), getActivity())
                             .show();
                 return true;
@@ -845,7 +846,7 @@ public class MainFragment extends Fragment {
                 return true;
 
             case R.id.about:
-                new AboutDialog(getActivity()).show();
+                new AboutDialog(getActivity());
                 return true;
 
             default:
@@ -874,7 +875,7 @@ public class MainFragment extends Fragment {
                         @Override
                         public void onCancel() {
                         }
-                    }).show();
+                    });
 
             mLastBackPressTime = 0;
         }
@@ -1168,7 +1169,7 @@ public class MainFragment extends Fragment {
                             onInitializationError(getString(R.string.mandatory_update));
                         }
                     }
-                    ).show();
+                    );
                 }
             });
         }
@@ -1207,8 +1208,8 @@ public class MainFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    new ErrorDialog(getString(R.string.error),
-                            getString(message), getActivity()).show();
+                    UIHelper.error(getString(R.string.error),
+                            getString(message), getActivity());
                 }
             });
 
