@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ public class FatalDialog extends AlertDialog{
       TextView text = new TextView(activity);
 
       text.setMovementMethod(LinkMovementMethod.getInstance());
-      text.setText(Html.fromHtml(message));
+      text.setText(HtmlCompat.fromHtml(message));
       text.setPadding(10, 10, 10, 10);
 
       this.setView(text);

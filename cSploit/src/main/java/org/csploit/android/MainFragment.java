@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -952,7 +953,7 @@ public class MainFragment extends Fragment {
             final Target target = list.get(position);
 
             if (target.hasAlias()) {
-                holder.itemTitle.setText(Html.fromHtml("<b>"
+                holder.itemTitle.setText(HtmlCompat.fromHtml("<b>"
                         + target.getAlias() + "</b> <small>( "
                         + target.getDisplayAddress() + " )</small>"));
             } else {

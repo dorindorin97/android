@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;

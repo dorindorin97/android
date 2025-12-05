@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.widget.TextView;
 
 import org.csploit.android.R;
@@ -57,10 +58,10 @@ public class ChangelogDialog extends AlertDialog
     try {
       view.setText(GitHubParser.getcSploitRepo().getReleaseBody(System.getAppVersionName()));
     } catch (JSONException e) {
-      view.setText(Html.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
+      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
       LoggingHelper.e(TAG, "Failed to load changelog", e);
     } catch (IOException e) {
-      view.setText(Html.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
+      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
       Logger.error(e.getMessage());
     }
 

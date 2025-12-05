@@ -35,6 +35,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.ClipboardManager;
 import android.text.Html;
+import androidx.core.text.HtmlCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -122,11 +123,11 @@ public class WifiScannerFragment extends ListFragment
 
     public void onSuccessfulConnection(){
         if(mCurrentKey != null){
-            mStatusText.setText(Html.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3)));
+            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3)));
             Toast.makeText(getActivity(), getString(R.string.wifi_key_copied), Toast.LENGTH_SHORT).show();
             mClipboard.setText(mCurrentKey);
         } else
-            mStatusText.setText(Html.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + "</b> !"));
+            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + "</b> !"));
 
         mConnectionReceiver.unregister();
         mConnected = true;
@@ -142,7 +143,7 @@ public class WifiScannerFragment extends ListFragment
             return;
         }
 
-        mStatusText.setText(Html.fromHtml(getString(R.string.connection_to) + mCurrentAp.SSID + getString(R.string.connection_to2)));
+        mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connection_to) + mCurrentAp.SSID + getString(R.string.connection_to2)));
 
         List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
         if(configurations != null){
@@ -228,9 +229,9 @@ public class WifiScannerFragment extends ListFragment
             @Override
             public void run() {
                 if (key != null)
-                    mStatusText.setText(Html.fromHtml(getString(R.string.wifi_attempting_to) + " <b>" + ap.SSID + "</b> " + getString(R.string.wifi_with_key) + " <b>" + key + "</b> ..."));
+                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_attempting_to) + " <b>" + ap.SSID + "</b> " + getString(R.string.wifi_with_key) + " <b>" + key + "</b> ..."));
                 else
-                    mStatusText.setText(Html.fromHtml(getString(R.string.wifi_connecting_to) + " <b>" + ap.SSID + "</b> ..."));
+                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_connecting_to) + " <b>" + ap.SSID + "</b> ..."));
             }
         });
 
@@ -584,7 +585,7 @@ public class WifiScannerFragment extends ListFragment
             if(capabilities.contains("WPS"))
                 protection += " ( WPS )";
 
-            holder.bssid.setText(Html.fromHtml(
+            holder.bssid.setText(HtmlCompat.fromHtml(
                             result.BSSID.toUpperCase() + " " + protection + " <small>( " + (Math.round((result.frequency / 1000.0) * 10.0) / 10.0) + " Ghz )</small>")
             );
 
