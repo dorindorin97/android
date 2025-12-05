@@ -642,7 +642,7 @@ public class MITM extends Plugin
             new RedirectionDialog( getString(R.string.mitm_redirection), MITM.this, new RedirectionDialogListener(){
               @Override
               public void onInputEntered(String address, String port){
-                if(address.isEmpty() == false && port.isEmpty() == false){
+                if(!address.isEmpty() && !port.isEmpty()){
                   try{
                     int iport = Integer.parseInt(port);
 
@@ -728,7 +728,7 @@ public class MITM extends Plugin
                         public void onInputEntered(String input){
                           String image = input.trim();
 
-                          if(image.isEmpty() == false){
+                          if(!image.isEmpty()){
                             image = image.startsWith("http") ? image : "http://" + image;
 
                             activity.setVisibility(View.VISIBLE);
@@ -820,7 +820,7 @@ public class MITM extends Plugin
                     final String video = input.trim();
                     Matcher matcher = YOUTUBE_PATTERN.matcher(input);
 
-                    if(video.isEmpty() == false && matcher != null && matcher.find()){
+                    if(!video.isEmpty() && matcher != null && matcher.find()){
                       final String videoId = matcher.group(1);
 
                       mSpoofSession = new SpoofSession();
@@ -911,7 +911,7 @@ public class MITM extends Plugin
                         @Override
                         public void onInputEntered(String input){
                           final String js = input.trim();
-                          if(js.isEmpty() == false || js.startsWith("<script") == false){
+                          if(!js.isEmpty() && js.startsWith("<script")){
 
                             mSpoofSession = new SpoofSession();
                             try {
