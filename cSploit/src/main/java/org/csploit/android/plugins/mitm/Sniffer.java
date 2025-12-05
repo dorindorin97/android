@@ -266,9 +266,9 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
       if(target != null && target.hasAlias())
         holder.address.setText
           (
-            Html.fromHtml
+            HtmlCompat.fromHtml
               (
-                "<b>" + target.getAlias() + "</b> <small>( " + target.getDisplayAddress() + " )</small>"
+                "<b>" + target.getAlias() + "</b> <small>( " + target.getDisplayAddress() + " )</small>", HtmlCompat.FROM_HTML_MODE_LEGACY
               )
           );
       else
@@ -276,9 +276,9 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
 
       holder.description.setText
         (
-          Html.fromHtml
+          HtmlCompat.fromHtml
             (
-              "<b>BANDWIDTH</b>: " + formatSpeed(stats.mBandwidth) + " | <b>TOTAL</b> " + formatSize(stats.mBytes)
+              "<b>BANDWIDTH</b>: " + formatSpeed(stats.mBandwidth) + " | <b>TOTAL</b> " + formatSize(stats.mBytes), HtmlCompat.FROM_HTML_MODE_LEGACY
             )
         );
 
