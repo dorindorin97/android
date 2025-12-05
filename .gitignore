@@ -1,53 +1,85 @@
+# macOS
 .DS_Store
 *.DS_Store
-*.o
 
-# built application files
+# IDE - IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.gradle/
+*.gradle.bak
+
+# IDE - Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IDE - Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+actionbarsherlock/build/
+
+# Build artifacts
+build/
 *.apk
 *.ap_
-
-# files for the dex VM
 *.dex
+*.jar
+*.aar
 
-# Java class files
+# Python / PyDev
+*.pydevproject
+
+# Java
 *.class
-
-# generated files
-bin/
-gen/
-build/
-gen/
-
-# Gradle/Android Studio
-*.iml
-.idea/
-.gradle/
 *.log
+hs_err_pid*
 us.stackdump*
 
-# Local configuration file (sdk path, etc)
+# Local configuration
 local.properties
+gradle.properties.local
 
-*.pydevproject
-.project
-.metadata/
-target/
-bin/**
-tmp/**
-tmp/**/*
+# Temporary files
 *.tmp
 *.bak
 *.swp
 *~.nib
 *~
-project.properties
+*.orig
+
+# Build outputs
+bin/
+gen/
 proguard/
-.classpath
-.settings/
-.loadpath
-actionbarsherlock/build/
-dSploit/build/
 cSploit/build/
+dSploit/build/
+target/
+
+# Gradle cache
+.gradle/
+gradle/cache/
+
+# Lint / Code analysis
+lint-results*/
+lint-results.html
+
+# Test coverage
+coverage/
+.jacoco/
+
+# OS
+Thumbs.db
+.Thumbs.db
+
+# Misc
+.env
+.env.local
+*.pem
+*.key
 # External tool builders
 .externalToolBuilders/
 

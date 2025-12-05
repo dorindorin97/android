@@ -1,9 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        // SDK versions
+        compileSdkVersion = 34
+        minSdkVersion = 21
+        targetSdkVersion = 33
+        
+        // Dependency versions
+        gradleVersion = '7.4.2'
+        kotlinVersion = '1.9.0'
+        androidxVersion = '1.6.0'
+    }
+    
     repositories {
         google()
         mavenCentral()
     }
+    
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
         // NOTE: Do not place your application dependencies here; they belong
@@ -15,5 +28,30 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+// Gradle tasks
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}
+
+// Build information task
+tasks.register('buildInfo') {
+    doLast {
+        println "cSploit Android Build Information"
+        println "=================================="
+        println "Gradle Version: ${gradle.gradleVersion}"
+        println "Java Version: ${System.getProperty('java.version')}"
+        println "OS: ${System.getProperty('os.name')} ${System.getProperty('os.arch')}"
+        println "=================================="
+    }
+}
+
+// Build wrapper update task
+tasks.register('updateWrapper') {
+    doLast {
+        println "To update gradle wrapper, run:"
+        println "gradle wrapper --gradle-version <new-version>"
     }
 }

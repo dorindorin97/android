@@ -6,48 +6,53 @@
 # The GNU General Public License is a free, copyleft license for software and other kinds of works.
 # see the LICENSE file distributed with this work for a full version of the License.
 
+set -euo pipefail
+
 CYAN="\\033[1;36m"
 GREEN="\\033[1;32m"
-YELLOW="\\E[33;44m"
+YELLOW="\\033[1;33m"
 RED="\\033[1;31m"
-RESET="\\e[0m"
-DATE=`date +%Y-%m-%d`
+RESET="\\033[0m"
+
+DATE=$(date +%Y-%m-%d)
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="${DIR}/logs"
-MAX_DAYS="15"
-PREVIOUS_COMMIT=$(cat "${LOG_DIR}last_commit")
+BUILD_LOG="${LOG_DIR}/${TIMESTAMP}.log"
+MAX_DAYS=15
 
-export NIGHTLY_BUILD=1
+# Create log directory if it doesn't exist
+mkdir -p "${LOG_DIR}"
 
+# Log function
+log() {
+    echo -e "${1}" | tee -a "${BUILD_LOG}"
+}
+
+# Error handler
 die() {
- echo -n -e "${RED}An error occured while building the nightly apk${RESET}\n"
- echo -n -e "${RED}See $LOG_DIR/$DATE.log for more info\n${RESET}\n"
- exec 3>&-
- exit 1
+    log "${RED}An error occurred while building the nightly APK${RESET}"
+    log "${RED}See ${BUILD_LOG} for more info${RESET}"
+    exit 1
 }
 
-jni_die() {
- cat "${DIR}/cSploit/jni/build.log" >&3
- die
-}
+# Trap errors
+trap die ERR
 
-if [ ! -d "${LOG_DIR}" ]; then
-    mkdir -p $LOG_DIR
-fi
+# Clean old logs
+log "${YELLOW}Cleaning old log files (older than ${MAX_DAYS} days)${RESET}"
+find "${LOG_DIR}" -name "*.log" -mtime "+${MAX_DAYS}" -delete 2>/dev/null || true
 
-if [ -z "${NIGHTLIES_OUT_DIR}" ]; then
-  NIGHTLIES_OUT_DIR="${DIR}/cSploit/build"
-fi
+# Initialize build directory
+export NIGHTLY_BUILD=1
+NIGHTLIES_OUT_DIR="${NIGHTLIES_OUT_DIR:-${DIR}/cSploit/build}"
+mkdir -p "${NIGHTLIES_OUT_DIR}"
 
-if [ ! -d "${NIGHTLIES_OUT_DIR}" ]; then
-    mkdir -p $NIGHTLIES_OUT_DIR
-fi
+cd "${DIR}" || die
 
-exec 3> $LOG_DIR/$DATE.log
-
-cd "${DIR}" >&3 2>&1 || die
-
-echo -n -e "${YELLOW}Cleaning old files${RESET}\n" | tee >(cat - >&3)
+log "${YELLOW}[$(date +'%H:%M:%S')] Starting nightly build${RESET}"
+log "${CYAN}Build date: ${DATE}${RESET}"
+log "${CYAN}Build timestamp: ${TIMESTAMP}${RESET}"
 LAST_APK=$(readlink "${NIGHTLIES_OUT_DIR}/cSploit-lastest.apk")
 # find $NIGHTLIES_OUT_DIR -type f -a -mtime +${MAX_DAYS} -a ! -name "${LAST_APK}" -exec rm -f "{}" \; >&3 2>&1
 find $LOG_DIR -type f -a -mtime +${MAX_DAYS} -exec rm -f "{}" \; >&3 2>&1
