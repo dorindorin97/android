@@ -42,7 +42,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import org.csploit.android.helpers.UIHelper;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
@@ -51,10 +50,10 @@ import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.Target.Port;
 import org.csploit.android.tools.Hydra;
-import org.csploit.android.helpers.UIHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -62,7 +61,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.csploit.android.helpers.UIHelper;
 
 public class LoginCracker extends Plugin {
   private static final int SELECT_USER_WORDLIST = 1012;
