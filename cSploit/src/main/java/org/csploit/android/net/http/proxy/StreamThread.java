@@ -21,6 +21,7 @@ package org.csploit.android.net.http.proxy;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.net.ByteBuffer;
 import org.csploit.android.net.http.RequestParser;
 
@@ -57,7 +58,10 @@ public class StreamThread implements Runnable
     mBuffer = new ByteBuffer();
     mFilter = filter;
 
-    new Thread(this).start();
+    ConcurrencyHelper.submitAsync(() -> {
+      this.run();
+      return null;
+    });
   }
 
   public void run(){

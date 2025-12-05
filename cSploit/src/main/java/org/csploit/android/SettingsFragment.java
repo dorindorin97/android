@@ -35,6 +35,8 @@ import org.csploit.android.core.System;
 import org.csploit.android.gui.DirectoryPicker;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.GitHubParser;
 import org.csploit.android.services.Services;
 import org.csploit.android.tools.Raw;
@@ -98,7 +100,7 @@ public class SettingsFragment extends Fragment {
         private ListPreference mMsfBranch = null;
         private int mMsfSize = 0;
         private BroadcastReceiver mReceiver = null;
-        private Thread mBranchesWaiter = null;
+        private java.util.concurrent.Future<?> mBranchesWaiter = null;
 
             @Override
             public void onViewCreated(View v, Bundle savedInstanceState) {
@@ -168,11 +170,11 @@ public class SettingsFragment extends Fragment {
         }
 
         private void wipe_prompt() {
-            String message = getString(R.string.pref_msfwipe_message);
+            StringBuilder message = new StringBuilder(getString(R.string.pref_msfwipe_message));
             if (mMsfSize > 0) {
-                message += "\n" + String.format(getString(R.string.pref_msfwipe_size), mMsfSize);
+                message.append("\n").append(String.format(getString(R.string.pref_msfwipe_size), mMsfSize));
             }
-            new ConfirmDialog(getString(R.string.warning), message, getActivity(), new ConfirmDialog.ConfirmDialogListener() {
+            new ConfirmDialog(getString(R.string.warning), message.toString(), getActivity(), new ConfirmDialog.ConfirmDialogListener() {
                 @Override
                 public void onConfirm() {
                     getActivity().sendBroadcast(new Intent(SETTINGS_WIPE_START));
@@ -518,30 +520,27 @@ public class SettingsFragment extends Fragment {
 
         private void getMsfBranches() {
             if (mBranchesWaiter != null) { // run it once per settings activity
-                if (mBranchesWaiter.getState() == Thread.State.TERMINATED)
+                if (mBranchesWaiter.isDone())
                     try {
-                        mBranchesWaiter.join();
-                    } catch (InterruptedException e) {
+                        mBranchesWaiter.get();
+                    } catch (Exception e) {
                         Logger.error(e.getMessage());
                     }
                 return;
             }
 
             mMsfBranch.setEnabled(false);
-            mBranchesWaiter = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        GitHubParser.getMsfRepo().getBranches();
-                        getActivity().sendBroadcast(new Intent(SETTINGS_MSF_BRANCHES_AVAILABLE));
-                    } catch (JSONException e) {
-                        LoggingHelper.e(TAG, "Error", e);
-                    } catch (IOException e) {
-                        Logger.error(e.getMessage());
-                    }
+            mBranchesWaiter = ConcurrencyHelper.submitAsync(() -> {
+                try {
+                    GitHubParser.getMsfRepo().getBranches();
+                    getActivity().sendBroadcast(new Intent(SETTINGS_MSF_BRANCHES_AVAILABLE));
+                } catch (JSONException e) {
+                    LoggingHelper.e(TAG, "Error", e);
+                } catch (IOException e) {
+                    Logger.error(e.getMessage());
                 }
+                return null;
             });
-            mBranchesWaiter.start();
         }
 
         private void onMsfPathChanged() {

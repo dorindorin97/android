@@ -56,6 +56,8 @@ import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.gui.dialogs.WifiCrackDialog;
 import org.csploit.android.gui.dialogs.WifiCrackDialog.WifiCrackDialogListener;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.wifi.Keygen;
 import org.csploit.android.wifi.NetworkManager;
 import org.csploit.android.wifi.WirelessMatcher;
@@ -320,36 +322,34 @@ public class WifiScannerFragment extends ListFragment
 
         final ProgressDialog dialog = ProgressDialog.show(getActivity(), "", getString(R.string.generating_keys), true, false);
 
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                dialog.show();
+        ConcurrencyHelper.submitAsync(() -> {
+            dialog.show();
 
-                try{
-                    List<String> keys = keygen.getKeys();
+            try{
+                List<String> keys = keygen.getKeys();
 
-                    if(keys == null || keys.size() == 0){
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                UIHelper.error(getActivity(), getString(R.string.error), keygen.getErrorMessage().isEmpty() ? getString(R.string.wifi_error_keys) : keygen.getErrorMessage());
-                            }
-                        });
-                    }
-                    else{
-                        mCurrentAp = ap;
-                        mKeyList = keys;
-
-                        nextConnectionAttempt();
-                    }
+                if(keys == null || keys.size() == 0){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UIHelper.error(getActivity(), getString(R.string.error), keygen.getErrorMessage().isEmpty() ? getString(R.string.wifi_error_keys) : keygen.getErrorMessage());
+                        }
+                    });
                 }
-                catch(Exception e){
-                    LoggingHelper.e(TAG, "Failed to parse WiFi keys", e);
-                } finally{
-                    dialog.dismiss();
+                else{
+                    mCurrentAp = ap;
+                    mKeyList = keys;
+
+                    nextConnectionAttempt();
                 }
             }
-        }).start();
+            catch(Exception e){
+                LoggingHelper.e(TAG, "Failed to parse WiFi keys", e);
+            } finally{
+                dialog.dismiss();
+            }
+            return null;
+        });
     }
 
     @Override

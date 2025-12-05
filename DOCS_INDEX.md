@@ -20,16 +20,20 @@ Welcome to cSploit documentation! This index helps you find what you need.
   - Build variants
   - Performance optimization
   - Troubleshooting
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - One-page developer reference (bookmarkable)
 
 ### For Contributors
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute
 - **[CODE_QUALITY_IMPROVEMENTS.md](./CODE_QUALITY_IMPROVEMENTS.md)** - Recent safety fixes
-- **[IMPROVEMENTS_ARCHIVE.md](./IMPROVEMENTS_ARCHIVE.md)** - Complete improvement history
+- **[IMPROVEMENTS.md](./IMPROVEMENTS.md)** - Complete improvement history
 
 ### Reference
 - **[CHANGELOG.md](./CHANGELOG.md)** - Version history and changes
 - **[HELPERS.md](./HELPERS.md)** - Helper utility documentation
 - **[ISSUE_TEMPLATE.md](./ISSUE_TEMPLATE.md)** - Bug report and feature request template
+
+### Historical Archives
+- **[docs/archives/](./docs/archives/)** - Archived iteration logs and analyses
 
 ---
 

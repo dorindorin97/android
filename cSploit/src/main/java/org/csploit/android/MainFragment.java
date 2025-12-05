@@ -71,6 +71,7 @@ import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
+import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -818,21 +819,17 @@ public class MainFragment extends Fragment {
                 return true;
 
             case R.id.ss_monitor:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Services.getNetworkRadar().onMenuClick(getActivity(), item);
-                    }
-                }).start();
+                ConcurrencyHelper.submitAsync(() -> {
+                    Services.getNetworkRadar().onMenuClick(getActivity(), item);
+                    return null;
+                });
                 return true;
 
             case R.id.ss_msfrpcd:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Services.getMsfRpcdService().onMenuClick(getActivity(), item);
-                    }
-                }).start();
+                ConcurrencyHelper.submitAsync(() -> {
+                    Services.getMsfRpcdService().onMenuClick(getActivity(), item);
+                    return null;
+                });
                 return true;
 
             case R.id.submit_issue:

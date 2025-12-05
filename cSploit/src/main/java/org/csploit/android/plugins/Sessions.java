@@ -36,6 +36,8 @@ import org.csploit.android.gui.Console;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.ListChoiceDialog;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.metasploit.RPCClient;
 import org.csploit.android.net.metasploit.Session;
@@ -163,22 +165,20 @@ public class Sessions extends Plugin {
 
     mListView.setOnItemLongClickListener(longClickListener);
 
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        System.getMsfRpc().updateSessions();
-        runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            if(mResults.isEmpty()) {
-              UIHelper.finish(Sessions.this, getString(R.string.warning), getString(R.string.no_opened_sessions));
-            } else {
-              mAdapter.notifyDataSetChanged();
-            }
+    ConcurrencyHelper.submitAsync(() -> {
+      System.getMsfRpc().updateSessions();
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if(mResults.isEmpty()) {
+            UIHelper.finish(Sessions.this, getString(R.string.warning), getString(R.string.no_opened_sessions));
+          } else {
+            mAdapter.notifyDataSetChanged();
           }
-        });
-      }
-    }).start();
+        }
+      });
+      return null;
+    });
 	}
 
   @Override

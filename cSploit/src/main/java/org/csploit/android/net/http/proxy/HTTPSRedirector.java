@@ -22,6 +22,8 @@ import android.content.Context;
 
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.http.RequestParser;
 
 import java.io.BufferedOutputStream;
@@ -110,20 +112,18 @@ public class HTTPSRedirector implements Runnable
         try{
           final SSLSocket client = (SSLSocket) mSocket.accept();
 
-          new Thread(new Runnable(){
-            @Override
-            public void run(){
-              try{
-                String clientAddress = client.getInetAddress().getHostAddress();
+          ConcurrencyHelper.submitAsync(() -> {
+            try{
+              String clientAddress = client.getInetAddress().getHostAddress();
 
-                Logger.debug("Incoming connection from " + clientAddress);
+              Logger.debug("Incoming connection from " + clientAddress);
 
-                InputStream reader = client.getInputStream();
+              InputStream reader = client.getInputStream();
 
-                // Apache's default header limit is 8KB.
-                byte[] buffer = new byte[8192];
-                int read = 0;
-                String serverName = null;
+              // Apache's default header limit is 8KB.
+              byte[] buffer = new byte[8192];
+              int read = 0;
+              String serverName = null;
 
                 // Read the header and rebuild it
                 if((read = reader.read(buffer, 0, 8192)) > 0){
@@ -188,8 +188,8 @@ public class HTTPSRedirector implements Runnable
               catch(IOException e){
                 LoggingHelper.e(TAG, "HTTPS redirector reader error", e);
               }
-            }
-          }).start();
+              return null;
+            });
         }
         catch(Exception e){
           LoggingHelper.d(TAG, "HTTPS redirector thread start failed: " + e.getMessage());

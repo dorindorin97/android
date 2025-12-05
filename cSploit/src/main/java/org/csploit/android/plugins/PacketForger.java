@@ -34,6 +34,8 @@ import org.csploit.android.R;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ErrorDialog;
+import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.net.Endpoint;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.Target.Type;
@@ -57,7 +59,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 	private EditText mResponse = null;
 	private ToggleButton mSendButton = null;
 	private boolean mRunning = false;
-	private Thread mThread = null;
+	private java.util.concurrent.Future<?> mThread = null;
 	private Socket mSocket = null;
 	private DatagramSocket mUdpSocket = null;
 
@@ -102,121 +104,117 @@ public class PacketForger extends Plugin implements OnClickListener {
 			if (v.getId() == R.id.sendButton) {
 				mResponse.setText("");
 
-				mRunning = true;
+			mRunning = true;
 
-				mThread = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						int protocol = mProtocol.getSelectedItemPosition(), port = -1;
-						String data = mData.getText() + "", error = null;
-						boolean waitResponse = mWaitResponse.isChecked();
+			mThread = ConcurrencyHelper.submitAsync(() -> {
+				int protocol = mProtocol.getSelectedItemPosition(), port = -1;
+				String data = mData.getText() + "", error = null;
+				boolean waitResponse = mWaitResponse.isChecked();
 
-						try {
-							port = Integer.parseInt(mPort.getText() + "".trim());
-							if (port <= 0 || port > 65535)
-								port = -1;
-						} catch (Exception e) {
-							port = -1;
-						}
+				try {
+					port = Integer.parseInt(mPort.getText() + "".trim());
+					if (port <= 0 || port > 65535)
+						port = -1;
+				} catch (Exception e) {
+					port = -1;
+				}
 
-						if (port == -1)
-							error = getString(R.string.invalid_port);
+				if (port == -1)
+					error = getString(R.string.invalid_port);
 
-						else if (data.isEmpty())
-							error = getString(R.string.request_empty);
+				else if (data.isEmpty())
+					error = getString(R.string.request_empty);
 
-						else {
-							try {
-								if (protocol == TCP_PROTOCOL) {
-									mSocket = new Socket(System
-											.getCurrentTarget()
-											.getCommandLineRepresentation(),
-											port);
-									OutputStream writer = mSocket
-											.getOutputStream();
+				else {
+					try {
+						if (protocol == TCP_PROTOCOL) {
+							mSocket = new Socket(System
+									.getCurrentTarget()
+									.getCommandLineRepresentation(),
+									port);
+							OutputStream writer = mSocket
+									.getOutputStream();
 
-									writer.write(data.getBytes());
-									writer.flush();
+							writer.write(data.getBytes());
+							writer.flush();
 
-									if (waitResponse) {
-										BufferedReader reader = new BufferedReader(
-												new InputStreamReader(mSocket
-														.getInputStream()));
-										String line;
-										final StringBuilder responseBuilder = new StringBuilder();
-										while ((line = reader.readLine()) != null) {
-											responseBuilder.append(line).append("\n");
-										}
-
-										final String text = responseBuilder.toString();
-										PacketForger.this
-												.runOnUiThread(new Runnable() {
-													public void run() {
-														mResponse.setText(text);
-													}
-												});
-
-										reader.close();
-									}
-
-									writer.close();
-									mSocket.close();
-								} else if (protocol == UDP_PROTOCOL) {
-									mUdpSocket = new DatagramSocket();
-									DatagramPacket packet = null;
-
-									if (mBinaryData != null)
-										packet = new DatagramPacket(
-												mBinaryData,
-												mBinaryData.length, System
-														.getCurrentTarget()
-														.getAddress(), port);
-									else
-										packet = new DatagramPacket(data
-												.getBytes(), data.length(),
-												System.getCurrentTarget()
-														.getAddress(), port);
-
-									mUdpSocket.send(packet);
-
-									if (waitResponse) {
-										byte[] buffer = new byte[1024];
-
-										DatagramPacket response = new DatagramPacket(
-												buffer, buffer.length);
-
-										mUdpSocket.receive(response);
-
-										final String text = new String(buffer);
-										PacketForger.this
-												.runOnUiThread(new Runnable() {
-													public void run() {
-														mResponse.setText(text);
-													}
-												});
-									}
-
-									mUdpSocket.close();
+							if (waitResponse) {
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(mSocket
+												.getInputStream()));
+								String line;
+								final StringBuilder responseBuilder = new StringBuilder();
+								while ((line = reader.readLine()) != null) {
+									responseBuilder.append(line).append("\n");
 								}
-							} catch (Exception e) {
-								error = e.getMessage();
+
+								final String text = responseBuilder.toString();
+								PacketForger.this
+										.runOnUiThread(new Runnable() {
+											public void run() {
+												mResponse.setText(text);
+											}
+										});
+
+								reader.close();
 							}
-						}
 
-						mBinaryData = null;
+							writer.close();
+							mSocket.close();
+						} else if (protocol == UDP_PROTOCOL) {
+							mUdpSocket = new DatagramSocket();
+							DatagramPacket packet = null;
 
-						final String errorMessage = error;
-					PacketForger.this.runOnUiThread(new Runnable() {
-						public void run() {
-							ToastHelper.success(PacketForger.this,
-									getString(R.string.request_sent));
-							setStoppedState(errorMessage);
+							if (mBinaryData != null)
+								packet = new DatagramPacket(
+										mBinaryData,
+										mBinaryData.length, System
+												.getCurrentTarget()
+												.getAddress(), port);
+							else
+								packet = new DatagramPacket(data
+										.getBytes(), data.length(),
+										System.getCurrentTarget()
+												.getAddress(), port);
+
+							mUdpSocket.send(packet);
+
+							if (waitResponse) {
+								byte[] buffer = new byte[1024];
+
+								DatagramPacket response = new DatagramPacket(
+										buffer, buffer.length);
+
+								mUdpSocket.receive(response);
+
+								final String text = new String(buffer);
+								PacketForger.this
+										.runOnUiThread(new Runnable() {
+											public void run() {
+												mResponse.setText(text);
+											}
+										});
+							}
+
+							mUdpSocket.close();
 						}
-					});
+					} catch (Exception e) {
+						error = e.getMessage();
 					}
-				});
+				}
 
-				mThread.start();
+				mBinaryData = null;
+
+				final String errorMessage = error;
+			PacketForger.this.runOnUiThread(new Runnable() {
+				public void run() {
+					ToastHelper.success(PacketForger.this,
+							getString(R.string.request_sent));
+					setStoppedState(errorMessage);
+				}
+			});
+			return null;
+			});
 			} else {
 				Endpoint endpoint = System.getCurrentTarget().getEndpoint();
 
@@ -261,26 +259,24 @@ public class PacketForger extends Plugin implements OnClickListener {
 		mSendButton.setChecked(false);
 		mRunning = false;
 		try {
-			if (mThread != null && mThread.isAlive()) {
 			if (mSocket != null)
 				mSocket.close();
 
 			if (mUdpSocket != null)
 				mUdpSocket.close();
 
-			// Safely terminate thread instead of deprecated stop()
-			if (mThread != null && mThread.isAlive()) {
+			// Cancel async task instead of deprecated stop()
+			if (mThread != null && !mThread.isDone()) {
 				mRunning = false;
-				mThread.interrupt();
+				mThread.cancel(true);
 				try {
-					mThread.join(1000); // Wait up to 1 second for thread to finish
-				} catch (InterruptedException e) {
-					LoggingHelper.e("PacketForger", "Thread interrupt failed", e);
+					mThread.get(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+				} catch (Exception e) {
+					LoggingHelper.e("PacketForger", "Thread cancellation failed", e);
 				}
 			}
 			mThread = null;
 			mRunning = false;
-			}
 		} catch (Exception e) {
 
 		}

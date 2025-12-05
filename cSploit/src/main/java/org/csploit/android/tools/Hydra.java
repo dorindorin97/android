@@ -69,25 +69,25 @@ public class Hydra extends Tool
   }
 
   public Child crack(Target target, int port, String service, String charset, int minlength, int maxlength, String username, String userWordlist, String passWordlist, AttemptReceiver receiver) throws ChildManager.ChildNotStartedException {
-    String command = "-F ";
+    StringBuilder command = new StringBuilder("-F ");
 
     if(userWordlist != null)
-      command += "-L " + userWordlist;
+      command.append("-L ").append(userWordlist);
 
     else
-      command += "-l " + username;
+      command.append("-l ").append(username);
 
     if(passWordlist != null)
-      command += " -P " + passWordlist;
+      command.append(" -P ").append(passWordlist);
 
     else
-      command += " -x "" + minlength + ":" + maxlength + ":" + charset + "" ";
+      command.append(" -x \"").append(minlength).append(":").append(maxlength).append(":").append(charset).append("\" ");
 
-    command += " -s " + port + " -V -t 10 " + target.getCommandLineRepresentation() + " " + service;
+    command.append(" -s ").append(port).append(" -V -t 10 ").append(target.getCommandLineRepresentation()).append(" ").append(service);
 
     if(service.equalsIgnoreCase("http-head"))
-      command += " /";
+      command.append(" /");
 
-    return super.async(command, receiver);
+    return super.async(command.toString(), receiver);
   }
 }

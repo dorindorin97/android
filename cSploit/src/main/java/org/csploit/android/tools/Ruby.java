@@ -78,7 +78,7 @@ public class Ruby extends Tool {
     path = java.lang.System.getenv("PATH");
 
     mEnv[0] = String.format("RUBYLIB=" + rubyLib, rubyRoot + "/lib/ruby");
-    mEnv[1] = String.format("PATH=%s:%s", path, rubyRoot + "/bin");
-    mEnv[2] = String.format("HOME=%s", rubyRoot + "/home/ruby");
+    mEnv[1] = "PATH=" + path + ":" + rubyRoot + "/bin";
+    mEnv[2] = "HOME=" + rubyRoot + "/home/ruby";
   }
 }
