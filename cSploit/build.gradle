@@ -28,6 +28,30 @@ dependencies {
     
     // Testing
     testImplementation 'junit:junit:4.13.2'
+
+    // JUnit5 (Jupiter) for unit tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.9.2'
+
+    // Mockito for mocking
+    testImplementation 'org.mockito:mockito-core:5.2.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+
+    // AssertJ for better assertions
+    testImplementation 'org.assertj:assertj-core:3.24.1'
+
+    // Android testing - AndroidX Test
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+
+    // Mockito for Android tests
+    androidTestImplementation 'org.mockito:mockito-android:5.2.0'
+
+    // Robolectric for unit tests that need Android context
+    testImplementation 'org.robolectric:robolectric:4.10'
 }
 
 android {
