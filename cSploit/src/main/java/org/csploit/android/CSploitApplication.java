@@ -33,6 +33,9 @@ import org.acra.config.NotificationConfigurationBuilder;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.PreferencesHelper;
+import org.csploit.android.helpers.HttpHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.plugins.ExploitFinder;
 import org.csploit.android.plugins.Inspector;
 import org.csploit.android.plugins.LoginCracker;
@@ -62,6 +65,10 @@ public class CSploitApplication extends Application {
       setTheme(R.style.AppTheme);
 
     super.onCreate();
+
+    // Initialize helper utilities early
+    PreferencesHelper.init(this);
+    LoggingHelper.d("CSploitApplication", "Helper utilities initialized");
 
     // Initialize ACRA with configuration from preferences or environment
     // Only enable crash reporting if user opted in and credentials are properly configured
@@ -135,5 +142,13 @@ public class CSploitApplication extends Application {
   protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     MultiDex.install(this);
+  }
+
+  @Override
+  public void onTerminate() {
+    // Clean up helper resources
+    HttpHelper.clearCache();
+    LoggingHelper.d("CSploitApplication", "HTTP cache and resources cleaned up");
+    super.onTerminate();
   }
 }
