@@ -46,10 +46,10 @@ import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
-import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.Target.Port;
@@ -249,11 +249,7 @@ public class PortScanner extends Plugin {
               PortScanner.this.startActivity(browser);
             } catch (ActivityNotFoundException e) {
               LoggingHelper.e(TAG, "No browser activity found for URL", e);
-
-              new ErrorDialog(
-                      getString(R.string.error),
-                      getString(R.string.no_activities_for_url),
-                      PortScanner.this).show();
+              UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.no_activities_for_url));
             }
 
           }
@@ -315,7 +311,7 @@ public class PortScanner extends Plugin {
                                       getString(R.string.port_must_be_greater));
                           }
                         } catch (Exception e) {
-                          new ErrorDialog("Error", e.toString(),
+                          UIHelper.error(PortScanner.this, "Error", e.toString());
                                   PortScanner.this).show();
                           return;
                         }
@@ -330,9 +326,7 @@ public class PortScanner extends Plugin {
 
                       if (mCustomPorts.isEmpty()) {
                         mCustomPorts = null;
-                        new ErrorDialog(getString(R.string.error),
-                                getString(R.string.invalid_ports),
-                                PortScanner.this).show();
+                        UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.invalid_custom_ports));
                       }
 
                       hideParametersField();
@@ -340,9 +334,7 @@ public class PortScanner extends Plugin {
 
                       Logger.debug("mCustomPorts = " + mCustomPorts);
                     } else
-                      new ErrorDialog(getString(R.string.error),
-                              getString(R.string.empty_port_list),
-                              PortScanner.this).show();
+                      UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.empty_port_list));
                   }
                 }).show();
 

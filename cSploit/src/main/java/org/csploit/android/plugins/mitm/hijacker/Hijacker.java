@@ -51,14 +51,14 @@ import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
-import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
+import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.helpers.AnimationHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;
 import org.csploit.android.plugins.mitm.SpoofSession;
@@ -548,8 +548,7 @@ public class Hijacker extends AppCompatActivity {
 			@Override
 			public void run() {
 				if (!Hijacker.this.isFinishing()) {
-					new ErrorDialog(getString(R.string.error), error,
-							Hijacker.this).show();
+					UIHelper.error(Hijacker.this, getString(R.string.error), error);
 					setStoppedState();
 				}
 			}
@@ -602,15 +601,12 @@ public class Hijacker extends AppCompatActivity {
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
-									new ErrorDialog("Error", e.getMessage(),
-											Hijacker.this).show();
+									UIHelper.error(Hijacker.this, "Error", e.getMessage());
 								}
 							}
 						}).show();
 			} else
-				new ErrorDialog(getString(R.string.error),
-						getString(R.string.no_session_found), Hijacker.this)
-						.show();
+				UIHelper.error(Hijacker.this, getString(R.string.error), getString(R.string.no_session_found));
 
 			return true;
 
