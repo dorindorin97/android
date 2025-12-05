@@ -127,15 +127,13 @@ public class DNSSpoofing extends AppCompatActivity {
 	}
 
     public void readDNSlist(){
-        String _line="";
-
         try {
-            BufferedReader inputReader = new BufferedReader(new FileReader(System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns"));
-            while ((_line = inputReader.readLine()) != null) {
-                mTextDnsList.append(_line + "\n");
+            try (BufferedReader inputReader = new BufferedReader(new FileReader(System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns"))) {
+                String line;
+                while ((line = inputReader.readLine()) != null) {
+                    mTextDnsList.append(line + "\n");
+                }
             }
-
-            inputReader.close();
         }
         catch (Exception e){
             Logger.error("readDNSList() error: " + e.getLocalizedMessage());
@@ -147,9 +145,9 @@ public class DNSSpoofing extends AppCompatActivity {
         try {
             Logger.info("saveDNSList() saving dnss to: " + System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns");
             File f = new File(System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns");
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(mTextDnsList.getText().toString().getBytes());
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(mTextDnsList.getText().toString().getBytes());
+            }
 
             ToastHelper.success(this, "Saved");
         }
