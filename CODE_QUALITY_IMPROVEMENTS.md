@@ -469,3 +469,75 @@ a094f98f Fix gradle build configuration and remove unused MainFragment method
 ```
 
 ---
+
+---
+
+## Post-Iteration 14: TODO/FIXME Documentation Improvements
+
+### Overview
+
+**Iteration 14** focused on clarifying remaining TODO and FIXME comments that represent known limitations, incomplete features, or future enhancements that are acceptable to leave in the codebase with proper documentation.
+
+### Comments Improved (5 instances)
+
+#### 1. **HTTPSRedirector.java** - FIXME: Unused Headers Collection
+- **Issue**: ArrayList of headers was being collected but never used
+- **Resolution**: Removed unused ArrayList, clarified that header parsing happens but only values are used for request building
+- **LOC Removed**: 1 line (unused ArrayList declaration)
+- **Impact**: Reduced memory allocation and improved code clarity
+
+#### 2. **ShellSession.java** - TODO: Resource ID
+- **Issue**: Bare TODO comment on getResourceId() method
+- **Resolution**: Added comprehensive JavaDoc explaining that method returns shell session drawable (uses MSF exploit icon)
+- **Clarification**: Method is properly implemented, just lacked documentation
+
+#### 3. **Option.java** - TODO: PATH Case
+- **Issue**: Empty TODO on PATH option type handling
+- **Resolution**: Clarified that PATH values are accepted as-is, with validation deferred to usage time
+- **Rationale**: Design decision to separate parsing from validation
+
+#### 4. **RPCClient.java** - TODO: Meterpreter Session
+- **Issue**: Generic Session used instead of specific MeterpreterSession
+- **Resolution**: Enhanced TODO with context: requires proper MeterpreterSession implementation
+- **Complexity**: Medium - requires new MeterpreterSession class design
+
+#### 5. **ExploitDb.java** - TODO: Cloudflare Bypass
+- **Issue**: Commented-out code to fetch OSVDB with TODO about Cloudflare JS challenge
+- **Resolution**: Added detailed explanation of the challenge (Cloudflare protection) and requirements for implementation (headless browser or JS execution)
+- **Complexity**: High - requires external library or JS engine
+
+### Remaining Strategic TODOs (5 items requiring more work)
+
+| File | Line | Type | Complexity | Description |
+|------|------|------|------------|-------------|
+| TcpDump.java | 56 | TODO | Medium | Receive tcpdump output when saving to file |
+| Ettercap.java | 58 | TODO | Low | Only onAccount() event implemented |
+| ExploitFinder.java | 409 | TODO | Medium | Use Java Observer/Observable pattern |
+| MultiAttackService.java | 271 | TODO | High | Rewrite service - target index may change |
+| Option.java | 61,107,133 | TODO | Medium | Enum handling - string/integer/generics |
+
+### Metrics
+
+| Metric | Value |
+|--------|-------|
+| TODO/FIXME comments improved | 5 |
+| Unused code removed | 1 LOC |
+| Files modified | 5 |
+| Commits | 1 |
+| Documentation enhanced | ✅ |
+
+### Commit
+
+```
+4c5449b2 Clarify and improve remaining TODO/FIXME comments with better documentation
+```
+
+### Quality Impact
+
+- **Documentation**: Enhanced clarity for maintainers
+- **Code Comprehension**: TODOs now explain rationale and constraints
+- **Future Work**: Clear roadmap for potential improvements
+- **Technical Debt**: Properly documented, not hidden
+- **Maintainability**: Future developers understand context
+
+---
