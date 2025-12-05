@@ -173,7 +173,7 @@ public class HijackerWebView extends AppCompatActivity {
       }
 
       if (session.mUserAgent != null
-              && session.mUserAgent.isEmpty() == false)
+              && !session.mUserAgent.isEmpty())
         mSettings.setUserAgentString(session.mUserAgent);
 
       String url = (session.mHTTPS ? "https" : "http") + "://";

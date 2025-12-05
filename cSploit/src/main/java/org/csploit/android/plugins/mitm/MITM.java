@@ -298,7 +298,7 @@ public class MITM extends Plugin
 
           js = buffer.toString().trim();
 
-          if(js.startsWith("<script") == false && js.startsWith("<SCRIPT") == false)
+          if(!js.startsWith("<script") && !js.startsWith("<SCRIPT"))
             js = "<script type="text/javascript">\n" + js + "\n</script>\n";
 
           mCurrentActivity.setVisibility(View.VISIBLE);
@@ -397,7 +397,7 @@ public class MITM extends Plugin
     ActionAdapter.ActionHolder holder;
     View row;
 
-    for(i = 0; i < rows && somethingIsRunning == false; i++){
+    for(i = 0; i < rows && !somethingIsRunning; i++){
       if((row = mActionListView.getChildAt(i)) != null){
         holder = (ActionAdapter.ActionHolder) row.getTag();
         if(holder.activity.getVisibility() == View.VISIBLE)
@@ -457,7 +457,7 @@ public class MITM extends Plugin
                     new OnClickListener() {
                       @Override
                       public void onClick(View v) {
-                        if (System.checkNetworking(MITM.this) == false)
+                        if (!System.checkNetworking(MITM.this))
                           return;
 
                         setStoppedState();
@@ -633,7 +633,7 @@ public class MITM extends Plugin
       new OnClickListener(){
         @Override
         public void onClick(View v){
-          if(System.checkNetworking(MITM.this) == false)
+          if(!System.checkNetworking(MITM.this))
             return;
 
           final ProgressBar activity = (ProgressBar) v.findViewById(R.id.itemActivity);
@@ -698,7 +698,7 @@ public class MITM extends Plugin
       new OnClickListener(){
         @Override
         public void onClick(View v){
-          if(System.checkNetworking(MITM.this) == false)
+          if(!System.checkNetworking(MITM.this))
             return;
 
           final ProgressBar activity = (ProgressBar) v.findViewById(R.id.itemActivity);
@@ -800,7 +800,7 @@ public class MITM extends Plugin
       new OnClickListener(){
         @Override
         public void onClick(View v){
-          if(System.checkNetworking(MITM.this) == false)
+          if(!System.checkNetworking(MITM.this))
             return;
 
           final ProgressBar activity = (ProgressBar) v.findViewById(R.id.itemActivity);
@@ -978,7 +978,7 @@ public class MITM extends Plugin
             @Override
             public void onInputEntered(final ArrayList<String> from, final ArrayList<String> to){
 
-              if(from.isEmpty() == false && to.isEmpty() == false){
+              if(!from.isEmpty() && !to.isEmpty()){
                 try{
                   for(String exp : from){
                     Pattern.compile(exp);

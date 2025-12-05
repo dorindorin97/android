@@ -90,7 +90,7 @@ public class StreamThread implements Runnable
         location = location == null ? RequestParser.getHeaderValue(RequestParser.LOCATION_HEADER, mBuffer) : location;
         contentType = contentType == null ? RequestParser.getHeaderValue(RequestParser.CONTENT_TYPE_HEADER, mBuffer) : contentType;
 
-        if(contentType != null && wasContentTypeChecked == false){
+        if(contentType != null && !wasContentTypeChecked){
           wasContentTypeChecked = true;
           isHandledContentType = false;
 
@@ -102,7 +102,7 @@ public class StreamThread implements Runnable
           }
 
           // not handled content type, start fast streaming
-          if(isHandledContentType == false){
+          if(!isHandledContentType){
             Profiler.instance().profile("Fast streaming");
 
             Logger.debug("Content type " + contentType + " not handled, start fast streaming ...");
@@ -127,7 +127,7 @@ public class StreamThread implements Runnable
 
       // if we are here, this means we have a document to be filtered
       // ( handled content type )
-      if(mBuffer.isEmpty() == false){
+      if(!mBuffer.isEmpty()){
         Profiler.instance().profile("content filtering");
 
         String data = mBuffer.toString();
@@ -135,7 +135,7 @@ public class StreamThread implements Runnable
         String headers = split[0];
 
         // handle relocations for https support
-        if(location != null && location.startsWith("https://") && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) == true){
+        if(location != null && location.startsWith("https://") && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true)){
           Logger.warning("Patching 302 HTTPS redirect : " + location);
 
           // update variables for further filtering
@@ -156,7 +156,7 @@ public class StreamThread implements Runnable
 
         // remove explicit content length, just in case the body changed after filtering
         for(String header : headers.split("\n")){
-          if(header.toLowerCase().contains("content-length") == false)
+          if(!header.toLowerCase().contains("content-length"))
           patchedBuilder.append(header).append("\n");
         }
 

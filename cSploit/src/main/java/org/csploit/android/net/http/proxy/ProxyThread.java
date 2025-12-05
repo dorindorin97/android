@@ -97,7 +97,7 @@ public class ProxyThread extends Thread
         boolean headersProcessed = false;
 
         while((line = bReader.readLine()) != null){
-          if(headersProcessed == false){
+          if(!headersProcessed){
             headers.add(line);
 
             // \r\n\r\n received ?
@@ -150,10 +150,10 @@ public class ProxyThread extends Thread
 
           // connect to host
           if(mHostRedirect == null){
-            if(url != null && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) == true && HTTPSMonitor.getInstance().hasURL(client, url) == true){
+            if(url != null && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) && HTTPSMonitor.getInstance().hasURL(client, url)){
               Logger.warning("Found stripped HTTPS url : " + url);
 
-              if(CookieCleaner.getInstance().isClean(client, mServerName, request) == false){
+              if(!CookieCleaner.getInstance().isClean(client, mServerName, request)){
                 Logger.warning("Sending expired cookie for " + mServerName);
 
                 response = CookieCleaner.getInstance().getExpiredResponse(request, mServerName);
@@ -202,7 +202,7 @@ public class ProxyThread extends Thread
             new StreamThread(client, mServerReader, mWriter, new Proxy.ProxyFilter(){
               @Override
               public String onDataReceived(String headers, String data){
-                if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) == true){
+                if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true)){
                   // first of all, get rid of every HTTPS url
                   Matcher match = LINK_PATTERN.matcher(data);
                   if(match != null){

@@ -240,11 +240,9 @@ public class PasswordSniffer extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_fields:
-				if (mSniffToggleButton.isEnabled() == false)
-					ToastHelper.info(this, "The changes won't take effect until you stop the current traffic sniffing");
-
-				Intent _fields = new Intent(PasswordSniffer.this, FileEdit.class);
+		case R.id.action_fields:
+			if (!mSniffToggleButton.isEnabled())
+				ToastHelper.info(this, "The changes won't take effect until you stop the current traffic sniffing");				Intent _fields = new Intent(PasswordSniffer.this, FileEdit.class);
 				_fields.putExtra(FileEdit.KEY_FILEPATH, "/tools/ettercap/share/etter.fields");
 				startActivityForResult(_fields, 0);
 
@@ -294,7 +292,7 @@ public class PasswordSniffer extends AppCompatActivity {
           PasswordSniffer.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              if (mAdapter.hasChild(protocol, line) == false) {
+              if (!mAdapter.hasChild(protocol, line)) {
                 try {
                   mBufferedWriter.write(line + "\n");
                 } catch (IOException e) {

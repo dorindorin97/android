@@ -135,7 +135,7 @@ public class HTTPSRedirector implements Runnable
                   boolean headersProcessed = false;
 
                   while((line = bReader.readLine()) != null){
-                    if(headersProcessed == false){
+                    if(!headersProcessed){
                       //FIXME: It had been modified, but it had not been used further. Is this a bug?
                       headers.add(line);
 

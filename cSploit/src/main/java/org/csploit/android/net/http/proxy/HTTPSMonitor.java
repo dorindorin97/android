@@ -38,7 +38,7 @@ public class HTTPSMonitor{
   }
 
   public void addURL(String client, String url){
-    if(mMap.containsKey(client) == false)
+    if(!mMap.containsKey(client))
       mMap.put(client, new ArrayList<String>());
 
     mMap.get(client).add(url);

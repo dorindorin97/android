@@ -43,7 +43,7 @@ public class CookieCleaner{
     if(request.startsWith("POST "))
       return true;
 
-    else if(request.contains("Cookie:") == false)
+    else if(!request.contains("Cookie:"))
       return true;
 
     else{
@@ -97,7 +97,7 @@ public class CookieCleaner{
   public void addCleaned(String client, String hostname){
     String domain = RequestParser.getBaseDomain(hostname);
 
-    if(mMap.containsKey(client) == false)
+    if(!mMap.containsKey(client))
       mMap.put(client, new ArrayList<String>());
 
     mMap.get(client).add(domain);
