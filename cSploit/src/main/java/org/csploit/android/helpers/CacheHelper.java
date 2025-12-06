@@ -23,12 +23,13 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * CacheHelper - Flexible caching utility for objects, bitmaps, and HTTP responses
@@ -71,33 +72,40 @@ import java.util.Map;
 public final class CacheHelper {
 
     private static final String TAG = "CacheHelper";
-
-    // In-memory object cache (thread-safe)
-    private static final Map<String, CacheEntry<?>> OBJECT_CACHE = 
-            Collections.synchronizedMap(new LinkedHashMap<String, CacheEntry<?>>(16, 0.75f, true) {
-                private static final long serialVersionUID = 1L;
-                private static final int MAX_ENTRIES = 100;
-
-                @Override
-                protected boolean removeEldestEntry(Map.Entry eldest) {
-                    return size() > MAX_ENTRIES;
-                }
-            });
-
-    // Bitmap cache (thread-safe, with size limit)
-    private static final Map<String, BitmapCacheEntry> BITMAP_CACHE = 
-            Collections.synchronizedMap(new HashMap<String, BitmapCacheEntry>());
-    private static long bitmapCacheSize = 0;
+    private static final int MAX_OBJECT_CACHE_ENTRIES = 100;
     private static final long DEFAULT_BITMAP_CACHE_LIMIT = 50 * 1024 * 1024;  // 50 MB
 
-    // HTTP response cache (thread-safe)
-    private static final Map<String, ResponseCacheEntry> RESPONSE_CACHE = 
-            Collections.synchronizedMap(new HashMap<String, ResponseCacheEntry>());
+    // Locks for thread-safe operations on composite actions
+    private static final ReentrantReadWriteLock objectCacheLock = new ReentrantReadWriteLock();
+    private static final ReentrantReadWriteLock bitmapCacheLock = new ReentrantReadWriteLock();
+    private static final ReentrantReadWriteLock responseCacheLock = new ReentrantReadWriteLock();
 
-    // Cache statistics
-    private static long hitCount = 0;
-    private static long missCount = 0;
-    private static long evictionCount = 0;
+    // In-memory object cache with LRU eviction (protected by objectCacheLock)
+    private static final LinkedHashMap<String, CacheEntry<?>> OBJECT_CACHE =
+            new LinkedHashMap<String, CacheEntry<?>>(16, 0.75f, true) {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, CacheEntry<?>> eldest) {
+                    boolean shouldRemove = size() > MAX_OBJECT_CACHE_ENTRIES;
+                    if (shouldRemove) {
+                        evictionCount.incrementAndGet();
+                    }
+                    return shouldRemove;
+                }
+            };
+
+    // Bitmap cache (protected by bitmapCacheLock)
+    private static final Map<String, BitmapCacheEntry> BITMAP_CACHE = new HashMap<>();
+    private static final AtomicLong bitmapCacheSize = new AtomicLong(0);
+
+    // HTTP response cache (using ConcurrentHashMap for better concurrent access)
+    private static final Map<String, ResponseCacheEntry> RESPONSE_CACHE = new ConcurrentHashMap<>();
+
+    // Cache statistics (using AtomicLong for thread-safety)
+    private static final AtomicLong hitCount = new AtomicLong(0);
+    private static final AtomicLong missCount = new AtomicLong(0);
+    private static final AtomicLong evictionCount = new AtomicLong(0);
 
     // Private constructor to prevent instantiation
     private CacheHelper() {}
@@ -173,7 +181,12 @@ public final class CacheHelper {
      * @param ttlMs time-to-live in milliseconds
      */
     public static void put(@NonNull String key, @NonNull Object value, long ttlMs) {
-        OBJECT_CACHE.put(key, new CacheEntry<>(value, ttlMs));
+        objectCacheLock.writeLock().lock();
+        try {
+            OBJECT_CACHE.put(key, new CacheEntry<>(value, ttlMs));
+        } finally {
+            objectCacheLock.writeLock().unlock();
+        }
         LoggingHelper.d(TAG, "Cached: " + key);
     }
 
@@ -186,22 +199,33 @@ public final class CacheHelper {
      */
     @Nullable
     public static <T> T get(@NonNull String key, @NonNull Class<T> type) {
-        CacheEntry<?> entry = OBJECT_CACHE.get(key);
+        objectCacheLock.readLock().lock();
+        CacheEntry<?> entry;
+        try {
+            entry = OBJECT_CACHE.get(key);
+        } finally {
+            objectCacheLock.readLock().unlock();
+        }
 
         if (entry == null) {
-            missCount++;
+            missCount.incrementAndGet();
             return null;
         }
 
         if (entry.isExpired()) {
-            OBJECT_CACHE.remove(key);
-            evictionCount++;
-            missCount++;
+            objectCacheLock.writeLock().lock();
+            try {
+                OBJECT_CACHE.remove(key);
+            } finally {
+                objectCacheLock.writeLock().unlock();
+            }
+            evictionCount.incrementAndGet();
+            missCount.incrementAndGet();
             LoggingHelper.d(TAG, "Cache expired: " + key);
             return null;
         }
 
-        hitCount++;
+        hitCount.incrementAndGet();
         try {
             @SuppressWarnings("unchecked")
             T result = (T) entry.value;
@@ -219,11 +243,23 @@ public final class CacheHelper {
      * @return true if valid cache entry exists
      */
     public static boolean contains(@NonNull String key) {
-        CacheEntry<?> entry = OBJECT_CACHE.get(key);
+        objectCacheLock.readLock().lock();
+        CacheEntry<?> entry;
+        try {
+            entry = OBJECT_CACHE.get(key);
+        } finally {
+            objectCacheLock.readLock().unlock();
+        }
+
         if (entry == null) return false;
 
         if (entry.isExpired()) {
-            OBJECT_CACHE.remove(key);
+            objectCacheLock.writeLock().lock();
+            try {
+                OBJECT_CACHE.remove(key);
+            } finally {
+                objectCacheLock.writeLock().unlock();
+            }
             return false;
         }
 
@@ -239,25 +275,31 @@ public final class CacheHelper {
      * @param maxSizeBytes maximum cache size
      * @return true if cached successfully
      */
-    public static boolean putBitmap(@NonNull Context context, @NonNull String key, 
+    public static boolean putBitmap(@NonNull Context context, @NonNull String key,
                                     @NonNull Bitmap bitmap, long maxSizeBytes) {
-        long bitmapSize = bitmap.getByteCount();
+        long size = bitmap.getByteCount();
 
-        // Evict entries if necessary
-        while (bitmapCacheSize + bitmapSize > maxSizeBytes && !BITMAP_CACHE.isEmpty()) {
-            String oldestKey = BITMAP_CACHE.keySet().iterator().next();
-            BitmapCacheEntry removed = BITMAP_CACHE.remove(oldestKey);
-            if (removed != null) {
-                bitmapCacheSize -= removed.size;
-                evictionCount++;
+        bitmapCacheLock.writeLock().lock();
+        try {
+            // Evict entries if necessary
+            while (bitmapCacheSize.get() + size > maxSizeBytes && !BITMAP_CACHE.isEmpty()) {
+                Iterator<Map.Entry<String, BitmapCacheEntry>> it = BITMAP_CACHE.entrySet().iterator();
+                if (it.hasNext()) {
+                    Map.Entry<String, BitmapCacheEntry> entry = it.next();
+                    it.remove();
+                    bitmapCacheSize.addAndGet(-entry.getValue().size);
+                    evictionCount.incrementAndGet();
+                }
             }
-        }
 
-        if (bitmapCacheSize + bitmapSize <= maxSizeBytes) {
-            BITMAP_CACHE.put(key, new BitmapCacheEntry(bitmap));
-            bitmapCacheSize += bitmapSize;
-            LoggingHelper.d(TAG, "Cached bitmap: " + key + " (" + bitmapSize + " bytes)");
-            return true;
+            if (bitmapCacheSize.get() + size <= maxSizeBytes) {
+                BITMAP_CACHE.put(key, new BitmapCacheEntry(bitmap));
+                bitmapCacheSize.addAndGet(size);
+                LoggingHelper.d(TAG, "Cached bitmap: " + key + " (" + size + " bytes)");
+                return true;
+            }
+        } finally {
+            bitmapCacheLock.writeLock().unlock();
         }
 
         return false;
@@ -271,15 +313,20 @@ public final class CacheHelper {
      */
     @Nullable
     public static Bitmap getBitmap(@NonNull String key) {
-        BitmapCacheEntry entry = BITMAP_CACHE.get(key);
+        bitmapCacheLock.readLock().lock();
+        try {
+            BitmapCacheEntry entry = BITMAP_CACHE.get(key);
 
-        if (entry == null) {
-            missCount++;
-            return null;
+            if (entry == null) {
+                missCount.incrementAndGet();
+                return null;
+            }
+
+            hitCount.incrementAndGet();
+            return entry.bitmap;
+        } finally {
+            bitmapCacheLock.readLock().unlock();
         }
-
-        hitCount++;
-        return entry.bitmap;
     }
 
     /**
@@ -289,12 +336,17 @@ public final class CacheHelper {
      * @return true if removed
      */
     public static boolean removeBitmap(@NonNull String key) {
-        BitmapCacheEntry removed = BITMAP_CACHE.remove(key);
-        if (removed != null) {
-            bitmapCacheSize -= removed.size;
-            return true;
+        bitmapCacheLock.writeLock().lock();
+        try {
+            BitmapCacheEntry removed = BITMAP_CACHE.remove(key);
+            if (removed != null) {
+                bitmapCacheSize.addAndGet(-removed.size);
+                return true;
+            }
+            return false;
+        } finally {
+            bitmapCacheLock.writeLock().unlock();
         }
-        return false;
     }
 
     /**
@@ -323,19 +375,19 @@ public final class CacheHelper {
         ResponseCacheEntry entry = RESPONSE_CACHE.get(url);
 
         if (entry == null) {
-            missCount++;
+            missCount.incrementAndGet();
             return null;
         }
 
         if (entry.isExpired()) {
             RESPONSE_CACHE.remove(url);
-            evictionCount++;
-            missCount++;
+            evictionCount.incrementAndGet();
+            missCount.incrementAndGet();
             LoggingHelper.d(TAG, "Response cache expired: " + url);
             return null;
         }
 
-        hitCount++;
+        hitCount.incrementAndGet();
         return entry.data;
     }
 
@@ -350,18 +402,18 @@ public final class CacheHelper {
         ResponseCacheEntry entry = RESPONSE_CACHE.get(url);
 
         if (entry == null) {
-            missCount++;
+            missCount.incrementAndGet();
             return null;
         }
 
         if (entry.isExpired()) {
             RESPONSE_CACHE.remove(url);
-            evictionCount++;
-            missCount++;
+            evictionCount.incrementAndGet();
+            missCount.incrementAndGet();
             return null;
         }
 
-        hitCount++;
+        hitCount.incrementAndGet();
         return entry;
     }
 
@@ -369,10 +421,22 @@ public final class CacheHelper {
      * Clear all object caches
      */
     public static void clearCache() {
-        OBJECT_CACHE.clear();
-        BITMAP_CACHE.clear();
+        objectCacheLock.writeLock().lock();
+        try {
+            OBJECT_CACHE.clear();
+        } finally {
+            objectCacheLock.writeLock().unlock();
+        }
+
+        bitmapCacheLock.writeLock().lock();
+        try {
+            BITMAP_CACHE.clear();
+            bitmapCacheSize.set(0);
+        } finally {
+            bitmapCacheLock.writeLock().unlock();
+        }
+
         RESPONSE_CACHE.clear();
-        bitmapCacheSize = 0;
         LoggingHelper.d(TAG, "All caches cleared");
     }
 
@@ -380,15 +444,25 @@ public final class CacheHelper {
      * Clear object cache only
      */
     public static void clearObjectCache() {
-        OBJECT_CACHE.clear();
+        objectCacheLock.writeLock().lock();
+        try {
+            OBJECT_CACHE.clear();
+        } finally {
+            objectCacheLock.writeLock().unlock();
+        }
     }
 
     /**
      * Clear bitmap cache only
      */
     public static void clearBitmapCache() {
-        BITMAP_CACHE.clear();
-        bitmapCacheSize = 0;
+        bitmapCacheLock.writeLock().lock();
+        try {
+            BITMAP_CACHE.clear();
+            bitmapCacheSize.set(0);
+        } finally {
+            bitmapCacheLock.writeLock().unlock();
+        }
     }
 
     /**
@@ -403,20 +477,25 @@ public final class CacheHelper {
      */
     public static void evictExpired() {
         // Object cache
-        Iterator<Map.Entry<String, CacheEntry<?>>> objIter = OBJECT_CACHE.entrySet().iterator();
-        while (objIter.hasNext()) {
-            if (objIter.next().getValue().isExpired()) {
-                objIter.remove();
-                evictionCount++;
+        objectCacheLock.writeLock().lock();
+        try {
+            Iterator<Map.Entry<String, CacheEntry<?>>> objIter = OBJECT_CACHE.entrySet().iterator();
+            while (objIter.hasNext()) {
+                if (objIter.next().getValue().isExpired()) {
+                    objIter.remove();
+                    evictionCount.incrementAndGet();
+                }
             }
+        } finally {
+            objectCacheLock.writeLock().unlock();
         }
 
-        // Response cache
+        // Response cache (ConcurrentHashMap handles concurrent modification)
         Iterator<Map.Entry<String, ResponseCacheEntry>> respIter = RESPONSE_CACHE.entrySet().iterator();
         while (respIter.hasNext()) {
             if (respIter.next().getValue().isExpired()) {
                 respIter.remove();
-                evictionCount++;
+                evictionCount.incrementAndGet();
             }
         }
 
@@ -431,16 +510,36 @@ public final class CacheHelper {
     @NonNull
     public static String getStatistics() {
         StringBuilder sb = new StringBuilder();
-        long total = hitCount + missCount;
-        double hitRate = total > 0 ? (hitCount * 100.0 / total) : 0;
+        long hits = hitCount.get();
+        long misses = missCount.get();
+        long total = hits + misses;
+        double hitRate = total > 0 ? (hits * 100.0 / total) : 0;
+
+        int objectSize;
+        objectCacheLock.readLock().lock();
+        try {
+            objectSize = OBJECT_CACHE.size();
+        } finally {
+            objectCacheLock.readLock().unlock();
+        }
+
+        int bitmapCount;
+        long bitmapSize;
+        bitmapCacheLock.readLock().lock();
+        try {
+            bitmapCount = BITMAP_CACHE.size();
+            bitmapSize = bitmapCacheSize.get();
+        } finally {
+            bitmapCacheLock.readLock().unlock();
+        }
 
         sb.append("Cache Statistics:\n");
-        sb.append("Hits: ").append(hitCount).append("\n");
-        sb.append("Misses: ").append(missCount).append("\n");
+        sb.append("Hits: ").append(hits).append("\n");
+        sb.append("Misses: ").append(misses).append("\n");
         sb.append("Hit Rate: ").append(String.format("%.1f%%", hitRate)).append("\n");
-        sb.append("Evictions: ").append(evictionCount).append("\n");
-        sb.append("Object Cache Size: ").append(OBJECT_CACHE.size()).append("\n");
-        sb.append("Bitmap Cache Size: ").append(BITMAP_CACHE.size()).append(" (").append(SystemHelper.formatBytes(bitmapCacheSize)).append(")\n");
+        sb.append("Evictions: ").append(evictionCount.get()).append("\n");
+        sb.append("Object Cache Size: ").append(objectSize).append("\n");
+        sb.append("Bitmap Cache Size: ").append(bitmapCount).append(" (").append(SystemHelper.formatBytes(bitmapSize)).append(")\n");
         sb.append("Response Cache Size: ").append(RESPONSE_CACHE.size()).append("\n");
 
         return sb.toString();
@@ -450,9 +549,9 @@ public final class CacheHelper {
      * Reset cache statistics
      */
     public static void resetStatistics() {
-        hitCount = 0;
-        missCount = 0;
-        evictionCount = 0;
+        hitCount.set(0);
+        missCount.set(0);
+        evictionCount.set(0);
         LoggingHelper.d(TAG, "Statistics reset");
     }
 
@@ -462,8 +561,10 @@ public final class CacheHelper {
      * @return hit rate or 0 if no accesses
      */
     public static double getHitRate() {
-        long total = hitCount + missCount;
-        return total > 0 ? (hitCount * 100.0 / total) : 0;
+        long hits = hitCount.get();
+        long misses = missCount.get();
+        long total = hits + misses;
+        return total > 0 ? (hits * 100.0 / total) : 0;
     }
 
     /**
@@ -472,7 +573,7 @@ public final class CacheHelper {
      * @return size in bytes
      */
     public static long getBitmapCacheSize() {
-        return bitmapCacheSize;
+        return bitmapCacheSize.get();
     }
 
     /**
@@ -481,7 +582,12 @@ public final class CacheHelper {
      * @return number of cached objects
      */
     public static int getObjectCacheCount() {
-        return OBJECT_CACHE.size();
+        objectCacheLock.readLock().lock();
+        try {
+            return OBJECT_CACHE.size();
+        } finally {
+            objectCacheLock.readLock().unlock();
+        }
     }
 
     /**
@@ -490,7 +596,12 @@ public final class CacheHelper {
      * @return number of cached bitmaps
      */
     public static int getBitmapCacheCount() {
-        return BITMAP_CACHE.size();
+        bitmapCacheLock.readLock().lock();
+        try {
+            return BITMAP_CACHE.size();
+        } finally {
+            bitmapCacheLock.readLock().unlock();
+        }
     }
 
     /**
