@@ -41,9 +41,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class Target implements Comparable<Target>
 {
+  private static final String TAG = "Target";
 
   public enum Type{
     NETWORK,
@@ -699,6 +702,19 @@ public class Target implements Comparable<Target>
 
   public String getHostname(){
     return mHostname;
+  }
+
+  /**
+   * Get the hardware (MAC) address for this target.
+   * Only applicable for ENDPOINT type targets.
+   * @return The MAC address as byte array, or null if not available
+   */
+  @Nullable
+  public byte[] getHardwareAddress(){
+    if(mType == Type.ENDPOINT && mEndpoint != null){
+      return mEndpoint.getHardware();
+    }
+    return null;
   }
 
   public void addOpenPort(Port port){

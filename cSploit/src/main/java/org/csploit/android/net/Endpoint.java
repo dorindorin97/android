@@ -20,8 +20,8 @@ package org.csploit.android.net;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.NetworkHelper;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
 import java.math.BigInteger;
@@ -31,6 +31,7 @@ import java.util.Arrays;
 
 public class Endpoint implements Comparable<Endpoint>
 {
+  private static final String TAG = "Endpoint";
   private InetAddress mAddress = null;
   private byte[] mHardware = null;
 
