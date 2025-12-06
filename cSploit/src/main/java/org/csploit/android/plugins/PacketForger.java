@@ -273,7 +273,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 			mThread = null;
 			mRunning = false;
 		} catch (Exception e) {
-
+			LoggingHelper.w("PacketForger", "Error during cleanup in setStoppedState", e);
 		}
 
 		if (errorMessage != null && !isFinishing())

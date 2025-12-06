@@ -107,12 +107,11 @@ public class RPCClient
   protected Map exec (String methname, Object[] params) throws IOException, MsgpackException, MSFException
   {
     Object response = null;
+    // Use only lock (removed redundant synchronized block to avoid double synchronization)
+    lock.lock();
     try {
-      synchronized(this) {
-        lock.lock();
-        writeCall(methname, params);
-        response = readResp();
-      }
+      writeCall(methname, params);
+      response = readResp();
     }
     finally
     {
@@ -137,11 +136,19 @@ public class RPCClient
       Map results = exec("auth.login",new Object[]{ username, password });
 
 			/* save the temp token (lasts for 5 minutes of inactivity) */
-      token = results.get("token").toString();
+      Object tokenObj = results.get("token");
+      if (tokenObj == null) {
+        throw new MSFException("Login failed: no token received from server");
+      }
+      token = tokenObj.toString();
 
 			/* generate a non-expiring token and use that */
       results = exec("auth.token_generate", new Object[]{ token });
-      token = results.get("token").toString();
+      tokenObj = results.get("token");
+      if (tokenObj == null) {
+        throw new MSFException("Token generation failed: no token received from server");
+      }
+      token = tokenObj.toString();
     }
     catch ( MsgpackException me)
     {
