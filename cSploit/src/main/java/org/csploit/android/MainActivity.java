@@ -26,11 +26,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import java.util.ArrayList;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,16 +71,27 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void verifyPerms() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-              Manifest.permission.WAKE_LOCK)
-              != PackageManager.PERMISSION_GRANTED)
-      {
-          ActivityCompat.requestPermissions(this,
-                  new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                  Manifest.permission.WAKE_LOCK},
-                  MY_PERMISSIONS_WANTED);
+        // Build list of required permissions based on SDK version
+        ArrayList<String> requiredPermissions = new ArrayList<>();
+        
+        // WAKE_LOCK is always needed
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK)
+                != PackageManager.PERMISSION_GRANTED) {
+            requiredPermissions.add(Manifest.permission.WAKE_LOCK);
+        }
+        
+        // Storage permissions for SDK < 33
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requiredPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        }
+        
+        if (!requiredPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    requiredPermissions.toArray(new String[0]),
+                    MY_PERMISSIONS_WANTED);
         }
     }
 

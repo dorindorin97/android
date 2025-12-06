@@ -1,12 +1,15 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    // AndroidX dependencies - updated versions
+    // AndroidX dependencies - latest stable versions
     // Note: removed androidx.legacy:legacy-support-v4 - use AndroidX APIs directly
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
 
     // Security library for encrypted preferences and secure credential storage
     // Provides AES-256-GCM encryption for sensitive data
@@ -73,10 +76,10 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 21  // Updated minimum SDK for better security and features
-        targetSdkVersion 33  // Modern target SDK
-        versionCode 5
-        versionName "1.7.1-stable"
+        minSdkVersion 23  // Updated minimum SDK for better security and features
+        targetSdkVersion 34  // Latest target SDK
+        versionCode 6
+        versionName "1.8.0-stable"
         if(System.getenv("NIGHTLY_BUILD")) {
             versionName += "+" + System.getenv("NIGHTLY_BUILD_COMMIT").substring(0, 7)
         }
