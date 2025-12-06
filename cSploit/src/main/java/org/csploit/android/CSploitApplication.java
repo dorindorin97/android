@@ -36,6 +36,7 @@ import org.csploit.android.core.System;
 import org.csploit.android.helpers.PreferencesHelper;
 import org.csploit.android.helpers.HttpHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ConnectionMonitor;
 import org.csploit.android.plugins.ExploitFinder;
 import org.csploit.android.plugins.Inspector;
 import org.csploit.android.plugins.LoginCracker;
@@ -138,6 +139,13 @@ public class CSploitApplication extends Application {
       // Log but don't crash if crash reporting setup fails
       LoggingHelper.e(TAG, "Failed to initialize crash reporting", e);
     }
+
+    // Start connection monitoring service for the app
+    try {
+      ConnectionMonitor.getInstance(this).start();
+    } catch (Exception e) {
+      LoggingHelper.w(TAG, "Failed to start ConnectionMonitor", e);
+    }
   }
 
   @Override
@@ -151,6 +159,13 @@ public class CSploitApplication extends Application {
     // Clean up helper resources
     HttpHelper.clearCache();
     LoggingHelper.d("CSploitApplication", "HTTP cache and resources cleaned up");
+    // stop ConnectionMonitor if running
+    try {
+      ConnectionMonitor.getInstance(this).stop();
+    } catch (Exception e) {
+      LoggingHelper.w(TAG, "Failed to stop ConnectionMonitor cleanly", e);
+    }
+
     super.onTerminate();
   }
 }

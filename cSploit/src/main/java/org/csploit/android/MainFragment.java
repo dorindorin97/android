@@ -859,10 +859,17 @@ public class MainFragment extends Fragment {
                 sb.append("Developer Options: ").append(checker.isDeveloperOptionsEnabled() ? "Yes" : "No").append("\n");
                 sb.append("APK Signature: ").append(checker.getApkSignatureHash());
                 new android.app.AlertDialog.Builder(getActivity())
-                        .setTitle("Security Check")
-                        .setMessage(sb.toString())
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show();
+                    .setTitle("Security Check")
+                    .setMessage(sb.toString())
+                    .setPositiveButton("Share", (dialog, whichButton) -> {
+                        Intent send = new Intent(Intent.ACTION_SEND);
+                        send.setType("text/plain");
+                        send.putExtra(Intent.EXTRA_SUBJECT, "cSploit Security Check Report");
+                        send.putExtra(Intent.EXTRA_TEXT, sb.toString());
+                        startActivity(Intent.createChooser(send, "Share security report"));
+                    })
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show();
                 return true;
 
             case R.id.export_targets:
@@ -871,17 +878,38 @@ public class MainFragment extends Fragment {
                 new android.app.AlertDialog.Builder(getActivity())
                         .setTitle("Export Targets")
                         .setItems(exportFormats, (dialog, which) -> {
+                            java.util.List<org.csploit.android.net.Target> targets = org.csploit.android.core.System.getTargets();
+                            if (targets == null || targets.size() == 0) {
+                                ToastHelper.info(getActivity(), "No targets available to export");
+                                return;
+                            }
+
                             java.io.File exportFile = null;
                             org.csploit.android.helpers.ScanResultExporter exporter = new org.csploit.android.helpers.ScanResultExporter(getActivity());
+                            String mime = "text/plain";
+                            String baseName = "scan_report_" + java.lang.System.currentTimeMillis();
                             switch (which) {
-                                case 0: exportFile = exporter.exportToJson(); break;
-                                case 1: exportFile = exporter.exportToCsv(); break;
-                                case 2: exportFile = exporter.exportToHtml(); break;
-                                case 3: exportFile = exporter.exportToTxt(); break;
+                                case 0:
+                                    exportFile = exporter.exportToJson(targets, baseName);
+                                    mime = "application/json";
+                                    break;
+                                case 1:
+                                    exportFile = exporter.exportToCsv(targets, baseName);
+                                    mime = "text/csv";
+                                    break;
+                                case 2:
+                                    exportFile = exporter.exportToHtml(targets, baseName);
+                                    mime = "text/html";
+                                    break;
+                                case 3:
+                                    exportFile = exporter.exportToTxt(targets, baseName);
+                                    mime = "text/plain";
+                                    break;
                             }
+
                             if (exportFile != null && exportFile.exists()) {
                                 ToastHelper.success(getActivity(), "Exported to: " + exportFile.getAbsolutePath());
-                                exporter.shareFile(exportFile);
+                                exporter.shareFile(exportFile, mime);
                             } else {
                                 ToastHelper.error(getActivity(), "Export failed");
                             }
