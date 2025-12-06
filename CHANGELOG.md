@@ -5,18 +5,27 @@ All notable changes to the cSploit project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8.0-stable] - 2025-12-06
+## [1.8.0-stable] - 2025-01-06
 
 ### 🚀 Added
 
-#### Comprehensive Helper Utilities (100 Classes)
-- **Network Utilities (25)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, and more
-- **Security Utilities (12)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, and more
+#### Comprehensive Helper Utilities (108+ Classes)
+- **Network Utilities (30)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, and more
+- **Security Utilities (14)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, and more
 - **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
 - **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
 - **System Utilities (15)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, and more
 - **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
 - **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Iteration 8 Additions
+- `BannerGrabber` - Network service banner grabbing with protocol detection
+- `TrafficMonitor` - Real-time network traffic monitoring with anomaly detection
+- `ProxyHelper` - SOCKS/HTTP proxy configuration and testing
+- `PortHelper` - Comprehensive port scanning with service database
+- `SecurityAuditHelper` - Security auditing with vulnerability scoring
+- `SslHelper` - SSL/TLS certificate analysis and security checks
+- `RoutingHelper` - Routing table management utilities
 
 #### Code Quality Improvements
 - Fixed all deprecated AsyncTask usages
@@ -30,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Version Update
 - Version bumped to 1.8.0-stable from 1.7.1-stable
-- Total helper classes: 100 (was 5)
-- Total lines of helper code: ~25,000+
+- Total helper classes: 108+ (was 100)
+- Total lines of helper code: ~28,000+
 
 ---
 

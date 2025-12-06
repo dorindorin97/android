@@ -4,9 +4,9 @@ This document describes the comprehensive helper utilities added to improve code
 
 ## Overview
 
-The `org.csploit.android.helpers` package contains **100 utility classes** designed to simplify common operations and improve code quality across the cSploit application.
+The `org.csploit.android.helpers` package contains **108+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
 
-**Last Updated:** December 6, 2025
+**Last Updated:** January 2025 (v1.8.0)
 
 ## Helper Categories
 
@@ -29,7 +29,7 @@ The `org.csploit.android.helpers` package contains **100 utility classes** desig
 | `EventBus` | Event publish/subscribe pattern |
 | `ConfigHelper` | Configuration management |
 
-### Network Utilities (25)
+### Network Utilities (30)
 | Helper | Purpose |
 |--------|---------|
 | `NetworkHelper` | General network utilities |
@@ -57,11 +57,17 @@ The `org.csploit.android.helpers` package contains **100 utility classes** desig
 | `FirewallHelper` | iptables/firewall management |
 | `PacketAnalyzer` | Packet inspection |
 | `PcapHelper` | PCAP file read/write |
+| `RoutingHelper` | Routing table management |
+| `TrafficMonitor` | Real-time traffic monitoring |
+| `ProxyHelper` | Proxy configuration and testing |
+| `PortHelper` | Port scanning and service detection |
+| `BannerGrabber` | Service banner grabbing |
 
-### Security Utilities (12)
+### Security Utilities (14)
 | Helper | Purpose |
 |--------|---------|
 | `SecurityChecker` | Security assessment |
+| `SecurityAuditHelper` | Comprehensive security auditing |
 | `VulnerabilityScanner` | Vulnerability detection |
 | `ExploitMatcher` | Exploit matching |
 | `ServiceFingerprinter` | Service identification |
@@ -73,6 +79,7 @@ The `org.csploit.android.helpers` package contains **100 utility classes** desig
 | `BatchScannerHelper` | Batch scanning operations |
 | `ServiceDatabase` | Service/port database |
 | `HostTracker` | Host discovery tracking |
+| `SslHelper` | SSL/TLS certificate analysis |
 
 ### Target Management (8)
 | Helper | Purpose |
