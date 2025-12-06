@@ -39,11 +39,6 @@ public class WorkManagerHelper {
     public static final String TAG_CLEANUP = "cleanup";
     public static final String TAG_SYNC = "sync";
     
-    // Work names for unique periodic work
-    private static final String WORK_SCHEDULED_SCAN = "scheduled_scan_work";
-    private static final String WORK_UPDATE_CHECK = "update_check_work";
-    private static final String WORK_CLEANUP = "cleanup_work";
-    
     /**
      * Schedule periodic network scan.
      * 
