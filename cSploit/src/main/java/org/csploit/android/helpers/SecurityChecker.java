@@ -258,14 +258,21 @@ public final class SecurityChecker {
     
     private boolean checkRootExec() {
         Process process = null;
+        BufferedReader reader = null;
         try {
             process = Runtime.getRuntime().exec(new String[]{"which", "su"});
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
             return line != null && !line.isEmpty();
         } catch (Exception e) {
             return false;
         } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception ignored) {
+                }
+            }
             if (process != null) {
                 process.destroy();
             }
