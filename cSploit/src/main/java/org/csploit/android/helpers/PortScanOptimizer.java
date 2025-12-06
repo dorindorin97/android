@@ -16,6 +16,8 @@
  */
 package org.csploit.android.helpers;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -175,7 +177,9 @@ public final class PortScanOptimizer {
         PORT_SERVICE_MAP.put(27017, "MongoDB");
     }
 
-    private PortScanOptimizer() {}
+    private PortScanOptimizer() {
+        Log.d(TAG, "PortScanOptimizer initialized");
+    }
 
     public static PortScanOptimizer getInstance() {
         if (instance == null) {
