@@ -283,15 +283,15 @@ public class MITM extends Plugin
         try{
 
           StringBuffer buffer = new StringBuffer();
-          BufferedReader reader = new BufferedReader(new FileReader(fileName));
           char[] buf = new char[1024];
           int read = 0;
           String js = "";
 
-          while((read = reader.read(buf)) != -1){
-            buffer.append(String.valueOf(buf, 0, read));
+          try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while((read = reader.read(buf)) != -1){
+              buffer.append(String.valueOf(buf, 0, read));
+            }
           }
-          reader.close();
 
           js = buffer.toString().trim();
 

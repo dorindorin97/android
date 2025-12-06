@@ -18,11 +18,11 @@
  */
 package org.csploit.android.net;
 
-import android.os.StrictMode;
-
 import org.csploit.android.R;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network.Protocol;
 import org.csploit.android.net.metasploit.MsfExploit;
 import org.csploit.android.net.metasploit.Session;
@@ -37,12 +37,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 public class Target implements Comparable<Target>
 {
@@ -292,6 +294,44 @@ public class Target implements Comparable<Target>
   /** Unique identifier for this target, used for stable reference across operations */
   private final String mUuid;
 
+  private static final long DNS_LOOKUP_TIMEOUT_MS = 5000;
+
+  /**
+   * Resolve hostname to InetAddress asynchronously to avoid NetworkOnMainThread exception.
+   * @param hostname the hostname to resolve
+   * @return the resolved InetAddress, or null if resolution failed
+   */
+  private static InetAddress resolveHostnameAsync(String hostname) {
+    if (hostname == null || hostname.isEmpty()) {
+      return null;
+    }
+
+    AtomicReference<InetAddress> result = new AtomicReference<>(null);
+    CountDownLatch latch = new CountDownLatch(1);
+
+    ThreadHelper.executeBackground(() -> {
+      try {
+        result.set(InetAddress.getByName(hostname));
+      } catch (Exception e) {
+        LoggingHelper.d(TAG, "DNS resolution failed for: " + hostname);
+      } finally {
+        latch.countDown();
+      }
+    });
+
+    try {
+      if (!latch.await(DNS_LOOKUP_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+        LoggingHelper.w(TAG, "DNS lookup timeout for: " + hostname);
+        return null;
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      return null;
+    }
+
+    return result.get();
+  }
+
   public static Target getFromString(String string){
     final Pattern PARSE_PATTERN = Pattern.compile("^(([a-z]+)://)?([0-9a-z\\-\\.]+)(:([\\d]+))?[0-9a-z\\-\\./]*$", Pattern.CASE_INSENSITIVE);
     final Pattern IP_PATTERN = Pattern.compile("^[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}$");
@@ -342,16 +382,10 @@ public class Target implements Comparable<Target>
       LoggingHelper.e(TAG, "Failed to parse target", e);
     }
 
-    // determine if the target is reachable.
+    // Verify the target is reachable using async DNS resolution
     if(target != null){
-      try{
-        // This is needed to avoid NetworkOnMainThreadException
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        InetAddress.getByName(target.getCommandLineRepresentation());
-      }
-      catch(Exception e){
+      InetAddress resolved = resolveHostnameAsync(target.getCommandLineRepresentation());
+      if(resolved == null){
         target = null;
       }
     }
@@ -379,11 +413,8 @@ public class Target implements Comparable<Target>
       mHostname = reader.readLine();
       mHostname = mHostname.equals("null") ? null : mHostname;
       if(mHostname != null){
-        // This is needed to avoid NetworkOnMainThreadException
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        mAddress = InetAddress.getByName(mHostname);
+        // Use async DNS resolution to avoid NetworkOnMainThreadException
+        mAddress = resolveHostnameAsync(mHostname);
       }
     }
 
@@ -653,14 +684,10 @@ public class Target implements Comparable<Target>
     mPort = port;
     mType = Type.REMOTE;
 
-    try{
-      // This is needed to avoid NetworkOnMainThreadException
-      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-      StrictMode.setThreadPolicy(policy);
-
-      mAddress = InetAddress.getByName(mHostname);
-    } catch(Exception e){
-      Logger.debug(e.toString());
+    // Use async DNS resolution to avoid NetworkOnMainThreadException
+    mAddress = resolveHostnameAsync(mHostname);
+    if(mAddress == null){
+      Logger.debug("Failed to resolve hostname: " + hostname);
     }
   }
 

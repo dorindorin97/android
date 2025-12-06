@@ -19,24 +19,29 @@
 package org.csploit.android.net.http.proxy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.csploit.android.net.http.RequestParser;
 
 public class CookieCleaner{
-  private static CookieCleaner mInstance = null;
+  private static volatile CookieCleaner mInstance = null;
 
-  private HashMap<String, ArrayList<String>> mMap = null;
+  private final Map<String, List<String>> mMap;
 
   public static CookieCleaner getInstance(){
-    if(mInstance == null)
-      mInstance = new CookieCleaner();
-
+    if(mInstance == null){
+      synchronized(CookieCleaner.class){
+        if(mInstance == null)
+          mInstance = new CookieCleaner();
+      }
+    }
     return mInstance;
   }
 
   public CookieCleaner(){
-    mMap = new HashMap<String, ArrayList<String>>();
+    mMap = new ConcurrentHashMap<>();
   }
 
   public boolean isClean(String client, String hostname, String request){
@@ -48,7 +53,7 @@ public class CookieCleaner{
 
     else{
       String domain = RequestParser.getBaseDomain(hostname);
-      ArrayList<String> domains = mMap.get(client);
+      List<String> domains = mMap.get(client);
 
       return (domains != null && domains.contains(domain));
     }
@@ -96,10 +101,10 @@ public class CookieCleaner{
 
   public void addCleaned(String client, String hostname){
     String domain = RequestParser.getBaseDomain(hostname);
+    mMap.computeIfAbsent(client, k -> new ArrayList<>()).add(domain);
+  }
 
-    if(!mMap.containsKey(client))
-      mMap.put(client, new ArrayList<String>());
-
-    mMap.get(client).add(domain);
+  public void clear(){
+    mMap.clear();
   }
 }
