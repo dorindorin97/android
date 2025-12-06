@@ -62,6 +62,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PortScanner extends Plugin {
+  private static final String TAG = "PortScanner";
   private TextView mTextDoc = null;
   private EditText mTextParameters = null;
   private FloatingActionButton mScanFloatingActionButton = null;

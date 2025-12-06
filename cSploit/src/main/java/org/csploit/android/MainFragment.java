@@ -592,7 +592,7 @@ public class MainFragment extends Fragment {
                             for (int i = 0; i < actions.length; i++)
                                 actions[i] = commonPlugins.get(i).getName();
 
-                            (new MultipleChoiceDialog(R.string.choose_method, actions, getActivity(), new MultipleChoiceDialog.MultipleChoiceDialogListener() {
+                            new MultipleChoiceDialog(R.string.choose_method, actions, getActivity(), new MultipleChoiceDialog.MultipleChoiceDialogListener() {
                                 @Override
                                 public void onChoice(int[] choices) {
                                     Intent intent = new Intent(getActivity(), MultiAttackService.class);
@@ -606,9 +606,9 @@ public class MainFragment extends Fragment {
 
                                     getActivity().startService(intent);
                                 }
-                            }));
+                            });
                         } else {
-                            (UIHelper.error(getString(R.string.error), "no common actions found", getActivity()));
+                            UIHelper.error(getActivity(), getString(R.string.error), "no common actions found");
                         }
                     } else {
                         targetAliasPrompt((Target) mTargetAdapter.getItem(selected[0]));
@@ -676,7 +676,7 @@ public class MainFragment extends Fragment {
     /**
      * stop MSF RPC Daemon
      */
-    public void StopRPCServer() {
+    public void stopRPCServer() {
         ThreadHelper.getSharedExecutor().execute(new Runnable() {
             @Override
             public void run() {

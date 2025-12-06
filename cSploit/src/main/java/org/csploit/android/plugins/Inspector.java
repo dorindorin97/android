@@ -35,13 +35,16 @@ import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ThreadHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.Target.Port;
 import org.csploit.android.tools.NMap.InspectionReceiver;
 
-public class Inspector extends Plugin{
+public class Inspector extends Plugin {
+  private static final String TAG = "Inspector";
 
   private FloatingActionButton mStartButton = null;
   private ProgressBar mActivity = null;

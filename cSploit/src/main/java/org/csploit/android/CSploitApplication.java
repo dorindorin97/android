@@ -60,7 +60,7 @@ public class CSploitApplication extends Application {
   @Override
   public void onCreate() {
     SharedPreferences themePrefs = getSharedPreferences("THEME", 0);
-    Boolean isDark = themePrefs.getBoolean("isDark", false);
+    boolean isDark = themePrefs.getBoolean("isDark", false);
     if (isDark)
       setTheme(R.style.DarkTheme);
     else

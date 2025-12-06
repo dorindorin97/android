@@ -20,107 +20,178 @@ package org.csploit.android.core;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.csploit.android.R;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.metasploit.RPCClient;
 
 import java.util.Arrays;
 
+/**
+ * Base class for all cSploit plugins.
+ * Provides common functionality for plugin activities.
+ */
 public abstract class Plugin extends AppCompatActivity {
   public static final int NO_LAYOUT = -1;
+  protected static final String TAG = "Plugin";
 
-  private int mNameStringId = -1;
-  private int mDescriptionStringId = -1;
-  private Target.Type[] mAllowedTargetTypes = null;
-  private int mLayoutId = 0;
-  private int mIconId = 0;
+  private final int mNameStringId;
+  private final int mDescriptionStringId;
+  private final Target.Type[] mAllowedTargetTypes;
+  private final int mLayoutId;
+  private final int mIconId;
   protected Child mProcess = null;
+  private boolean mIsActive = false;
 
-  public Plugin(int nameStringId, int descStringId, Target.Type[] allowedTargetTypes, int layoutId, int iconResourceId){
+  public Plugin(int nameStringId, int descStringId, Target.Type[] allowedTargetTypes, int layoutId, int iconResourceId) {
     mNameStringId = nameStringId;
     mDescriptionStringId = descStringId;
-
     mAllowedTargetTypes = Arrays.copyOf(allowedTargetTypes, allowedTargetTypes.length);
     mLayoutId = layoutId;
     mIconId = iconResourceId;
   }
 
-  public Plugin(int nameStringId, int descStringId, Target.Type[] allowedTargetTypes, int layoutId){
+  public Plugin(int nameStringId, int descStringId, Target.Type[] allowedTargetTypes, int layoutId) {
     this(nameStringId, descStringId, allowedTargetTypes, layoutId, R.drawable.action_plugin);
   }
 
-  public int getName(){
+  public int getName() {
     return mNameStringId;
   }
 
-  public int getDescription(){
+  public int getDescription() {
     return mDescriptionStringId;
   }
 
-  public Target.Type[] getAllowedTargetTypes(){
+  @NonNull
+  public Target.Type[] getAllowedTargetTypes() {
     return Arrays.copyOf(mAllowedTargetTypes, mAllowedTargetTypes.length);
   }
 
-  public int getIconResourceId(){
+  public int getIconResourceId() {
     return mIconId;
   }
 
-  public boolean isAllowedTarget(Target target){
-    for(Target.Type type : mAllowedTargetTypes)
-      if(type == target.getType())
+  public boolean isAllowedTarget(@Nullable Target target) {
+    if (target == null) {
+      return false;
+    }
+    for (Target.Type type : mAllowedTargetTypes) {
+      if (type == target.getType()) {
         return true;
-
+      }
+    }
     return false;
   }
 
-  public boolean hasLayoutToShow(){
-    return mLayoutId != -1;
+  public boolean hasLayoutToShow() {
+    return mLayoutId != NO_LAYOUT;
   }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+  /**
+   * Check if this plugin is currently active/running
+   * @return true if the plugin has an active process
+   */
+  public boolean isActive() {
+    return mIsActive && mProcess != null;
+  }
+
+  /**
+   * Stop any running process
+   */
+  protected void stopProcess() {
+    if (mProcess != null) {
+      try {
+        mProcess.kill();
+      } catch (Exception e) {
+        LoggingHelper.w(TAG, "Error stopping process", e);
+      }
+      mProcess = null;
     }
+    mIsActive = false;
+  }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+  /**
+   * Called when the plugin is started (process begins)
+   */
+  protected void onPluginStarted() {
+    mIsActive = true;
+    LoggingHelper.d(TAG, getString(mNameStringId) + " started");
+  }
 
-    public void onActionClick(Context context){
-
+  /**
+   * Called when the plugin is stopped
+   */
+  protected void onPluginStopped() {
+    mIsActive = false;
+    LoggingHelper.d(TAG, getString(mNameStringId) + " stopped");
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState){
+  protected void onResume() {
+    super.onResume();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+  }
+
+  @Override
+  protected void onDestroy() {
+    stopProcess();
+    super.onDestroy();
+  }
+
+  public void onActionClick(Context context) {
+    // Override in subclasses
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setTitle(System.getCurrentTarget() + " > " + getString( mNameStringId ) );
-    setContentView(mLayoutId);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item){
-    switch(item.getItemId()){
-      case android.R.id.home:
-
-        onBackPressed();
-
-        return true;
-
-      default:
-        return super.onOptionsItemSelected(item);
+    
+    Target currentTarget = System.getCurrentTarget();
+    String targetName = currentTarget != null ? currentTarget.toString() : "Unknown";
+    setTitle(targetName + " > " + getString(mNameStringId));
+    
+    if (mLayoutId != NO_LAYOUT) {
+      setContentView(mLayoutId);
+    }
+    
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
   }
 
   @Override
-  public void onBackPressed(){
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onBackPressed() {
+    stopProcess();
     super.onBackPressed();
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
   }
 
-  public void onRpcChange(RPCClient currentValue) { }
+  /**
+   * Called when RPC client connection state changes
+   * @param currentValue new RPC client or null if disconnected
+   */
+  public void onRpcChange(@Nullable RPCClient currentValue) {
+    // Override in subclasses that need RPC notifications
+  }
 }

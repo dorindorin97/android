@@ -24,10 +24,12 @@ import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.ToastHelper;
 
 import java.util.ArrayList;
 
 public class ActionFragment extends Fragment {
+    private static final String TAG = "ActionFragment";
 
     private ArrayList<Plugin> mAvailable = null;
     private ListView theList;
