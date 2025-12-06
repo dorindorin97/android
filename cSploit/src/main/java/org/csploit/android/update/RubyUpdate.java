@@ -3,7 +3,7 @@ package org.csploit.android.update;
 import android.content.Context;
 
 import org.csploit.android.R;
-import org.csploit.android.core.*;
+import org.csploit.android.core.ExecChecker;
 import org.csploit.android.core.System;
 
 /**

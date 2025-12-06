@@ -1,6 +1,7 @@
 package org.csploit.android.tools;
 
-import org.csploit.android.core.*;
+import org.csploit.android.core.Child;
+import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.System;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Ready;

@@ -19,6 +19,8 @@ dependencies {
     // Other dependencies - updated versions
     implementation 'com.github.zafarkhaja:java-semver:0.9.0'
     implementation 'org.unbescape:unbescape:1.1.6.RELEASE'
+    // msgpack for Metasploit RPC communication
+    // Note: Using 0.6.12 for API compatibility - upgrading to 0.9.x requires refactoring RPCClient
     implementation 'org.msgpack:msgpack:0.6.12'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
     implementation 'org.tukaani:xz:1.9'
@@ -56,8 +58,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion '33.0.2'
+    compileSdkVersion 34
+    buildToolsVersion '34.0.0'
     namespace 'org.csploit.android'
 
     compileOptions {

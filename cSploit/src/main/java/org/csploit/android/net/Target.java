@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -285,6 +286,9 @@ public class Target implements Comparable<Target>
   private final ArrayList<Exploit> exploits = new ArrayList<Target.Exploit>();
   private ArrayList<Session> mSessions = new ArrayList<Session>();
 
+  /** Unique identifier for this target, used for stable reference across operations */
+  private final String mUuid;
+
   public static Target getFromString(String string){
     final Pattern PARSE_PATTERN = Pattern.compile("^(([a-z]+)://)?([0-9a-z\\-\\.]+)(:([\\d]+))?[0-9a-z\\-\\./]*$", Pattern.CASE_INSENSITIVE);
     final Pattern IP_PATTERN = Pattern.compile("^[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}$");
@@ -353,6 +357,7 @@ public class Target implements Comparable<Target>
   }
 
   public Target(BufferedReader reader) throws Exception{
+    mUuid = UUID.randomUUID().toString();
     mType = Type.fromString(reader.readLine());
     mDeviceType = reader.readLine();
     mDeviceType = mDeviceType.equals("null") ? null : mDeviceType;
@@ -473,19 +478,31 @@ public class Target implements Comparable<Target>
   }
 
   public Target(Network net){
+    mUuid = UUID.randomUUID().toString();
     setNetwork(net);
   }
 
   public Target(InetAddress address, byte[] hardware){
+    mUuid = UUID.randomUUID().toString();
     setEndpoint(address, hardware);
   }
 
   public Target(Endpoint endpoint){
+    mUuid = UUID.randomUUID().toString();
     setEndpoint(endpoint);
   }
 
   public Target(String hostname, int port){
+    mUuid = UUID.randomUUID().toString();
     setHostname(hostname, port);
+  }
+
+  /**
+   * Get the unique identifier for this target.
+   * @return The UUID string uniquely identifying this target instance.
+   */
+  public String getUuid() {
+    return mUuid;
   }
 
   public InetAddress getAddress(){

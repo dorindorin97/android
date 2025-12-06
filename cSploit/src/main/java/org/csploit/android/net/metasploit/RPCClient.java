@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import org.msgpack.MessagePack;
 import org.msgpack.MessageTypeException;
 import org.msgpack.packer.Packer;
-import org.msgpack.type.*;
+import org.msgpack.type.Value;
 import org.msgpack.unpacker.Unpacker;
 import org.msgpack.unpacker.Converter;
 
