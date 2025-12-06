@@ -1,7 +1,6 @@
 package org.csploit.android.net.metasploit;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -9,6 +8,7 @@ import java.util.regex.Pattern;
 import org.csploit.android.R;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
 
 /**
@@ -16,6 +16,8 @@ import org.csploit.android.net.Target;
  * References: https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/rpc/v10/rpc_session.rb#L14
  */
 public class Session extends Thread {
+
+  private static final String TAG = "Session";
 
   protected final static Pattern WINDOWS_HASH = Pattern.compile("^[^:]+:[0-9]+:[a-f0-9]+:[a-f0-9]+:");
   protected final static Pattern WINDOWS_GET_NTLM_HASH = Pattern.compile("^[^:]+:[0-9]+:[a-f0-9]+:([a-f0-9]+):");

@@ -10,6 +10,7 @@ import java.util.concurrent.TimeoutException;
 import org.csploit.android.R;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Raw;
 
 /**
@@ -17,6 +18,8 @@ import org.csploit.android.tools.Raw;
  * part of this code is taken from armitage
  */
 public class ShellSession extends Session {
+
+  private static final String TAG = "ShellSession";
 
   // max time to wait for command execution
   private final static int TIMEOUT = 60000;
