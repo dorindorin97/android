@@ -240,20 +240,20 @@ public class WifiScannerFragment extends ListFragment
         WifiConfiguration config = new WifiConfiguration();
         int network = -1;
 
-        config.SSID = """ + ap.SSID + """;
+        config.SSID = "\"" + ap.SSID + "\"";
         config.BSSID = ap.BSSID;
 
 		/*
          * Configure security.
 		 */
         if(ap.capabilities.contains("WEP")){
-            config.wepKeys[0] = """ + key + """;
+            config.wepKeys[0] = "\"" + key + "\"";
             config.wepTxKeyIndex = 0;
             config.status = WifiConfiguration.Status.ENABLED;
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
         } else if(ap.capabilities.contains("WPA"))
-            config.preSharedKey = """ + key + """;
+            config.preSharedKey = "\"" + key + "\"";
 
         else
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
