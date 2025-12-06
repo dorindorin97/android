@@ -217,17 +217,7 @@ public class RPCClient
           if("shell".equals(type)) {
             s = new ShellSession(id,openSessions.get(id));
           } else if("meterpreter".equals(type)) {
-            // TODO: ENHANCEMENT - Create MeterpreterSession instead of generic Session
-            // PROBLEM: Meterpreter sessions are being treated as generic Session objects,
-            // losing meterpreter-specific functionality like command execution, file ops, etc.
-            // CURRENT WORKAROUND: Using generic Session for all non-shell session types.
-            // SOLUTION: Implement MeterpreterSession class with:
-            // - Proper command execution methods (run, execute, background, etc.)
-            // - File transfer operations (upload, download)
-            // - Process management (ps, kill, getpid, etc.)
-            // - Registry manipulation (for Windows targets)
-            // IMPACT: Medium - Reduced meterpreter functionality in this tool
-            s = new Session(id,openSessions.get(id));
+            s = new MeterpreterSession(id, openSessions.get(id));
           } else {
             s = new Session(id,openSessions.get(id));
           }
