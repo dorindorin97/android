@@ -25,8 +25,8 @@ import android.net.Uri;
 
 import org.csploit.android.R;
 import org.csploit.android.core.Plugin;
-import org.csploit.android.core.System;
-import org.csploit.android.gui.dialogs.ErrorDialog;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Target;
 
 import androidx.fragment.app.FragmentActivity;

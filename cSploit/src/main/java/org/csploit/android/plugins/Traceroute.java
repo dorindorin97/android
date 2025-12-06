@@ -36,6 +36,8 @@ import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.tools.NMap;
 
