@@ -47,7 +47,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.Client;
@@ -845,6 +844,47 @@ public class MainFragment extends Fragment {
 
             case R.id.about:
                 new AboutDialog(getActivity());
+                return true;
+
+            case R.id.security_check:
+                // Show security check results in a dialog
+                org.csploit.android.helpers.SecurityChecker checker = new org.csploit.android.helpers.SecurityChecker(getActivity());
+                StringBuilder sb = new StringBuilder();
+                sb.append("Rooted: ").append(checker.isRooted() ? "Yes" : "No").append("\n");
+                sb.append("Emulator: ").append(checker.isEmulator() ? "Yes" : "No").append("\n");
+                sb.append("Debuggable: ").append(checker.isDebuggable() ? "Yes" : "No").append("\n");
+                sb.append("Developer Options: ").append(checker.isDeveloperOptionsEnabled() ? "Yes" : "No").append("\n");
+                sb.append("APK Signature: ").append(checker.getApkSignatureHash());
+                new android.app.AlertDialog.Builder(getActivity())
+                        .setTitle("Security Check")
+                        .setMessage(sb.toString())
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                return true;
+
+            case R.id.export_targets:
+                // Export targets using ScanResultExporter
+                final String[] exportFormats = {"JSON", "CSV", "HTML", "TXT"};
+                new android.app.AlertDialog.Builder(getActivity())
+                        .setTitle("Export Targets")
+                        .setItems(exportFormats, (dialog, which) -> {
+                            java.io.File exportFile = null;
+                            org.csploit.android.helpers.ScanResultExporter exporter = new org.csploit.android.helpers.ScanResultExporter(getActivity());
+                            switch (which) {
+                                case 0: exportFile = exporter.exportToJson(); break;
+                                case 1: exportFile = exporter.exportToCsv(); break;
+                                case 2: exportFile = exporter.exportToHtml(); break;
+                                case 3: exportFile = exporter.exportToTxt(); break;
+                            }
+                            if (exportFile != null && exportFile.exists()) {
+                                ToastHelper.success(getActivity(), "Exported to: " + exportFile.getAbsolutePath());
+                                exporter.shareFile(exportFile);
+                            } else {
+                                ToastHelper.error(getActivity(), "Export failed");
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
                 return true;
 
             default:

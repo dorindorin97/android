@@ -50,6 +50,12 @@
             android:id="@+id/submit_issue"
             android:title="@string/menu_submit_issue" />
         <item
+            android:id="@+id/security_check"
+            android:title="Security Check" />
+        <item
+            android:id="@+id/export_targets"
+            android:title="Export Targets" />
+        <item
             android:id="@+id/about"
             android:title="@string/menu_about" />
     </group>
