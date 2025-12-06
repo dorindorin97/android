@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import androidx.core.app.NotificationCompat;
 
 import org.csploit.android.R;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.datasource.Search;
@@ -29,7 +30,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class MultiAttackService extends IntentService {
 
-  public final static String MULTI_ACTIONS = "MultiAttackService.data.actions";
+  private static final String TAG = "MultiAttackService";
+
+  public static final String MULTI_ACTIONS = "MultiAttackService.data.actions";
   /** @deprecated Use MULTI_TARGET_UUIDS instead for stable target references */
   @Deprecated
   public final static String MULTI_TARGETS = "MultiAttackService.data.targets";

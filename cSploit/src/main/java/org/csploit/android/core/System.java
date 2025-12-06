@@ -457,35 +457,32 @@ public class System {
   }
 
   public static synchronized void errorLogging(Throwable e) {
-    String message = "Unknown error.",
-            trace = "Unknown trace.",
-            filename = (new File(Environment.getExternalStorageDirectory().toString(), ERROR_LOG_FILENAME)).getAbsolutePath();
+    String message = "Unknown error.";
+    String trace = "Unknown trace.";
+    String filename = new File(Environment.getExternalStorageDirectory().toString(), ERROR_LOG_FILENAME).getAbsolutePath();
 
     if (e != null) {
-      if (e.getMessage() != null && !e.getMessage().isEmpty())
+      if (e.getMessage() != null && !e.getMessage().isEmpty()) {
         message = e.getMessage();
-
-      else if (e.toString() != null)
+      } else if (e.toString() != null) {
         message = e.toString();
+      }
 
-      if (message.equals(mLastError))
+      if (message.equals(mLastError)) {
         return;
+      }
 
-      Writer sWriter = new StringWriter();
-      PrintWriter pWriter = new PrintWriter(sWriter);
-
-      e.printStackTrace(pWriter);
-
-      trace = sWriter.toString();
+      try (StringWriter sWriter = new StringWriter();
+           PrintWriter pWriter = new PrintWriter(sWriter)) {
+        e.printStackTrace(pWriter);
+        trace = sWriter.toString();
+      } catch (IOException ignored) {
+        // StringWriter close doesn't actually throw
+      }
 
       if (mContext != null && getSettings().getBoolean("PREF_DEBUG_ERROR_LOGGING", false)) {
-        try {
-          FileWriter fWriter = new FileWriter(filename, true);
-          BufferedWriter bWriter = new BufferedWriter(fWriter);
-
+        try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(filename, true))) {
           bWriter.write(trace);
-
-          bWriter.close();
         } catch (IOException ioe) {
           Logger.error(ioe.toString());
         }
@@ -606,85 +603,57 @@ public class System {
     if (!mServices.isEmpty())
       return;
 
-    FileReader fr = null;
-    BufferedReader reader = null;
-    try {
-      // preload network service and ports map
-      Context ctx = getContextSafe();
-      if (ctx == null) {
-        Logger.error("Context has been garbage collected in preloadServices");
-        return;
-      }
-      fr = new FileReader(ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-services");
-      reader = new BufferedReader(fr);
+    Context ctx = getContextSafe();
+    if (ctx == null) {
+      Logger.error("Context has been garbage collected in preloadServices");
+      return;
+    }
+    String servicesFilePath = ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-services";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(servicesFilePath))) {
       String line;
       Matcher matcher;
-      String port, proto;
 
       while ((line = reader.readLine()) != null) {
         if ((matcher = SERVICE_PARSER.matcher(line)) != null && matcher.find()) {
-          proto = matcher.group(1);
-          port = matcher.group(2);
+          String proto = matcher.group(1);
+          String port = matcher.group(2);
 
           mServices.put(proto, port);
           mPorts.put(port, proto);
         }
       }
-
     } catch (Exception e) {
       mServices.clear();
       mPorts.clear();
-
       errorLogging(e);
-    } finally {
-      IOUtils.closeQuietly(reader);
-      IOUtils.closeQuietly(fr);
     }
   }
 
   private static synchronized void preloadVendors() {
     if (mVendors == null) {
-      FileInputStream fstream = null;
-      DataInputStream in = null;
-      BufferedReader reader = null;
-      try {
-        mVendors = new HashMap<>();
-        Context ctx = getContextSafe();
-        if (ctx == null) {
-          Logger.error("Context has been garbage collected in preloadVendors");
-          return;
-        }
-        fstream = new FileInputStream(
-        ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-mac-prefixes");
+      mVendors = new HashMap<>();
+      Context ctx = getContextSafe();
+      if (ctx == null) {
+        Logger.error("Context has been garbage collected in preloadVendors");
+        return;
+      }
+      String vendorFilePath = ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-mac-prefixes";
 
-        in = new DataInputStream(fstream);
-        reader = new BufferedReader(new InputStreamReader(in));
+      try (BufferedReader reader = new BufferedReader(
+              new InputStreamReader(new FileInputStream(vendorFilePath)))) {
         String line;
-
         while ((line = reader.readLine()) != null) {
           line = line.trim();
           if (!line.startsWith("#") && !line.isEmpty()) {
             String[] tokens = line.split(" ", 2);
-
-            if (tokens.length == 2)
+            if (tokens.length == 2) {
               mVendors.put(NetworkHelper.getOUICode(tokens[0]), tokens[1]);
+            }
           }
         }
-
-        in.close();
       } catch (Exception e) {
         errorLogging(e);
-      } finally {
-        try {
-          if (fstream != null) fstream.close();
-          if (in != null) in.close();
-          if (reader != null) reader.close();
-        } catch (IOException e) {
-          // Nothing else matters
-        }
-
-
-
       }
     }
   }
@@ -1281,22 +1250,13 @@ public class System {
   }
 
   public static boolean isForwardingEnabled() {
-    boolean forwarding = false;
-    BufferedReader reader;
-    String line;
-
-    try {
-      reader = new BufferedReader(new FileReader(IPV4_FORWARD_FILEPATH));
-      line = reader.readLine().trim();
-      forwarding = line.equals("1");
-
-      reader.close();
-
+    try (BufferedReader reader = new BufferedReader(new FileReader(IPV4_FORWARD_FILEPATH))) {
+      String line = reader.readLine();
+      return line != null && line.trim().equals("1");
     } catch (IOException e) {
       Logger.warning(e.toString());
+      return false;
     }
-
-    return forwarding;
   }
 
   public static void setForwarding(boolean enabled) {
