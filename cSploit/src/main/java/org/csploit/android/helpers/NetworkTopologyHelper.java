@@ -87,7 +87,7 @@ public final class NetworkTopologyHelper {
         public float y;
 
         public TopologyNode(Target target, boolean gateway) {
-            this.id = target.getUUID();
+            this.id = target.getUuid();
             this.ip = target.getCommandLineRepresentation();
             this.mac = target.getHardwareAddress() != null ?
                     NetworkHelper.bytesToMac(target.getHardwareAddress()) : "";
@@ -163,10 +163,9 @@ public final class NetworkTopologyHelper {
     public static List<TopologyNode> generateTopologyData() {
         List<TopologyNode> nodes = new ArrayList<>();
         List<Target> targets = System.getTargets();
-        Target gateway = System.getNetwork().getGateway();
 
         for (Target target : targets) {
-            boolean isGateway = gateway != null && gateway.equals(target);
+            boolean isGateway = target.isRouter();
             nodes.add(new TopologyNode(target, isGateway));
         }
 
