@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🚀 Added
 
-#### Comprehensive Helper Utilities (114+ Classes)
-- **Network Utilities (31)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, and more
+#### Comprehensive Helper Utilities (120+ Classes)
+- **Network Utilities (35)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, TracerouteHelper, PacketHelper, ServiceEnumerator, FtpHelper, SmtpHelper, SshHelper, and more
 - **Security Utilities (18)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, PayloadHelper, HashHelper, CredentialHelper, RegexHelper, and more
 - **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
 - **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
 - **System Utilities (16)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, UserAgentHelper, and more
 - **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
 - **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Iteration 10 Additions
+- `TracerouteHelper` - Traceroute output parsing, hop analysis, and anomaly detection
+- `FtpHelper` - FTP protocol operations, banner parsing, and server fingerprinting
+- `SmtpHelper` - SMTP protocol operations, user enumeration, and vulnerability checks
+- `SshHelper` - SSH banner parsing, algorithm analysis, and security assessment
+- `PacketHelper` - TCP/IP packet parsing, header extraction, and checksum calculation
+- `ServiceEnumerator` - Network service identification with 70+ known service mappings
 
 #### Iteration 9 Additions
 - `PayloadHelper` - Payload generation, encoding (Base64, Hex, URL), and obfuscation
@@ -47,8 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Version Update
 - Version bumped to 1.8.0-stable from 1.7.1-stable
-- Total helper classes: 114+ (was 108)
-- Total lines of helper code: ~30,000+
+- Total helper classes: 120+ (was 114)
+- Total lines of helper code: ~35,000+
 
 ---
 

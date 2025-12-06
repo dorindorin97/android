@@ -4,9 +4,9 @@ This document describes the comprehensive helper utilities added to improve code
 
 ## Overview
 
-The `org.csploit.android.helpers` package contains **114+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
+The `org.csploit.android.helpers` package contains **120+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
 
-**Last Updated:** January 2025 (v1.8.0 - Iteration 9)
+**Last Updated:** January 2025 (v1.8.0 - Iteration 10)
 
 ## Helper Categories
 
@@ -29,9 +29,12 @@ The `org.csploit.android.helpers` package contains **114+ utility classes** desi
 | `EventBus` | Event publish/subscribe pattern |
 | `ConfigHelper` | Configuration management |
 
-### Network Utilities (30)
+### Network Utilities (35)
 | Helper | Purpose |
 |--------|---------|
+| `TracerouteHelper` | Traceroute parsing and analysis |
+| `PacketHelper` | TCP/IP packet parsing and building |
+| `ServiceEnumerator` | Network service identification |
 | `NetworkHelper` | General network utilities |
 | `NetworkAnalyzer` | Network traffic analysis |
 | `NetworkDiagnostics` | Network troubleshooting |
@@ -63,6 +66,9 @@ The `org.csploit.android.helpers` package contains **114+ utility classes** desi
 | `PortHelper` | Port scanning and service detection |
 | `BannerGrabber` | Service banner grabbing |
 | `WhoIsHelper` | WHOIS domain and IP lookups |
+| `FtpHelper` | FTP protocol operations and fingerprinting |
+| `SmtpHelper` | SMTP protocol operations and analysis |
+| `SshHelper` | SSH protocol fingerprinting and security analysis |
 
 ### Security Utilities (18)
 | Helper | Purpose |
