@@ -552,19 +552,25 @@ public class LoginCracker extends Plugin {
     private long mNow = 0;
 
     private String formatTimeLeft(long millis) {
-      int seconds = (int) (millis / 1000) % 60, minutes = (int) ((millis / 60000) % 60), hours = (int) ((millis / 3600000) % 24);
-      String time = "";
+      int seconds = (int) (millis / 1000) % 60;
+      int minutes = (int) ((millis / 60000) % 60);
+      int hours = (int) ((millis / 3600000) % 24);
+      StringBuilder time = new StringBuilder();
 
       if (hours > 0)
-        time += hours + "h";
+        time.append(hours).append("h");
 
-      if (minutes > 0)
-        time += " " + minutes + "m";
+      if (minutes > 0) {
+        if (time.length() > 0) time.append(" ");
+        time.append(minutes).append("m");
+      }
 
-      if (seconds > 0)
-        time += " " + seconds + "s";
+      if (seconds > 0) {
+        if (time.length() > 0) time.append(" ");
+        time.append(seconds).append("s");
+      }
 
-      return time.trim();
+      return time.toString();
     }
 
     private void reset() {

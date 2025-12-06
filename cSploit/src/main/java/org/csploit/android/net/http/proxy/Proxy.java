@@ -87,7 +87,7 @@ public class Proxy implements Runnable{
       if(mSocket != null)
         mSocket.close();
     } catch(IOException e){
-
+      LoggingHelper.w(TAG, "Error closing proxy socket during stop", e);
     }
 
     mRunning = false;
@@ -114,7 +114,9 @@ public class Proxy implements Runnable{
 
           Profiler.instance().profile("client spawn");
         } catch(Exception e){
-
+          if(mRunning) {
+            LoggingHelper.w(TAG, "Error accepting client connection", e);
+          }
         }
       }
 

@@ -270,7 +270,8 @@ public final class SecurityChecker {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    LoggingHelper.d(TAG, "Error closing reader in checkRootExec");
                 }
             }
             if (process != null) {
