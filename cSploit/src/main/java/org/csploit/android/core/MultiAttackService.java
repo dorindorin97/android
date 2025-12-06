@@ -30,7 +30,11 @@ import java.util.concurrent.TimeUnit;
 public class MultiAttackService extends IntentService {
 
   public final static String MULTI_ACTIONS = "MultiAttackService.data.actions";
+  /** @deprecated Use MULTI_TARGET_UUIDS instead for stable target references */
+  @Deprecated
   public final static String MULTI_TARGETS = "MultiAttackService.data.targets";
+  /** UUIDs of targets to attack - preferred over index-based MULTI_TARGETS */
+  public final static String MULTI_TARGET_UUIDS = "MultiAttackService.data.target_uuids";
 
   private static final int NOTIFICATION_ID = 2;
   private static final int CANCEL_CODE = 1;
@@ -252,7 +256,7 @@ public class MultiAttackService extends IntentService {
 
   @Override
   protected void onHandleIntent(Intent intent) {
-    int[] actions,targetsIndex;
+    int[] actions;
     int i;
     ExecutorService executorService;
 
@@ -260,27 +264,54 @@ public class MultiAttackService extends IntentService {
     int tasks = 0;
 
     actions = intent.getIntArrayExtra(MULTI_ACTIONS);
-    targetsIndex = intent.getIntArrayExtra(MULTI_TARGETS);
 
-    if(actions == null || targetsIndex == null)
+    if(actions == null)
       return;
 
     mRunning = true;
 
-    //fetch targets
-    // TODO: ARCHITECTURAL ISSUE - Rewrite this service since target index may change
-    // PROBLEM: Indices passed via intent refer to positions in the targets list at the time
-    // the intent was created. If targets are added/removed/modified before this service
-    // processes them, the indices become invalid and may reference wrong targets or crash.
-    // CURRENT WORKAROUND: Assumes targets list is immutable during execution.
-    // SOLUTION: Use persistent Target IDs/UIDs instead of array indices, or pass Target
-    // objects directly via Parcelable instead of indices.
-    // IMPACT: Medium - Could cause incorrect target processing or ArrayIndexOutOfBoundsException
-    List<Target> list = System.getTargets();
-    Target[] targets = new Target[targetsIndex.length];
+    // Fetch targets - prefer UUID-based lookup for stability
+    Target[] targets;
+    String[] targetUuids = intent.getStringArrayExtra(MULTI_TARGET_UUIDS);
 
-    for(i =0; i< targetsIndex.length;i++)
-      targets[i] = list.get(targetsIndex[i]);
+    if (targetUuids != null && targetUuids.length > 0) {
+      // Use UUID-based lookup (preferred, stable across list modifications)
+      java.util.ArrayList<Target> validTargets = new java.util.ArrayList<>();
+      for (String uuid : targetUuids) {
+        Target target = System.getTargetByUuid(uuid);
+        if (target != null) {
+          validTargets.add(target);
+        } else {
+          Logger.warning("Target with UUID " + uuid + " not found, skipping");
+        }
+      }
+      targets = validTargets.toArray(new Target[0]);
+    } else {
+      // Fallback to legacy index-based lookup (deprecated)
+      int[] targetsIndex = intent.getIntArrayExtra(MULTI_TARGETS);
+      if (targetsIndex == null || targetsIndex.length == 0) {
+        Logger.error("No targets specified for multi-attack");
+        return;
+      }
+
+      Logger.warning("Using deprecated index-based target lookup. Use MULTI_TARGET_UUIDS instead.");
+      List<Target> list = System.getTargets();
+      java.util.ArrayList<Target> validTargets = new java.util.ArrayList<>();
+
+      for (i = 0; i < targetsIndex.length; i++) {
+        if (targetsIndex[i] >= 0 && targetsIndex[i] < list.size()) {
+          validTargets.add(list.get(targetsIndex[i]));
+        } else {
+          Logger.warning("Invalid target index: " + targetsIndex[i] + ", skipping");
+        }
+      }
+      targets = validTargets.toArray(new Target[0]);
+    }
+
+    if (targets.length == 0) {
+      Logger.error("No valid targets for multi-attack");
+      return;
+    }
 
     //fetch tasks
     for(int stringId : actions) {

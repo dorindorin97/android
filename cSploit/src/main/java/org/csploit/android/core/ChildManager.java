@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.csploit.android.core.Child.*;
+import org.csploit.android.core.Child.EventReceiver;
 import org.csploit.android.events.ChildDied;
 import org.csploit.android.events.ChildEnd;
 import org.csploit.android.events.Event;

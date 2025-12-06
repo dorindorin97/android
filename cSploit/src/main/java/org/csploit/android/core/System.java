@@ -1137,6 +1137,26 @@ public class System {
   }
 
   /**
+   * Get a target by its unique identifier (UUID).
+   * This is a safer alternative to index-based access as UUIDs remain stable
+   * even when the target list is modified.
+   *
+   * @param uuid the unique identifier of the target
+   * @return the target with the given UUID, or null if not found
+   */
+  public static Target getTargetByUuid(String uuid) {
+    if (uuid == null) return null;
+    synchronized (mTargets) {
+      for (Target target : mTargets) {
+        if (uuid.equals(target.getUuid())) {
+          return target;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * add a target to the list keeping it sorted.
    *
    * @param target the target to add
