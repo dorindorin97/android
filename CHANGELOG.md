@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🚀 Added
 
-#### Comprehensive Helper Utilities (108+ Classes)
-- **Network Utilities (30)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, and more
-- **Security Utilities (14)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, and more
+#### Comprehensive Helper Utilities (114+ Classes)
+- **Network Utilities (31)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, and more
+- **Security Utilities (18)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, PayloadHelper, HashHelper, CredentialHelper, RegexHelper, and more
 - **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
 - **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
-- **System Utilities (15)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, and more
+- **System Utilities (16)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, UserAgentHelper, and more
 - **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
 - **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Iteration 9 Additions
+- `PayloadHelper` - Payload generation, encoding (Base64, Hex, URL), and obfuscation
+- `WhoIsHelper` - WHOIS domain and IP lookups with registrar parsing
+- `UserAgentHelper` - Browser/device User-Agent database with random generation
+- `HashHelper` - Cryptographic hashing (MD5, SHA-1, SHA-256, SHA-512) with file support
+- `CredentialHelper` - Credential validation, password strength checking, common password detection
+- `RegexHelper` - Security-focused regex patterns (IP, MAC, URL, email, CVE, etc.)
 
 #### Iteration 8 Additions
 - `BannerGrabber` - Network service banner grabbing with protocol detection
@@ -39,8 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Version Update
 - Version bumped to 1.8.0-stable from 1.7.1-stable
-- Total helper classes: 108+ (was 100)
-- Total lines of helper code: ~28,000+
+- Total helper classes: 114+ (was 108)
+- Total lines of helper code: ~30,000+
 
 ---
 

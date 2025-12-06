@@ -4,9 +4,9 @@ This document describes the comprehensive helper utilities added to improve code
 
 ## Overview
 
-The `org.csploit.android.helpers` package contains **108+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
+The `org.csploit.android.helpers` package contains **114+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
 
-**Last Updated:** January 2025 (v1.8.0)
+**Last Updated:** January 2025 (v1.8.0 - Iteration 9)
 
 ## Helper Categories
 
@@ -62,8 +62,9 @@ The `org.csploit.android.helpers` package contains **108+ utility classes** desi
 | `ProxyHelper` | Proxy configuration and testing |
 | `PortHelper` | Port scanning and service detection |
 | `BannerGrabber` | Service banner grabbing |
+| `WhoIsHelper` | WHOIS domain and IP lookups |
 
-### Security Utilities (14)
+### Security Utilities (18)
 | Helper | Purpose |
 |--------|---------|
 | `SecurityChecker` | Security assessment |
@@ -80,6 +81,10 @@ The `org.csploit.android.helpers` package contains **108+ utility classes** desi
 | `ServiceDatabase` | Service/port database |
 | `HostTracker` | Host discovery tracking |
 | `SslHelper` | SSL/TLS certificate analysis |
+| `PayloadHelper` | Payload generation and encoding |
+| `HashHelper` | Cryptographic hashing utilities |
+| `CredentialHelper` | Credential validation and strength |
+| `RegexHelper` | Security-focused regex patterns |
 
 ### Target Management (8)
 | Helper | Purpose |
@@ -130,6 +135,7 @@ The `org.csploit.android.helpers` package contains **108+ utility classes** desi
 | `ExportHelper` | Data export |
 | `DatabaseHelper` | Database utilities |
 | `WorkManagerHelper` | WorkManager utilities |
+| `UserAgentHelper` | User-Agent string management |
 
 ### Performance Utilities (10)
 | Helper | Purpose |
