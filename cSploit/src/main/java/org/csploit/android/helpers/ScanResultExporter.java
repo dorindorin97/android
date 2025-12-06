@@ -353,7 +353,9 @@ public final class ScanResultExporter {
             if (writer != null) {
                 try {
                     writer.close();
-                } catch (IOException ignored) {}
+                } catch (IOException e) {
+                    LoggingHelper.w(TAG, "Failed to close writer: " + e.getMessage());
+                }
             }
         }
     }
