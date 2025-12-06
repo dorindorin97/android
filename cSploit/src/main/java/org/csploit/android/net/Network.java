@@ -45,6 +45,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class Network implements Comparable<Network> {
+  private static final String TAG = "Network";
+
   public enum Protocol {
     TCP,
     UDP,
