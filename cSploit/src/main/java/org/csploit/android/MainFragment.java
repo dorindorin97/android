@@ -33,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import android.text.Html;
 import androidx.core.text.HtmlCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -121,12 +120,10 @@ public class MainFragment extends Fragment {
     private ConnectivityReceiver mConnectivityReceiver = new ConnectivityReceiver();
     private Menu mMenu = null;
     private TextView mEmptyTextView = null;
-    private Toast mToast = null;
     private TextView mTextView = null;
     private long mLastBackPressTime = 0;
     private ActionMode mActionMode = null;
     private ListView lv;
-    private boolean isRootMissing = false;
     private String[] mIfaces = null;
     private boolean mIsCoreInstalled = false;
     private boolean mIsDaemonBeating = false;
@@ -600,7 +597,13 @@ public class MainFragment extends Fragment {
                                     for (int i = 0; i < selectedActions.length; i++)
                                         selectedActions[i] = actions[choices[i]];
 
-                                    intent.putExtra(MultiAttackService.MULTI_TARGETS, selected);
+                                    // Use UUID-based targeting for stability (preferred)
+                                    String[] targetUuids = new String[selected.length];
+                                    for (int i = 0; i < selected.length; i++) {
+                                        Target t = (Target) mTargetAdapter.getItem(selected[i]);
+                                        targetUuids[i] = t.getUuid();
+                                    }
+                                    intent.putExtra(MultiAttackService.MULTI_TARGET_UUIDS, targetUuids);
                                     intent.putExtra(MultiAttackService.MULTI_ACTIONS, selectedActions);
 
                                     getActivity().startService(intent);
@@ -897,9 +900,6 @@ public class MainFragment extends Fragment {
             ToastHelper.info(getActivity(), getString(R.string.press_back));
             mLastBackPressTime = java.lang.System.currentTimeMillis();
         } else {
-            if (mToast != null)
-                mToast.cancel();
-
             new ConfirmDialog(getString(R.string.exit),
                     getString(R.string.close_confirm), getActivity(),
                     new ConfirmDialogListener() {
@@ -920,7 +920,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroy() {
         stopNetworkRadar();
-        StopRPCServer();
+        stopRPCServer();
 
         mRadarReceiver.unregister();
         mUpdateReceiver.unregister();
@@ -1138,7 +1138,7 @@ public class MainFragment extends Fragment {
                         path = System.getRubyPath() + "' '" + System.getMsfPath();
                     }
 
-                    StopRPCServer();
+                    stopRPCServer();
                     System.getTools().raw.async("rm -rf '" + path + "'", new Child.EventReceiver() {
                         @Override
                         public void onEnd(int exitCode) {
@@ -1186,7 +1186,7 @@ public class MainFragment extends Fragment {
                             update.prompt, getActivity(), new ConfirmDialogListener() {
                         @Override
                         public void onConfirm() {
-                            StopRPCServer();
+                            stopRPCServer();
                             Intent i = new Intent(getActivity(), UpdateService.class);
                             i.setAction(UpdateService.START);
                             i.putExtra(UpdateService.UPDATE, update);
