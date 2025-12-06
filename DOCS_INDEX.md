@@ -2,6 +2,8 @@
 
 Welcome to cSploit documentation! This index helps you find what you need.
 
+**Version:** 1.8.0-stable | **Last Updated:** December 6, 2025 | **Helpers:** 100 classes
+
 ## 📚 Quick Navigation
 
 ### For New Users
@@ -13,13 +15,14 @@ Welcome to cSploit documentation! This index helps you find what you need.
 - **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Complete development reference
   - Setup instructions
   - Project structure
-  - Helper utilities
+  - Helper utilities (100 classes!)
   - Code quality standards
 - **[BUILD.md](./BUILD.md)** - Build system documentation
   - Gradle configuration
   - Build variants
   - Performance optimization
   - Troubleshooting
+- **[HELPERS.md](./HELPERS.md)** - **100 Helper utilities documentation** ⭐
 - **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - One-page developer reference (bookmarkable)
 
 ### For Contributors

@@ -154,9 +154,25 @@ android/
 
 ## Helper Utilities
 
-The `org.csploit.android.helpers` package provides reusable utilities:
+The `org.csploit.android.helpers` package provides **100 reusable utility classes** organized by category:
 
-### ConcurrencyHelper
+### Helper Categories Overview
+
+| Category | Count | Purpose |
+|----------|-------|---------|
+| Network | 25 | Network analysis, DNS, ARP, subnets, interfaces |
+| Security | 12 | Vulnerability scanning, fingerprinting, auth tokens |
+| Target | 8 | Target management, scan tracking, reporting |
+| UI | 15 | Toasts, dialogs, notifications, animations |
+| System | 15 | Process, shell, device info, WiFi |
+| Performance | 10 | Monitoring, metrics, rate limiting |
+| Core | 15 | Concurrency, validation, logging, strings |
+
+See **[HELPERS.md](./HELPERS.md)** for complete documentation.
+
+### Common Helpers
+
+#### ConcurrencyHelper
 Background task execution with callbacks:
 ```java
 ConcurrencyHelper.executeAsync(
@@ -171,7 +187,7 @@ ConcurrencyHelper.executeAsync(
 );
 ```
 
-### ValidationHelper
+#### ValidationHelper
 Input validation:
 ```java
 if (ValidationHelper.isValidIPv4(ip)) { /* Valid IP */ }
@@ -179,7 +195,7 @@ if (ValidationHelper.isValidPort(port)) { /* Valid port */ }
 if (ValidationHelper.isValidMacAddress(mac)) { /* Valid MAC */ }
 ```
 
-### LoggingHelper
+#### LoggingHelper
 Structured logging:
 ```java
 LoggingHelper.d("TAG", "Debug message");
@@ -187,13 +203,32 @@ LoggingHelper.e("TAG", "Error message", exception);
 LoggingHelper.logPerformance("TAG", "Operation", durationMs);
 ```
 
-### ToastHelper
+#### ToastHelper
 Toast notifications with emoji indicators:
 ```java
 ToastHelper.success(context, "Operation successful");
 ToastHelper.error(context, "Operation failed");
 ToastHelper.info(context, "Information");
 ToastHelper.warning(context, "Warning");
+```
+
+#### Network Helpers (NEW)
+```java
+// DNS resolution with caching
+String ip = DnsHelper.resolve("example.com");
+String hostname = DnsHelper.reverseLookup("8.8.8.8");
+
+// Subnet calculations
+SubnetHelper.SubnetInfo info = SubnetHelper.getSubnetInfo("192.168.1.0/24");
+List<String> hosts = SubnetHelper.getUsableHostRange(info);
+
+// ARP operations
+List<ArpHelper.ArpEntry> table = ArpHelper.getArpTable();
+String mac = ArpHelper.getMacForIp("192.168.1.1");
+
+// Firewall management
+FirewallHelper.addPortForward(8080, 80, "192.168.1.100");
+FirewallHelper.enableMasquerade("wlan0");
 ```
 
 ### UIHelper

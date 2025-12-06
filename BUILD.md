@@ -450,6 +450,7 @@ jobs:
 
 ---
 
-**Last Updated**: December 5, 2025  
+**Last Updated**: December 6, 2025  
+**Version**: 1.8.0-stable  
 **Gradle Version**: 8.0  
 **AGP Version**: 7.4.2

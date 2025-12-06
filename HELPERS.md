@@ -1,12 +1,147 @@
 # Helper Utilities Documentation
 
-This document describes the new helper utilities added to improve code quality and reduce boilerplate.
+This document describes the comprehensive helper utilities added to improve code quality and reduce boilerplate.
 
 ## Overview
 
-The `org.csploit.android.helpers` package contains utility classes designed to simplify common operations and improve code quality across the cSploit application.
+The `org.csploit.android.helpers` package contains **100 utility classes** designed to simplify common operations and improve code quality across the cSploit application.
 
-## Helper Classes
+**Last Updated:** December 6, 2025
+
+## Helper Categories
+
+### Core Utilities (15)
+| Helper | Purpose |
+|--------|---------|
+| `ConcurrencyHelper` | Async operations with callbacks and retry logic |
+| `ValidationHelper` | Input validation for IPs, MACs, ports, URLs |
+| `LoggingHelper` | Structured logging with levels and formatting |
+| `StringHelper` | String operations and formatting |
+| `PreferencesHelper` | SharedPreferences wrapper |
+| `FileHelper` | File operations and utilities |
+| `JsonHelper` | JSON parsing and serialization |
+| `CacheHelper` | Memory/disk caching |
+| `CollectionHelper` | Collection utilities |
+| `TimeHelper` | Date/time formatting and utilities |
+| `RetryHelper` | Retry logic with exponential backoff |
+| `IdGenerator` | Unique ID generation |
+| `InputSanitizer` | Input sanitization and cleaning |
+| `EventBus` | Event publish/subscribe pattern |
+| `ConfigHelper` | Configuration management |
+
+### Network Utilities (25)
+| Helper | Purpose |
+|--------|---------|
+| `NetworkHelper` | General network utilities |
+| `NetworkAnalyzer` | Network traffic analysis |
+| `NetworkDiagnostics` | Network troubleshooting |
+| `NetworkMonitor` | Network state monitoring |
+| `NetworkSpeedHelper` | Speed testing utilities |
+| `NetworkStatsHelper` | Network statistics |
+| `NetworkTopologyHelper` | Network topology mapping |
+| `NetworkInterfaceHelper` | Interface configuration |
+| `InterfaceHelper` | Interface management |
+| `SubnetHelper` | Subnet calculations and CIDR |
+| `IpAddressHelper` | IP address utilities |
+| `MacAddressHelper` | MAC address utilities |
+| `MacVendorHelper` | MAC vendor lookup (OUI database) |
+| `ArpHelper` | ARP table operations |
+| `DnsHelper` | DNS resolution with caching |
+| `HttpHelper` | HTTP request utilities |
+| `ProbeHelper` | Network probing utilities |
+| `ConnectivityHelper` | Connectivity checks |
+| `ConnectionMonitor` | Connection state monitoring |
+| `ConnectionQualityHelper` | Connection quality assessment |
+| `BandwidthMonitor` | Bandwidth monitoring |
+| `GeoIPHelper` | Geo-location by IP |
+| `FirewallHelper` | iptables/firewall management |
+| `PacketAnalyzer` | Packet inspection |
+| `PcapHelper` | PCAP file read/write |
+
+### Security Utilities (12)
+| Helper | Purpose |
+|--------|---------|
+| `SecurityChecker` | Security assessment |
+| `VulnerabilityScanner` | Vulnerability detection |
+| `ExploitMatcher` | Exploit matching |
+| `ServiceFingerprinter` | Service identification |
+| `DeviceFingerprinter` | Device fingerprinting |
+| `SecureCredentialsHelper` | Secure credential storage |
+| `EncryptedStorageHelper` | Encrypted data storage |
+| `AuthTokenHelper` | Token management and sessions |
+| `PortScanOptimizer` | Optimized port scanning |
+| `BatchScannerHelper` | Batch scanning operations |
+| `ServiceDatabase` | Service/port database |
+| `HostTracker` | Host discovery tracking |
+
+### Target Management (8)
+| Helper | Purpose |
+|--------|---------|
+| `TargetHelper` | Target operations |
+| `TargetGroupManager` | Target grouping |
+| `TargetHistoryHelper` | Target scan history |
+| `ScanProgressTracker` | Scan progress tracking |
+| `ScanResultExporter` | Export scan results |
+| `ScheduledScanHelper` | Scheduled scans |
+| `ReportGenerator` | Report generation |
+| `OutputFormatter` | Output formatting |
+
+### UI Utilities (15)
+| Helper | Purpose |
+|--------|---------|
+| `ToastHelper` | Toast notifications |
+| `DialogHelper` | Dialog utilities |
+| `NotificationHelper` | Notifications |
+| `ModernNotificationHelper` | Modern notification channels |
+| `UIHelper` | UI utilities |
+| `ViewHelper` | View utilities |
+| `DisplayHelper` | Display/screen utilities |
+| `AnimationHelper` | Animation utilities |
+| `ColorHelper` | Color utilities |
+| `ClipboardHelper` | Clipboard operations |
+| `VibrationHelper` | Vibration feedback |
+| `TextFormattingHelper` | Text formatting |
+| `MainThreadHelper` | Main thread operations |
+| `PermissionHelper` | Permission handling |
+| `RuntimePermissionHelper` | Runtime permissions |
+
+### System Utilities (15)
+| Helper | Purpose |
+|--------|---------|
+| `SystemHelper` | System information |
+| `ShellHelper` | Shell command execution |
+| `CommandBuilder` | Command building |
+| `ProcessHelper` | Process management |
+| `DeviceHelper` | Device information |
+| `DeviceCapabilityHelper` | Device capabilities |
+| `AppHelper` | App utilities |
+| `AppInfoHelper` | App information |
+| `BatteryStatusHelper` | Battery status |
+| `PowerHelper` | Power management |
+| `WifiHelper` | WiFi utilities |
+| `AssetHelper` | Asset file access |
+| `ExportHelper` | Data export |
+| `DatabaseHelper` | Database utilities |
+| `WorkManagerHelper` | WorkManager utilities |
+
+### Performance Utilities (10)
+| Helper | Purpose |
+|--------|---------|
+| `PerformanceMonitor` | Performance monitoring |
+| `MetricsCollector` | Metrics collection |
+| `RateLimiter` | Rate limiting |
+| `ThreadHelper` | Thread utilities |
+| `ThreadPoolManager` | Thread pool management |
+| `CloseableHelper` | Resource cleanup |
+| `AnalyticsHelper` | Analytics tracking |
+| `SessionLogger` | Session logging |
+| `SessionStateManager` | Session state management |
+| `FeatureFlagsHelper` | Feature flag management |
+| `EnhancedPreferencesHelper` | Enhanced preferences |
+
+---
+
+## Detailed Documentation
 
 ### 1. **ConcurrencyHelper**
 Provides modern async/concurrent operations with callbacks and retry logic.

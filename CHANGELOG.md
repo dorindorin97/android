@@ -5,6 +5,36 @@ All notable changes to the cSploit project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0-stable] - 2025-12-06
+
+### 🚀 Added
+
+#### Comprehensive Helper Utilities (100 Classes)
+- **Network Utilities (25)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, and more
+- **Security Utilities (12)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, and more
+- **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
+- **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
+- **System Utilities (15)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, and more
+- **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
+- **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Code Quality Improvements
+- Fixed all deprecated AsyncTask usages
+- Eliminated all Toast.makeText calls (46 patterns → 0)
+- Fixed Thread.stop() deprecation (safe interrupt/join pattern)
+- Fixed empty catch blocks (7+ files)
+- Boolean comparison optimization (20+ patterns)
+- Comprehensive null-safety annotations
+
+### 🔧 Changed
+
+#### Version Update
+- Version bumped to 1.8.0-stable from 1.7.1-stable
+- Total helper classes: 100 (was 5)
+- Total lines of helper code: ~25,000+
+
+---
+
 ## [1.7.1-stable] - 2025-12-05
 
 ### 🚀 Added

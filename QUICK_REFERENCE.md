@@ -94,8 +94,9 @@ android/
 - [ ] Code is readable with meaningful names
 - [ ] Commit message is descriptive: `type: description`
 
-## 🔍 Helper Classes
+## 🔍 Helper Classes (100 Total)
 
+### Core Helpers
 | Helper | Use | Example |
 |--------|-----|---------|
 | **ConcurrencyHelper** | Background tasks | `ConcurrencyHelper.executeAsync(...)` |
@@ -105,7 +106,24 @@ android/
 | **UIHelper** | Dialogs, UI | `UIHelper.showErrorDialog(...)` |
 | **AnimationHelper** | Animations | `AnimationHelper.fadeIn(view, 300)` |
 
-See [HELPERS.md](./HELPERS.md) for complete documentation.
+### Network Helpers (NEW)
+| Helper | Use | Example |
+|--------|-----|---------|
+| **DnsHelper** | DNS resolution | `DnsHelper.resolve("example.com")` |
+| **SubnetHelper** | Subnet calculations | `SubnetHelper.getSubnetInfo("192.168.1.0/24")` |
+| **ArpHelper** | ARP table ops | `ArpHelper.getArpTable()` |
+| **MacVendorHelper** | MAC vendor lookup | `MacVendorHelper.getVendor(mac)` |
+| **FirewallHelper** | iptables rules | `FirewallHelper.addPortForward(...)` |
+| **InterfaceHelper** | Network interfaces | `InterfaceHelper.listInterfaces()` |
+
+### Security Helpers (NEW)
+| Helper | Use | Example |
+|--------|-----|---------|
+| **AuthTokenHelper** | Token management | `AuthTokenHelper.generateToken(...)` |
+| **HostTracker** | Host tracking | `HostTracker.track(ip, mac)` |
+| **ProcessHelper** | Process mgmt | `ProcessHelper.kill(pid)` |
+
+See **[HELPERS.md](./HELPERS.md)** for complete documentation of all 100 helpers.
 
 ## 🏗️ Gradle Build Types
 
@@ -145,7 +163,8 @@ See [HELPERS.md](./HELPERS.md) for complete documentation.
 | **Min SDK** | 21 (Android 5.0) |
 | **Target SDK** | 33 (Android 13) |
 | **JDK** | 17+ |
-| **cSploit** | 1.7.1-stable |
+| **cSploit** | 1.8.0-stable |
+| **Helpers** | 100 classes |
 
 ## 🔗 External Resources
 
@@ -214,5 +233,6 @@ cat cSploit/build/test-results/testDebugUnitTest/
 
 **Print this page or save as bookmark!** 🚀
 
-**Last Updated**: December 5, 2025  
+**Last Updated**: December 6, 2025  
+**Version**: 1.8.0-stable  
 **Maintained By**: cSploit Development Team

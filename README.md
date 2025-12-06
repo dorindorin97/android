@@ -43,8 +43,7 @@
 | 🔐 [Security Best Practices](./SECURITY.md) | Security guidelines for development |
 | 📋 [Changelog](./CHANGELOG.md) | Version history and updates |
 | 🤝 [Contributing Guide](./CONTRIBUTING.md) | How to contribute to cSploit |
-| 🛠️ [Helper Utilities](./HELPERS.md) | Helper class documentation |
-| 💾 [Improvements Archive](./IMPROVEMENTS_ARCHIVE.md) | Complete improvement history |
+| 🛠️ [Helper Utilities](./HELPERS.md) | **100 helper classes documentation** ⭐ |
 | 🏗️ [Build Guide](./BUILD.md) | Build system and configuration |
 
 ## Tutorials

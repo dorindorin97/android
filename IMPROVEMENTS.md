@@ -120,15 +120,19 @@ Complete history of all improvements and code quality enhancements to the cSploi
 
 ### Helper Framework
 
-| Helper | Methods | Usage |
-|--------|---------|-------|
-| **UIHelper** | 6 | Dialogs, error displays |
-| **ToastHelper** | 8 | Status notifications |
-| **LoggingHelper** | 5+ | Structured logging |
-| **ConcurrencyHelper** | 8+ | Async operations |
-| **ValidationHelper** | 8+ | Input validation |
-| **AnimationHelper** | 3+ | View animations |
-| **StringHelper** | 5+ | String utilities |
+**Total Helper Classes: 100** ⭐
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Network Utilities** | 25 | NetworkAnalyzer, SubnetHelper, DnsHelper, ArpHelper |
+| **Security Utilities** | 12 | VulnerabilityScanner, AuthTokenHelper, FirewallHelper |
+| **Target Management** | 8 | TargetHelper, ScanProgressTracker, ReportGenerator |
+| **UI Utilities** | 15 | ToastHelper, DialogHelper, NotificationHelper |
+| **System Utilities** | 15 | ProcessHelper, ShellHelper, DeviceHelper |
+| **Performance Utilities** | 10 | PerformanceMonitor, MetricsCollector, RateLimiter |
+| **Core Utilities** | 15 | ConcurrencyHelper, ValidationHelper, StringHelper |
+
+See [HELPERS.md](./HELPERS.md) for complete documentation.
 
 ---
 
@@ -209,6 +213,8 @@ For detailed breakdown of each improvement iteration, see:
 
 ---
 
-**Last Updated**: December 5, 2025  
+**Last Updated**: December 6, 2025  
+**Version**: 1.8.0-stable  
 **Status**: ✅ Production Ready  
+**Helper Classes**: 100  
 **Maintained By**: cSploit Development Team

@@ -292,6 +292,11 @@ android/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/         # Java source code
+│   │   │   │   └── org/csploit/android/
+│   │   │   │       ├── helpers/   # 100 utility classes ⭐
+│   │   │   │       ├── activities/
+│   │   │   │       ├── fragments/
+│   │   │   │       └── ...
 │   │   │   ├── res/          # Resources (layouts, drawables, etc.)
 │   │   │   └── AndroidManifest.xml
 │   │   └── test/             # Unit tests
@@ -301,6 +306,22 @@ android/
 ├── build.gradle      # Root build configuration
 └── settings.gradle   # Project settings
 ```
+
+## Using Helper Classes
+
+When contributing, prefer using existing helper classes instead of writing custom code:
+
+| Need | Use Helper |
+|------|------------|
+| Background tasks | `ConcurrencyHelper` |
+| Input validation | `ValidationHelper` |
+| Logging | `LoggingHelper` |
+| Toast messages | `ToastHelper` |
+| Network operations | `NetworkHelper`, `DnsHelper`, `SubnetHelper` |
+| Process management | `ProcessHelper` |
+| Firewall rules | `FirewallHelper` |
+
+See **[HELPERS.md](./HELPERS.md)** for all 100 helper classes.
 
 ## Communication
 
