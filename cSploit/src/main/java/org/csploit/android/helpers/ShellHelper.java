@@ -208,11 +208,12 @@ public final class ShellHelper {
             
             ProcessBuilder pb = new ProcessBuilder(shellCmd);
             pb.redirectErrorStream(false);
-            process = pb.start();
+            final Process proc = pb.start();
+            process = proc;
             
             // Write input if provided
             if (input != null) {
-                try (OutputStream os = process.getOutputStream()) {
+                try (OutputStream os = proc.getOutputStream()) {
                     os.write(input.getBytes());
                     os.flush();
                 }
@@ -221,7 +222,7 @@ public final class ShellHelper {
             // Read output in separate threads to prevent deadlock
             Thread outputThread = new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()))) {
+                        new InputStreamReader(proc.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         outputBuilder.append(line).append("\n");
@@ -233,7 +234,7 @@ public final class ShellHelper {
             
             Thread errorThread = new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()))) {
+                        new InputStreamReader(proc.getErrorStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         errorBuilder.append(line).append("\n");
@@ -247,7 +248,7 @@ public final class ShellHelper {
             errorThread.start();
             
             // Wait for process with timeout
-            boolean completed = process.waitFor(timeoutMs, TimeUnit.MILLISECONDS);
+            boolean completed = proc.waitFor(timeoutMs, TimeUnit.MILLISECONDS);
             
             if (!completed) {
                 timedOut = true;

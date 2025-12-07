@@ -51,6 +51,7 @@ import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ToastHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ettercap;
 import org.csploit.android.helpers.LoggingHelper;
