@@ -84,13 +84,16 @@ jobs:
         with:
           ndk-version: r21e
           add-to-path: true
-      - name: Build native libraries
+      - name: Build native JNI libraries
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
-          cd cSploit/jni
-          chmod +x build.sh
-          ./build.sh || echo "Native build failed - will try to continue"
+          cd cSploit
+          chmod +x build-jni-libs.sh
+          ./build-jni-libs.sh
+          # Verify libraries were built
+          echo "Checking for built libraries..."
+          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
       - name: Grant execute permission
         run: chmod +x gradlew
       - name: Clean build
@@ -137,13 +140,16 @@ jobs:
         with:
           ndk-version: r21e
           add-to-path: true
-      - name: Build native libraries
+      - name: Build native JNI libraries
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
-          cd cSploit/jni
-          chmod +x build.sh
-          ./build.sh || echo "Native build failed - will try to continue"
+          cd cSploit
+          chmod +x build-jni-libs.sh
+          ./build-jni-libs.sh
+          # Verify libraries were built
+          echo "Checking for built libraries..."
+          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
       - name: Grant execute permission
         run: chmod +x gradlew
       - name: Clean build
