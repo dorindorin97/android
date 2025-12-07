@@ -362,7 +362,9 @@ public final class PayloadHelper {
             try {
                 Base64.decode(input, Base64.DEFAULT);
                 return EncodingType.BASE64;
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                Log.d(TAG, "Not a valid Base64 string");
+            }
         }
         
         // Check for URL encoding

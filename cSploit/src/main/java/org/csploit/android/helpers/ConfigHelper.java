@@ -219,7 +219,9 @@ public final class ConfigHelper {
                 if (port > 0 && port <= 65535) {
                     ports[idx++] = port;
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException e) {
+                    LoggingHelper.d(TAG, "Invalid port number: " + part.trim());
+                }
         }
         
         // Return trimmed array

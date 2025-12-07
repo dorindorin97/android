@@ -215,9 +215,9 @@ public final class WhoIsHelper {
             Log.w(TAG, "WHOIS query failed for " + domain + " on " + server, e);
             return null;
         } finally {
-            try { if (reader != null) reader.close(); } catch (Exception ignored) {}
-            try { if (writer != null) writer.close(); } catch (Exception ignored) {}
-            try { if (socket != null) socket.close(); } catch (Exception ignored) {}
+            try { if (reader != null) reader.close(); } catch (Exception e) { Log.d(TAG, "Error closing reader", e); }
+            try { if (writer != null) writer.close(); } catch (Exception e) { Log.d(TAG, "Error closing writer", e); }
+            try { if (socket != null) socket.close(); } catch (Exception e) { Log.d(TAG, "Error closing socket", e); }
         }
     }
     

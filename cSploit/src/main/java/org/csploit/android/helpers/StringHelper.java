@@ -224,4 +224,235 @@ public final class StringHelper {
         String cleaned = str.replaceAll("\\s+", "").toLowerCase();
         return cleaned.equals(reverse(cleaned));
     }
+
+    /**
+     * Count occurrences of substring in string
+     */
+    public static int countOccurrences(@Nullable String str, @Nullable String substring) {
+        if (ValidationHelper.isEmpty(str) || ValidationHelper.isEmpty(substring)) {
+            return 0;
+        }
+
+        int count = 0;
+        int idx = 0;
+        while ((idx = str.indexOf(substring, idx)) != -1) {
+            count++;
+            idx += substring.length();
+        }
+        return count;
+    }
+
+    /**
+     * Left pad string to target length
+     */
+    @NonNull
+    public static String leftPad(@Nullable String str, int length, char padChar) {
+        if (str == null) str = "";
+        if (str.length() >= length) return str;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = str.length(); i < length; i++) {
+            sb.append(padChar);
+        }
+        sb.append(str);
+        return sb.toString();
+    }
+
+    /**
+     * Right pad string to target length
+     */
+    @NonNull
+    public static String rightPad(@Nullable String str, int length, char padChar) {
+        if (str == null) str = "";
+        if (str.length() >= length) return str;
+
+        StringBuilder sb = new StringBuilder(str);
+        while (sb.length() < length) {
+            sb.append(padChar);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Center string within target length
+     */
+    @NonNull
+    public static String center(@Nullable String str, int length, char padChar) {
+        if (str == null) str = "";
+        if (str.length() >= length) return str;
+
+        int padding = length - str.length();
+        int leftPadding = padding / 2;
+        int rightPadding = padding - leftPadding;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < leftPadding; i++) sb.append(padChar);
+        sb.append(str);
+        for (int i = 0; i < rightPadding; i++) sb.append(padChar);
+        return sb.toString();
+    }
+
+    /**
+     * Extract substring between two delimiters
+     */
+    @Nullable
+    public static String extractBetween(@Nullable String str, @NonNull String start, @NonNull String end) {
+        if (ValidationHelper.isEmpty(str)) return null;
+
+        int startIdx = str.indexOf(start);
+        if (startIdx == -1) return null;
+
+        startIdx += start.length();
+        int endIdx = str.indexOf(end, startIdx);
+        if (endIdx == -1) return null;
+
+        return str.substring(startIdx, endIdx);
+    }
+
+    /**
+     * Remove all whitespace from string
+     */
+    @NonNull
+    public static String removeWhitespace(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        return str.replaceAll("\\s+", "");
+    }
+
+    /**
+     * Normalize whitespace (replace multiple spaces with single space)
+     */
+    @NonNull
+    public static String normalizeWhitespace(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        return str.replaceAll("\\s+", " ").trim();
+    }
+
+    /**
+     * Check if string is numeric
+     */
+    public static boolean isNumeric(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return false;
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    /**
+     * Check if string is alphanumeric
+     */
+    public static boolean isAlphanumeric(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return false;
+        return str.matches("[a-zA-Z0-9]+");
+    }
+
+    /**
+     * Convert string to title case
+     */
+    @NonNull
+    public static String toTitleCase(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+
+        StringBuilder result = new StringBuilder();
+        boolean capitalizeNext = true;
+
+        for (char c : str.toCharArray()) {
+            if (Character.isWhitespace(c)) {
+                capitalizeNext = true;
+                result.append(c);
+            } else if (capitalizeNext) {
+                result.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+            } else {
+                result.append(Character.toLowerCase(c));
+            }
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * Abbreviate string to max length with custom suffix
+     */
+    @NonNull
+    public static String abbreviate(@Nullable String str, int maxLength, @NonNull String suffix) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        if (str.length() <= maxLength) return str;
+        if (maxLength <= suffix.length()) return suffix.substring(0, maxLength);
+
+        return str.substring(0, maxLength - suffix.length()) + suffix;
+    }
+
+    /**
+     * Escape HTML special characters
+     */
+    @NonNull
+    public static String escapeHtml(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+
+        return str
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
+    /**
+     * Wrap text at specified width
+     */
+    @NonNull
+    public static String wordWrap(@Nullable String str, int width) {
+        if (ValidationHelper.isEmpty(str) || width <= 0) return str != null ? str : "";
+
+        StringBuilder result = new StringBuilder();
+        int lineLength = 0;
+
+        String[] words = str.split("\\s+");
+        for (String word : words) {
+            if (lineLength + word.length() > width) {
+                result.append("\n");
+                lineLength = 0;
+            } else if (lineLength > 0) {
+                result.append(" ");
+                lineLength++;
+            }
+            result.append(word);
+            lineLength += word.length();
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * Generate random alphanumeric string
+     */
+    @NonNull
+    public static String randomAlphanumeric(int length) {
+        if (length <= 0) return "";
+
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder(length);
+        java.util.Random random = new java.util.Random();
+
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Mask sensitive data (show only last N characters)
+     */
+    @NonNull
+    public static String maskSensitive(@Nullable String str, int visibleChars, char maskChar) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        if (str.length() <= visibleChars) return str;
+
+        int maskLength = str.length() - visibleChars;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < maskLength; i++) {
+            sb.append(maskChar);
+        }
+        sb.append(str.substring(maskLength));
+        return sb.toString();
+    }
 }
