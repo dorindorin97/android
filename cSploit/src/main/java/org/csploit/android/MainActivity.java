@@ -75,12 +75,6 @@ public class MainActivity extends AppCompatActivity {
         // Build list of required permissions based on SDK version
         ArrayList<String> requiredPermissions = new ArrayList<>();
         
-        // WAKE_LOCK is always needed
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK)
-                != PackageManager.PERMISSION_GRANTED) {
-            requiredPermissions.add(Manifest.permission.WAKE_LOCK);
-        }
-        
         // Storage permissions for SDK < 33
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -89,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         
+        // POST_NOTIFICATIONS permission for SDK >= 33
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requiredPermissions.add(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+        
+        // Only request permissions if we have any to request
         if (!requiredPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(this,
                     requiredPermissions.toArray(new String[0]),
@@ -103,8 +106,22 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSIONS_WANTED: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length == 0) {
+                    // Request was cancelled, just return without finishing
+                    LoggingHelper.w(TAG, "Permission request was cancelled");
+                    return;
+                }
+                
+                // Check ALL permissions are granted
+                boolean allGranted = true;
+                for (int result : grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        allGranted = false;
+                        break;
+                    }
+                }
+                
+                if (allGranted) {
                     ToastHelper.success(this, getString(R.string.permissions_succeed));
                 } else {
                     ToastHelper.error(this, getString(R.string.permissions_fail));
@@ -113,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             default: {
-                LoggingHelper.w("MainActivity", "Unexpected permission request code: " + requestCode);
+                LoggingHelper.w(TAG, "Unexpected permission request code: " + requestCode);
                 break;
             }
         }
