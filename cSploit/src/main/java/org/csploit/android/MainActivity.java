@@ -37,6 +37,7 @@ import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 
 public class MainActivity extends AppCompatActivity {
+  private static final String TAG = "MainActivity";
 
   MainFragment f;
   final static int MY_PERMISSIONS_WANTED = 1;

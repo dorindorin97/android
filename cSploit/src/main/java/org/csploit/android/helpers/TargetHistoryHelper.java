@@ -17,17 +17,27 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
+import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONArray;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONException;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONObject;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.lang.ref.WeakReference;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper for tracking and persisting target history.

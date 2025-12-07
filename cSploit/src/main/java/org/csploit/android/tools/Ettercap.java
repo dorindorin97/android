@@ -27,10 +27,13 @@ import org.csploit.android.events.Event;
 import org.csploit.android.events.Message;
 import org.csploit.android.events.Newline;
 import org.csploit.android.events.Ready;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
 
 public class Ettercap extends Tool
 {
+  private static final String TAG = "Ettercap";
+
   public Ettercap() {
     mHandler = "ettercap";
     mCmdPrefix = null;

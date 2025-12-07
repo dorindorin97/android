@@ -42,6 +42,7 @@ import org.csploit.android.net.Target;
 import org.csploit.android.tools.NMap;
 
 public class Traceroute extends Plugin {
+  private static final String TAG = "Traceroute";
 	private FloatingActionButton mTraceFloatingActionButton = null;
 	private ProgressBar mTraceProgress = null;
 	private boolean mRunning = false;

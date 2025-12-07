@@ -17,11 +17,16 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.Set;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Enhanced preferences helper with type-safe operations and default values.

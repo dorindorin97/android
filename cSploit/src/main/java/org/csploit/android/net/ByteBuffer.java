@@ -19,12 +19,17 @@
 package org.csploit.android.net;
 
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.mozilla.universalchardet.UniversalDetector;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.UnsupportedEncodingException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Arrays;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class ByteBuffer{
+  private static final String TAG = "ByteBuffer";
   private byte[] mBuffer = null;
   private UniversalDetector mCharsetDetector = null;
 

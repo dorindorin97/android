@@ -17,21 +17,36 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.ConnectivityManager;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.Network;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkCapabilities;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkInfo;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.TrafficStats;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.lang.ref.WeakReference;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicLong;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper for measuring network speed and latency.

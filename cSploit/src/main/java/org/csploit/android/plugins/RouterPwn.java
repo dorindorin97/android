@@ -32,6 +32,7 @@ import org.csploit.android.net.Target;
 import androidx.fragment.app.FragmentActivity;
 
 public class RouterPwn extends Plugin{
+  private static final String TAG = "RouterPwn";
   public RouterPwn(){
     super(
       R.string.router_pwn,

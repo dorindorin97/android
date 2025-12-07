@@ -18,19 +18,32 @@
 package org.csploit.android.helpers;
 
 import android.app.Activity;
+import org.csploit.android.helpers.LoggingHelper;
 import android.app.AlertDialog;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.graphics.Color;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.View;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.inputmethod.InputMethodManager;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.EditText;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.LinearLayout;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ScrollView;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.TextView;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Toast;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * UIHelper - Centralized UI utilities and common dialog management

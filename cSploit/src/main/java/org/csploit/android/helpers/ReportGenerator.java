@@ -17,23 +17,38 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Environment;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONArray;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONException;
+import org.csploit.android.helpers.LoggingHelper;
 import org.json.JSONObject;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.File;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileWriter;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.text.SimpleDateFormat;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Date;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Locale;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ReportGenerator - Generate comprehensive scan reports

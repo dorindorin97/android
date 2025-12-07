@@ -18,24 +18,41 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.net.TrafficStats;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Handler;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Looper;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Locale;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledExecutorService;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledFuture;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * BandwidthMonitor - Real-time network bandwidth monitoring.
@@ -63,6 +80,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * }
  */
 public class BandwidthMonitor {
+  private static final String TAG = "BandwidthMonitor";
     
     public static final String TAG = "BandwidthMonitor";
     

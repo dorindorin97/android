@@ -83,6 +83,7 @@ public class SettingsFragment extends Fragment {
 
         public static class PrefsFrag extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+        private static final String TAG = "PrefsFrag";
 
         private Preference mSavePath = null;
         private Preference mWipeMSF = null;

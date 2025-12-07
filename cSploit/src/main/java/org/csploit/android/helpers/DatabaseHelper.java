@@ -17,12 +17,19 @@
 package org.csploit.android.helpers;
 
 import android.content.ContentValues;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.database.Cursor;
+import org.csploit.android.helpers.LoggingHelper;
 import android.database.sqlite.SQLiteDatabase;
+import org.csploit.android.helpers.LoggingHelper;
 import android.database.sqlite.SQLiteOpenHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Database helper for persistent storage of scan results, targets, and history.

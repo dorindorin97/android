@@ -28,6 +28,7 @@ import org.csploit.android.net.metasploit.ShellSession;
  * this Activity allow user to run commands on pwned shells
  */
 public class Console extends AppCompatActivity {
+  private static final String TAG = "Console";
 
     private EditText mInput;
     private TextView mOutput;

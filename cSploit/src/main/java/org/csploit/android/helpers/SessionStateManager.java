@@ -17,14 +17,21 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.HashMap;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ConcurrentHashMap;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * SessionStateManager - Manages application session state and persistence.

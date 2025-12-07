@@ -18,25 +18,43 @@
 package org.csploit.android.helpers;
 
 import android.os.Handler;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Looper;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetSocketAddress;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.Socket;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.HashMap;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Matcher;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * DeviceFingerprinter - OS and device fingerprinting utilities.

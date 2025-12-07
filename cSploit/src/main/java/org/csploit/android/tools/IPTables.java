@@ -20,9 +20,12 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.System;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class IPTables extends Tool
 {
+  private static final String TAG = "IPTables";
+
   public IPTables(){
     mHandler = "raw";
     mCmdPrefix = "iptables";

@@ -1,31 +1,51 @@
 package org.csploit.android.net;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.IOException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.MalformedURLException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.URLConnection;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayDeque;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Deque;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.LinkedList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Queue;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutionException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Future;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeoutException;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * take advantage of persistent HTTP connections
  * by use 1 thread for each host.
  */
 public class RemoteReader implements Runnable {
+  private static final String TAG = "RemoteReader";
 
   /**
    * receive fetched content

@@ -18,21 +18,35 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.ApplicationInfo;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageInfo;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageManager;
+import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.Signature;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
+import org.csploit.android.helpers.LoggingHelper;
 import android.provider.Settings;
+import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.security.MessageDigest;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
+import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * SecurityChecker - Device and app security validation utilities

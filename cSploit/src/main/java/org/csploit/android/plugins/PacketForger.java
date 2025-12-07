@@ -19,35 +19,62 @@
 package org.csploit.android.plugins;
 
 import android.content.SharedPreferences;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Bundle;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.View;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.View.OnClickListener;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ArrayAdapter;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Button;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.CheckBox;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.EditText;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Spinner;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Toast;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ToggleButton;
+import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.R;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Plugin;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.gui.dialogs.ErrorDialog;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Endpoint;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target.Type;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.OutputStream;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.DatagramPacket;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.DatagramSocket;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.Socket;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class PacketForger extends Plugin implements OnClickListener {
+  private static final String TAG = "PacketForger";
 	private static final int TCP_PROTOCOL = 0;
 	private static final int UDP_PROTOCOL = 1;
 	private static final String[] PROTOCOLS = new String[] { "TCP", "UDP" };

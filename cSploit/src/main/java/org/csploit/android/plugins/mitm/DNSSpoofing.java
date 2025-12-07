@@ -19,33 +19,58 @@
 package org.csploit.android.plugins.mitm;
 
 import android.content.SharedPreferences;
+import org.csploit.android.helpers.LoggingHelper;
 import android.os.Bundle;
+import org.csploit.android.helpers.LoggingHelper;
 import androidx.appcompat.app.AppCompatActivity;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.MenuItem;
+import org.csploit.android.helpers.LoggingHelper;
 import android.view.View;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Button;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ProgressBar;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.TextView;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Toast;
+import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ToggleButton;
+import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.R;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.ChildManager;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.gui.dialogs.ErrorDialog;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.AnimationHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ettercap;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.BufferedWriter;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileOutputStream;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileReader;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileWriter;
+import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
+import org.csploit.android.helpers.LoggingHelper;
 
 public class DNSSpoofing extends AppCompatActivity {
+  private static final String TAG = "DNSSpoofing";
     private ToggleButton mSniffToggleButton = null;
 	private ProgressBar mSniffProgress = null;
 	private TextView mTextDnsList = null;

@@ -19,25 +19,44 @@
 package org.csploit.android.net.datasource;
 
 import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.RemoteReader;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.metasploit.Author;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.metasploit.MsfExploit;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.CVE;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.Link;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.OSVDB;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.Reference;
+import org.csploit.android.helpers.LoggingHelper;
 import org.unbescape.html.HtmlEscape;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.UnsupportedEncodingException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.MalformedURLException;
+import org.csploit.android.helpers.LoggingHelper;
 import java.net.URLEncoder;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collection;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.LinkedList;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Matcher;
+import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
+import org.csploit.android.helpers.LoggingHelper;
 
 class Rapid7
 {
