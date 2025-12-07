@@ -107,7 +107,7 @@ public class Console extends AppCompatActivity {
         runButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText(, HtmlCompat.FROM_HTML_MODE_LEGACY).toString() + "</font>\n"));
+                mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n", HtmlCompat.FROM_HTML_MODE_LEGACY));
                 mSession.addCommand(mInput.getText().toString(), mReceiver);
             }
         });
@@ -115,7 +115,7 @@ public class Console extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
-                    mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText(, HtmlCompat.FROM_HTML_MODE_LEGACY).toString() + "</font>\n"));
+                    mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n", HtmlCompat.FROM_HTML_MODE_LEGACY));
                     mSession.addCommand(mInput.getText().toString(), mReceiver);
                     return true;
                 }
@@ -127,7 +127,7 @@ public class Console extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText(, HtmlCompat.FROM_HTML_MODE_LEGACY).toString() + "</font>\n"));
+                    mOutput.append(HtmlCompat.fromHtml("<font color=\"red\">" + mInput.getText().toString() + "</font>\n", HtmlCompat.FROM_HTML_MODE_LEGACY));
                     mSession.addCommand(mInput.getText().toString(), mReceiver);
                     return true;
                 }
