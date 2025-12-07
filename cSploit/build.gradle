@@ -100,13 +100,13 @@ android {
 
     signingConfigs {
         release {
-            if (System.getenv("KEYSTORE_FILE") != null) {
-                storeFile = file(System.getenv("KEYSTORE_FILE"))
+            def keystoreFile = System.getenv("KEYSTORE_FILE")
+            if (keystoreFile != null && keystoreFile != '') {
+                storeFile = file(keystoreFile)
                 storePassword = System.getenv("KEYSTORE_PWD")
                 keyAlias = System.getenv("KEYSTORE_ALIAS")
                 keyPassword = System.getenv("KEYSTORE_ALIAS_PWD")
             }
-            return true
         }
     }
 
