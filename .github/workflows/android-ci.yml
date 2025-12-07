@@ -30,24 +30,6 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
 
 jobs:
-  # Clean up old workflow runs and artifacts
-  cleanup:
-    name: Cleanup Old Artifacts
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
-    continue-on-error: true
-    steps:
-    - name: Delete old workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
-      continue-on-error: true
-      with:
-        token: ${{ github.token }}
-        repository: ${{ github.repository }}
-        retain_days: 14
-        keep_minimum_runs: 5
-
   lint:
     name: Lint Check
     runs-on: ubuntu-latest
