@@ -30,6 +30,7 @@ import android.util.Patterns;
 import org.apache.commons.net.util.SubnetUtils;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.NetworkHelper;
 
 import java.lang.reflect.Method;

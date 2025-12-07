@@ -1,6 +1,7 @@
 package org.csploit.android.net.metasploit;
 
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import java.util.Map;
  */
 public class Payload {
 
+  private static final String TAG = "Payload";
   private Collection<Option> options = new ArrayList<Option>();
   private String mName = null;
 

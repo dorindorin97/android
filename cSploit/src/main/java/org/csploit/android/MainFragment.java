@@ -527,8 +527,8 @@ public class MainFragment extends Fragment {
                 }
             });
         } else {
-            UIHelper.error(getString(android.R.string.dialog_alert_title),
-                    getString(R.string.iface_error_no_available), getActivity());
+            UIHelper.error(getActivity(), getString(android.R.string.dialog_alert_title),
+                    getString(R.string.iface_error_no_available));
         }
     }
 
@@ -566,61 +566,60 @@ public class MainFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             ArrayList<Plugin> commonPlugins = null;
 
-            switch (item.getItemId()) {
-                case R.id.multi_action:
-                    final int[] selected = mTargetAdapter.getSelectedPositions();
-                    if (selected.length > 1) {
-                        Target target = (Target) mTargetAdapter.getItem(selected[0]);
-                        commonPlugins = System.getPluginsForTarget(target);
-                        for (int i = 1; i < selected.length; i++) {
-                            target = (Target) mTargetAdapter.getItem(selected[i]);
-                            ArrayList<Plugin> targetPlugins = System.getPluginsForTarget(target);
-                            ArrayList<Plugin> removeThem = new ArrayList<Plugin>();
-                            for (Plugin p : commonPlugins) {
-                                if (!targetPlugins.contains(p))
-                                    removeThem.add(p);
-                            }
-                            for (Plugin p : removeThem) {
-                                commonPlugins.remove(p);
-                            }
+            int itemId = item.getItemId();
+            if (itemId == R.id.multi_action) {
+                final int[] selected = mTargetAdapter.getSelectedPositions();
+                if (selected.length > 1) {
+                    Target target = (Target) mTargetAdapter.getItem(selected[0]);
+                    commonPlugins = System.getPluginsForTarget(target);
+                    for (int i = 1; i < selected.length; i++) {
+                        target = (Target) mTargetAdapter.getItem(selected[i]);
+                        ArrayList<Plugin> targetPlugins = System.getPluginsForTarget(target);
+                        ArrayList<Plugin> removeThem = new ArrayList<Plugin>();
+                        for (Plugin p : commonPlugins) {
+                            if (!targetPlugins.contains(p))
+                                removeThem.add(p);
                         }
-                        if (commonPlugins.size() > 0) {
-                            final int[] actions = new int[commonPlugins.size()];
-                            for (int i = 0; i < actions.length; i++)
-                                actions[i] = commonPlugins.get(i).getName();
-
-                            new MultipleChoiceDialog(R.string.choose_method, actions, getActivity(), new MultipleChoiceDialog.MultipleChoiceDialogListener() {
-                                @Override
-                                public void onChoice(int[] choices) {
-                                    Intent intent = new Intent(getActivity(), MultiAttackService.class);
-                                    int[] selectedActions = new int[choices.length];
-
-                                    for (int i = 0; i < selectedActions.length; i++)
-                                        selectedActions[i] = actions[choices[i]];
-
-                                    // Use UUID-based targeting for stability (preferred)
-                                    String[] targetUuids = new String[selected.length];
-                                    for (int i = 0; i < selected.length; i++) {
-                                        Target t = (Target) mTargetAdapter.getItem(selected[i]);
-                                        targetUuids[i] = t.getUuid();
-                                    }
-                                    intent.putExtra(MultiAttackService.MULTI_TARGET_UUIDS, targetUuids);
-                                    intent.putExtra(MultiAttackService.MULTI_ACTIONS, selectedActions);
-
-                                    getActivity().startService(intent);
-                                }
-                            });
-                        } else {
-                            UIHelper.error(getActivity(), getString(R.string.error), "no common actions found");
+                        for (Plugin p : removeThem) {
+                            commonPlugins.remove(p);
                         }
-                    } else {
-                        targetAliasPrompt((Target) mTargetAdapter.getItem(selected[0]));
                     }
-                    mode.finish(); // Action picked, so close the CAB
-                    return true;
-                default:
-                    return false;
+                    if (commonPlugins.size() > 0) {
+                        final int[] actions = new int[commonPlugins.size()];
+                        for (int i = 0; i < actions.length; i++)
+                            actions[i] = commonPlugins.get(i).getName();
+
+                        new MultipleChoiceDialog(R.string.choose_method, actions, getActivity(), new MultipleChoiceDialog.MultipleChoiceDialogListener() {
+                            @Override
+                            public void onChoice(int[] choices) {
+                                Intent intent = new Intent(getActivity(), MultiAttackService.class);
+                                int[] selectedActions = new int[choices.length];
+
+                                for (int i = 0; i < selectedActions.length; i++)
+                                    selectedActions[i] = actions[choices[i]];
+
+                                // Use UUID-based targeting for stability (preferred)
+                                String[] targetUuids = new String[selected.length];
+                                for (int i = 0; i < selected.length; i++) {
+                                    Target t = (Target) mTargetAdapter.getItem(selected[i]);
+                                    targetUuids[i] = t.getUuid();
+                                }
+                                intent.putExtra(MultiAttackService.MULTI_TARGET_UUIDS, targetUuids);
+                                intent.putExtra(MultiAttackService.MULTI_ACTIONS, selectedActions);
+
+                                getActivity().startService(intent);
+                            }
+                        });
+                    } else {
+                        UIHelper.error(getActivity(), getString(R.string.error), "no common actions found");
+                    }
+                } else {
+                    targetAliasPrompt((Target) mTargetAdapter.getItem(selected[0]));
+                }
+                mode.finish(); // Action picked, so close the CAB
+                return true;
             }
+            return false;
         }
 
         // called when the user exits the action mode
@@ -690,238 +689,215 @@ public class MainFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.add:
-                new InputDialog(getString(R.string.add_custom_target),
-                        getString(R.string.enter_url), getActivity(),
-                        new InputDialogListener() {
-                            @Override
-                            public void onInputEntered(String input) {
-                                final Target target = Target.getFromString(input);
-                                if (target != null) {
-                                    ThreadHelper.getSharedExecutor().execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            System.addOrderedTarget(target);
-                                        }
-                                    });
-                                } else
-                                    UIHelper.error(getString(R.string.error),
-                                            getString(R.string.invalid_target),
-                                            getActivity());
-                            }
-                        });
-                return true;
-
-            case R.id.scan:
-                startNetworkRadar();
-                return true;
-
-            case R.id.wifi_ifaces:
-                displayNetworkInterfaces(true);
-                return true;
-
-            case R.id.wifi_scan:
-                stopNetworkRadar();
-
-                mRadarReceiver.unregister();
-                mUpdateReceiver.unregister();
-
-                startActivityForResult(new Intent(getActivity(),
-                        WifiScannerActivity.class), WIFI_CONNECTION_REQUEST);
-                getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
-                return true;
-
-            case R.id.new_session:
-                new ConfirmDialog(getString(R.string.warning),
-                        getString(R.string.warning_new_session), getActivity(),
-                        new ConfirmDialogListener() {
-                            @Override
-                            public void onConfirm() {
-                                try {
-                                    System.reset();
-
-                                    ToastHelper.status(
-                                            getActivity(),
-                                            getString(R.string.new_session_started));
-                                } catch (Exception e) {
-                                    new FatalDialog(getString(R.string.error), e
-                                            .toString(), getActivity());
-                                }
-                            }
-
-                            @Override
-                            public void onCancel() {
-                            }
-
-                        });
-
-                return true;
-
-            case R.id.save_session:
-                new InputDialog(getString(R.string.save_session),
-                        getString(R.string.enter_session_name),
-                        System.getSessionName(), true, false, getActivity(),
-                        new InputDialogListener() {
-                            @Override
-                            public void onInputEntered(String input) {
-                                String name = input.trim().replace("/", "")
-                                        .replace("..", "");
-
-                                if (!name.isEmpty()) {
-                                    try {
-                                        String filename = System.saveSession(name);
-
-                                        ToastHelper.success(
-                                                getActivity(),
-                                                getString(R.string.session_saved_to)
-                                                        + filename + " .");
-                                    } catch (IOException e) {
-                                        UIHelper.error(getString(R.string.error),
-                                                e.toString(), getActivity())
-                                                .show();
-                                    }
-                                } else
-                                    UIHelper.error(getString(R.string.error),
-                                            getString(R.string.invalid_session),
-                                            getActivity());
-                            }
-                        });
-                return true;
-
-            case R.id.restore_session:
-                final ArrayList<String> sessions = System
-                        .getAvailableSessionFiles();
-
-                if (sessions != null && sessions.size() > 0) {
-                    new SpinnerDialog(getString(R.string.select_session),
-                            getString(R.string.select_session_file),
-                            sessions.toArray(new String[sessions.size()]),
-                            getActivity(), new SpinnerDialogListener() {
+        int itemId = item.getItemId();
+        if (itemId == R.id.add) {
+            new InputDialog(getString(R.string.add_custom_target),
+                    getString(R.string.enter_url), getActivity(),
+                    new InputDialogListener() {
                         @Override
-                        public void onItemSelected(int index) {
-                            String session = sessions.get(index);
-
-                            try {
-                                System.loadSession(session);
-                            } catch (Exception e) {
-                                LoggingHelper.e(TAG, "Failed to load session", e);
-                                UIHelper.error(getString(R.string.error),
-                                        e.getMessage(), getActivity())
-                                        .show();
-                            }
+                        public void onInputEntered(String input) {
+                            final Target target = Target.getFromString(input);
+                            if (target != null) {
+                                ThreadHelper.getSharedExecutor().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        System.addOrderedTarget(target);
+                                    }
+                                });
+                            } else
+                                UIHelper.error(getActivity(), getString(R.string.error),
+                                        getString(R.string.invalid_target));
                         }
                     });
-                } else
-                    UIHelper.error(getString(R.string.error),
-                            getString(R.string.no_session_found), getActivity())
-                            .show();
-                return true;
+            return true;
+        } else if (itemId == R.id.scan) {
+            startNetworkRadar();
+            return true;
+        } else if (itemId == R.id.wifi_ifaces) {
+            displayNetworkInterfaces(true);
+            return true;
+        } else if (itemId == R.id.wifi_scan) {
+            stopNetworkRadar();
 
-            case R.id.settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
-                return true;
+            mRadarReceiver.unregister();
+            mUpdateReceiver.unregister();
 
-            case R.id.ss_monitor:
-                ConcurrencyHelper.submitAsync(() -> {
-                    Services.getNetworkRadar().onMenuClick(getActivity(), item);
-                    return null;
+            startActivityForResult(new Intent(getActivity(),
+                    WifiScannerActivity.class), WIFI_CONNECTION_REQUEST);
+            getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+            return true;
+        } else if (itemId == R.id.new_session) {
+            new ConfirmDialog(getString(R.string.warning),
+                    getString(R.string.warning_new_session), getActivity(),
+                    new ConfirmDialogListener() {
+                        @Override
+                        public void onConfirm() {
+                            try {
+                                System.reset();
+
+                                ToastHelper.status(
+                                        getActivity(),
+                                        getString(R.string.new_session_started));
+                            } catch (Exception e) {
+                                new FatalDialog(getString(R.string.error), e
+                                        .toString(), getActivity());
+                            }
+                        }
+
+                        @Override
+                        public void onCancel() {
+                        }
+
+                    });
+
+            return true;
+        } else if (itemId == R.id.save_session) {
+            new InputDialog(getString(R.string.save_session),
+                    getString(R.string.enter_session_name),
+                    System.getSessionName(), true, false, getActivity(),
+                    new InputDialogListener() {
+                        @Override
+                        public void onInputEntered(String input) {
+                            String name = input.trim().replace("/", "")
+                                    .replace("..", "");
+
+                            if (!name.isEmpty()) {
+                                try {
+                                    String filename = System.saveSession(name);
+
+                                    ToastHelper.success(
+                                            getActivity(),
+                                            getString(R.string.session_saved_to)
+                                                    + filename + " .");
+                                } catch (IOException e) {
+                                    UIHelper.error(getActivity(), getString(R.string.error),
+                                            e.toString())
+                                            .show();
+                                }
+                            } else
+                                UIHelper.error(getActivity(), getString(R.string.error),
+                                        getString(R.string.invalid_session));
+                        }
+                    });
+            return true;
+        } else if (itemId == R.id.restore_session) {
+            final ArrayList<String> sessions = System
+                    .getAvailableSessionFiles();
+
+            if (sessions != null && sessions.size() > 0) {
+                new SpinnerDialog(getString(R.string.select_session),
+                        getString(R.string.select_session_file),
+                        sessions.toArray(new String[sessions.size()]),
+                        getActivity(), new SpinnerDialogListener() {
+                    @Override
+                    public void onItemSelected(int index) {
+                        String session = sessions.get(index);
+
+                        try {
+                            System.loadSession(session);
+                        } catch (Exception e) {
+                            LoggingHelper.e(TAG, "Failed to load session", e);
+                            UIHelper.error(getActivity(), getString(R.string.error),
+                                    e.getMessage())
+                                    .show();
+                        }
+                    }
                 });
-                return true;
-
-            case R.id.ss_msfrpcd:
-                ConcurrencyHelper.submitAsync(() -> {
-                    Services.getMsfRpcdService().onMenuClick(getActivity(), item);
-                    return null;
-                });
-                return true;
-
-            case R.id.submit_issue:
-                String uri = getString(R.string.github_new_issue_url);
-                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                startActivity(browser);
-                // for fat-tire:
-                //   String.format(getString(R.string.issue_message), getString(R.string.github_issues_url), getString(R.string.github_new_issue_url));
-                return true;
-
-            case R.id.about:
-                new AboutDialog(getActivity());
-                return true;
-
-            case R.id.security_check:
-                // Show security check results in a dialog
-                org.csploit.android.helpers.SecurityChecker checker = new org.csploit.android.helpers.SecurityChecker(getActivity());
-                StringBuilder sb = new StringBuilder();
-                sb.append("Rooted: ").append(checker.isRooted() ? "Yes" : "No").append("\n");
-                sb.append("Emulator: ").append(checker.isEmulator() ? "Yes" : "No").append("\n");
-                sb.append("Debuggable: ").append(checker.isDebuggable() ? "Yes" : "No").append("\n");
-                sb.append("Developer Options: ").append(checker.isDeveloperOptionsEnabled() ? "Yes" : "No").append("\n");
-                sb.append("APK Signature: ").append(checker.getApkSignatureHash());
-                new android.app.AlertDialog.Builder(getActivity())
-                    .setTitle("Security Check")
-                    .setMessage(sb.toString())
-                    .setPositiveButton("Share", (dialog, whichButton) -> {
-                        Intent send = new Intent(Intent.ACTION_SEND);
-                        send.setType("text/plain");
-                        send.putExtra(Intent.EXTRA_SUBJECT, "cSploit Security Check Report");
-                        send.putExtra(Intent.EXTRA_TEXT, sb.toString());
-                        startActivity(Intent.createChooser(send, "Share security report"));
-                    })
-                    .setNegativeButton(android.R.string.ok, null)
-                    .show();
-                return true;
-
-            case R.id.export_targets:
-                // Export targets using ScanResultExporter
-                final String[] exportFormats = {"JSON", "CSV", "HTML", "TXT"};
-                new android.app.AlertDialog.Builder(getActivity())
-                        .setTitle("Export Targets")
-                        .setItems(exportFormats, (dialog, which) -> {
-                            java.util.List<org.csploit.android.net.Target> targets = org.csploit.android.core.System.getTargets();
-                            if (targets == null || targets.size() == 0) {
-                                ToastHelper.info(getActivity(), "No targets available to export");
-                                return;
-                            }
-
-                            java.io.File exportFile = null;
-                            org.csploit.android.helpers.ScanResultExporter exporter = new org.csploit.android.helpers.ScanResultExporter(getActivity());
-                            String mime = "text/plain";
-                            String baseName = "scan_report_" + java.lang.System.currentTimeMillis();
-                            switch (which) {
-                                case 0:
-                                    exportFile = exporter.exportToJson(targets, baseName);
-                                    mime = "application/json";
-                                    break;
-                                case 1:
-                                    exportFile = exporter.exportToCsv(targets, baseName);
-                                    mime = "text/csv";
-                                    break;
-                                case 2:
-                                    exportFile = exporter.exportToHtml(targets, baseName);
-                                    mime = "text/html";
-                                    break;
-                                case 3:
-                                    exportFile = exporter.exportToTxt(targets, baseName);
-                                    mime = "text/plain";
-                                    break;
-                            }
-
-                            if (exportFile != null && exportFile.exists()) {
-                                ToastHelper.success(getActivity(), "Exported to: " + exportFile.getAbsolutePath());
-                                exporter.shareFile(exportFile, mime);
-                            } else {
-                                ToastHelper.error(getActivity(), "Export failed");
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
+            } else
+                UIHelper.error(getActivity(), getString(R.string.error),
+                        getString(R.string.no_session_found))
                         .show();
-                return true;
+            return true;
+        } else if (itemId == R.id.settings) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+            return true;
+        } else if (itemId == R.id.ss_monitor) {
+            ConcurrencyHelper.submitAsync(() -> {
+                Services.getNetworkRadar().onMenuClick(getActivity(), item);
+                return null;
+            });
+            return true;
+        } else if (itemId == R.id.ss_msfrpcd) {
+            ConcurrencyHelper.submitAsync(() -> {
+                Services.getMsfRpcdService().onMenuClick(getActivity(), item);
+                return null;
+            });
+            return true;
+        } else if (itemId == R.id.submit_issue) {
+            String uri = getString(R.string.github_new_issue_url);
+            Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            startActivity(browser);
+            // for fat-tire:
+            //   String.format(getString(R.string.issue_message), getString(R.string.github_issues_url), getString(R.string.github_new_issue_url));
+            return true;
+        } else if (itemId == R.id.about) {
+            new AboutDialog(getActivity());
+            return true;
+        } else if (itemId == R.id.security_check) {
+            // Show security check results in a dialog
+            org.csploit.android.helpers.SecurityChecker checker = new org.csploit.android.helpers.SecurityChecker(getActivity());
+            StringBuilder sb = new StringBuilder();
+            sb.append("Rooted: ").append(checker.isRooted() ? "Yes" : "No").append("\n");
+            sb.append("Emulator: ").append(checker.isEmulator() ? "Yes" : "No").append("\n");
+            sb.append("Debuggable: ").append(checker.isDebuggable() ? "Yes" : "No").append("\n");
+            sb.append("Developer Options: ").append(checker.isDeveloperOptionsEnabled() ? "Yes" : "No").append("\n");
+            sb.append("APK Signature: ").append(checker.getApkSignatureHash());
+            new android.app.AlertDialog.Builder(getActivity())
+                .setTitle("Security Check")
+                .setMessage(sb.toString())
+                .setPositiveButton("Share", (dialog, whichButton) -> {
+                    Intent send = new Intent(Intent.ACTION_SEND);
+                    send.setType("text/plain");
+                    send.putExtra(Intent.EXTRA_SUBJECT, "cSploit Security Check Report");
+                    send.putExtra(Intent.EXTRA_TEXT, sb.toString());
+                    startActivity(Intent.createChooser(send, "Share security report"));
+                })
+                .setNegativeButton(android.R.string.ok, null)
+                .show();
+            return true;
+        } else if (itemId == R.id.export_targets) {
+            // Export targets using ScanResultExporter
+            final String[] exportFormats = {"JSON", "CSV", "HTML", "TXT"};
+            new android.app.AlertDialog.Builder(getActivity())
+                    .setTitle("Export Targets")
+                    .setItems(exportFormats, (dialog, which) -> {
+                        java.util.List<org.csploit.android.net.Target> targets = org.csploit.android.core.System.getTargets();
+                        if (targets == null || targets.size() == 0) {
+                            ToastHelper.info(getActivity(), "No targets available to export");
+                            return;
+                        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+                        java.io.File exportFile = null;
+                        org.csploit.android.helpers.ScanResultExporter exporter = new org.csploit.android.helpers.ScanResultExporter(getActivity());
+                        String mime = "text/plain";
+                        String baseName = "scan_report_" + java.lang.System.currentTimeMillis();
+                        if (which == 0) {
+                            exportFile = exporter.exportToJson(targets, baseName);
+                            mime = "application/json";
+                        } else if (which == 1) {
+                            exportFile = exporter.exportToCsv(targets, baseName);
+                            mime = "text/csv";
+                        } else if (which == 2) {
+                            exportFile = exporter.exportToHtml(targets, baseName);
+                            mime = "text/html";
+                        } else if (which == 3) {
+                            exportFile = exporter.exportToTxt(targets, baseName);
+                            mime = "text/plain";
+                        }
+
+                        if (exportFile != null && exportFile.exists()) {
+                            ToastHelper.success(getActivity(), "Exported to: " + exportFile.getAbsolutePath());
+                            exporter.shareFile(exportFile, mime);
+                        } else {
+                            ToastHelper.error(getActivity(), "Export failed");
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onBackPressed() {
@@ -1273,8 +1249,8 @@ public class MainFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    UIHelper.error(getString(R.string.error),
-                            getString(message), getActivity());
+                    UIHelper.error(getActivity(), getString(R.string.error),
+                            getString(message));
                 }
             });
 
