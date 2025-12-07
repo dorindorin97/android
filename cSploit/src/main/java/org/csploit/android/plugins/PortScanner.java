@@ -278,8 +278,8 @@ public class PortScanner extends Plugin {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.scanner_custom_parameters:
+    int itemId = item.getItemId();
+    if (itemId == R.id.scanner_custom_parameters) {
         if (item.isChecked())
           hideParametersField();
         else
@@ -287,8 +287,7 @@ public class PortScanner extends Plugin {
 
         item.setChecked(!item.isChecked());
         return true;
-      case R.id.select_ports:
-
+    } else if (itemId == R.id.select_ports) {
         new InputDialog(getString(R.string.select_ports),
                 getString(R.string.enter_ports_list), this,
                 new InputDialogListener() {
@@ -340,10 +339,8 @@ public class PortScanner extends Plugin {
                 }).show();
 
         return true;
-
-      default:
-        return super.onOptionsItemSelected(item);
     }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

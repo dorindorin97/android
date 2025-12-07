@@ -390,24 +390,16 @@ public class LoginCracker extends Plugin {
 
     int itemId = item.getItemId();
 
-    switch (itemId) {
-      case R.id.user_wordlist:
-
+    if (itemId == R.id.user_wordlist) {
         startActivityForResult(Intent.createChooser(mWordlistPicker,
                 getString(R.string.select_wordlist)), SELECT_USER_WORDLIST);
-
         return true;
-
-      case R.id.pass_wordlist:
-
+    } else if (itemId == R.id.pass_wordlist) {
         startActivityForResult(Intent.createChooser(mWordlistPicker,
                 getString(R.string.select_wordlist)), SELECT_PASS_WORDLIST);
-
         return true;
-
-      default:
-        return super.onOptionsItemSelected(item);
     }
+    return super.onOptionsItemSelected(item);
   }
 
   @SuppressWarnings("ConstantConditions")
