@@ -68,6 +68,7 @@ import java.util.concurrent.CancellationException;
 
 public class UpdateService extends IntentService
 {
+  private static final String TAG = "UpdateService";
   // Intent defines
   public static final String START    = "UpdateService.action.START";
   public static final String ERROR    = "UpdateService.action.ERROR";

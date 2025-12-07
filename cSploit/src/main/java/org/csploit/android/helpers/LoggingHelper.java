@@ -55,10 +55,24 @@ public final class LoggingHelper {
     }
 
     /**
+     * Log a debug message with exception
+     */
+    public static void d(@NonNull String tag, @NonNull String message, @NonNull Throwable throwable) {
+        log(LogLevel.DEBUG, tag, message, throwable);
+    }
+
+    /**
      * Log an info message
      */
     public static void i(@NonNull String tag, @NonNull String message) {
         log(LogLevel.INFO, tag, message, null);
+    }
+
+    /**
+     * Log an info message with exception
+     */
+    public static void i(@NonNull String tag, @NonNull String message, @NonNull Throwable throwable) {
+        log(LogLevel.INFO, tag, message, throwable);
     }
 
     /**

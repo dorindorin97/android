@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.MacAddressHelper;
 import org.csploit.android.net.Target;
 
 import java.net.InetAddress;

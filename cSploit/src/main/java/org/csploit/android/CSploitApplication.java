@@ -110,27 +110,28 @@ public class CSploitApplication extends Application {
         return;
       }
 
-      CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
-      builder.setBuildConfigClass(BuildConfig.class)
-             .setReportFormat(StringFormat.JSON);
+      CoreConfigurationBuilder builder = new CoreConfigurationBuilder();
+      builder.withBuildConfigClass(BuildConfig.class)
+             .withReportFormat(StringFormat.JSON);
       
       // Only configure HTTP sender if credentials are available from secure storage
       String reportingUri = prefs.getString("reporting_uri", "");
       if (!reportingUri.isEmpty()) {
-        HttpSenderConfigurationBuilder httpBuilder = 
-            builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
-                   .setUri(reportingUri)
-                   .setHttpMethod(HttpSender.Method.PUT);
-        
-        // Notification configuration
-        builder.getPluginConfigurationBuilder(NotificationConfigurationBuilder.class)
-               .setResChannelName(R.string.csploitChannelId)
-               .setResText(R.string.crash_dialog_text)
-               .setResIcon(R.drawable.dsploit_icon)
-               .setResTitle(R.string.crash_dialog_title);
+        builder.withPluginConfigurations(
+            new HttpSenderConfigurationBuilder()
+                   .withUri(reportingUri)
+                   .withHttpMethod(HttpSender.Method.PUT)
+                   .build(),
+            new NotificationConfigurationBuilder()
+               .withResChannelName(R.string.csploitChannelId)
+               .withResText(R.string.crash_dialog_text)
+               .withResIcon(R.drawable.dsploit_icon)
+               .withResTitle(R.string.crash_dialog_title)
+               .build()
+        );
       }
       
-      ACRA.init(this, builder);
+      ACRA.init(this, builder.build());
     } catch (Exception e) {
       // Log but don't crash if crash reporting setup fails
       LoggingHelper.e(TAG, "Failed to initialize crash reporting", e);

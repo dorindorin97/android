@@ -744,6 +744,18 @@ public class Target implements Comparable<Target>
     return null;
   }
 
+  /**
+   * Get the MAC address as a formatted string.
+   * @return The MAC address as string (e.g., "AA:BB:CC:DD:EE:FF"), or null if not available
+   */
+  @Nullable
+  public String getMacAddress(){
+    if(mType == Type.ENDPOINT && mEndpoint != null){
+      return mEndpoint.getHardwareAsString();
+    }
+    return null;
+  }
+
   public void addOpenPort(Port port){
     boolean notifyList = false;
     synchronized (mPorts) {

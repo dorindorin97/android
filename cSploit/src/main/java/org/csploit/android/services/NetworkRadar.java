@@ -9,6 +9,7 @@ import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -21,6 +22,7 @@ import java.net.InetAddress;
  * network-radar process manager
  */
 public class NetworkRadar extends NativeService implements MenuControllableService {
+  private static final String TAG = "NetworkRadar";
   public static final String NRDR_STOPPED = "NetworkRadar.action.STOPPED";
   public static final String NRDR_STARTED = "NetworkRadar.action.STARTED";
   public static final String NRDR_START_FAILED = "NetworkRadar.action.START_FAILED";
