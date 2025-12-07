@@ -25,7 +25,7 @@ import org.csploit.android.core.System;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.tools.NMap;
-import org.csploit.android.tools.Child;
+import org.csploit.android.core.Child;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,9 +24,6 @@ import android.content.SharedPreferences;
 import androidx.multidex.MultiDex;
 
 import org.acra.ACRA;
-import org.acra.annotation.AcraCore;
-import org.acra.annotation.AcraHttpSender;
-import org.acra.annotation.AcraNotification;
 import org.acra.config.CoreConfigurationBuilder;
 import org.acra.config.HttpSenderConfigurationBuilder;
 import org.acra.config.NotificationConfigurationBuilder;
@@ -50,9 +47,8 @@ import org.csploit.android.services.Services;
 
 import java.net.NoRouteToHostException;
 
-// ACRA crash reporting removed from annotations for security reasons.
-// Configure crash reporting in onCreate() if needed with proper credentials from secure storage.
-@AcraCore(applicationLogFile = "/cSploitd.log")
+// ACRA crash reporting configuration moved to programmatic setup in onCreate()
+// Note: Annotations removed due to compatibility issues with annotation processors
 
 public class CSploitApplication extends Application {
 

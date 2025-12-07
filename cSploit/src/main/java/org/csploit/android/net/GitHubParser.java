@@ -21,7 +21,7 @@
 package org.csploit.android.net;
 
 import org.csploit.android.core.Logger;
-import org.csploit.android.core.RemoteReader;
+import org.csploit.android.net.RemoteReader;
 import org.csploit.android.core.System;
 import org.json.JSONArray;
 import org.json.JSONException;

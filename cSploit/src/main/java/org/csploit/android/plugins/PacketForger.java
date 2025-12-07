@@ -31,6 +31,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.csploit.android.R;
+import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.helpers.ConcurrencyHelper;
