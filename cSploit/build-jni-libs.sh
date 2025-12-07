@@ -92,13 +92,14 @@ for ABI in $ABIS; do
     echo "=== Building for $ABI ==="
     
     OBJ_DIR="$JNI_DIR/obj/$ABI"
-    LIB_DIR="$JNI_DIR/libs/$ABI"
+    LIB_DIR="$JNI_DIR/libs"
     
     mkdir -p "$OBJ_DIR"
     mkdir -p "$LIB_DIR"
     mkdir -p "$OUTPUT_DIR/$ABI"
     
     # Run ndk-build from jni directory
+    # NDK_LIBS_OUT will create an $ABI subdirectory automatically
     "$NDK_BUILD" \
         NDK_PROJECT_PATH="$JNI_DIR" \
         APP_BUILD_SCRIPT="$JNI_DIR/Android_client_only.mk" \
@@ -110,12 +111,18 @@ for ABI in $ABIS; do
         cSploitCommon cSploitClient
     
     # Copy the built libraries
+    # ndk-build creates $LIB_DIR/$ABI/ structure
+    echo "Looking for libraries in $LIB_DIR/$ABI/"
+    ls -la "$LIB_DIR/$ABI/" 2>/dev/null || echo "Directory not found"
+    
     if [ -f "$LIB_DIR/$ABI/libcSploitCommon.so" ]; then
         cp "$LIB_DIR/$ABI/libcSploitCommon.so" "$OUTPUT_DIR/$ABI/"
         cp "$LIB_DIR/$ABI/libcSploitClient.so" "$OUTPUT_DIR/$ABI/"
         echo "✓ Built and copied libraries for $ABI"
     else
-        echo "WARNING: Libraries not found for $ABI"
+        echo "WARNING: Libraries not found at $LIB_DIR/$ABI/"
+        # Try alternate location
+        find "$JNI_DIR" -name "libcSploitCommon.so" 2>/dev/null | head -5
     fi
 done
 
