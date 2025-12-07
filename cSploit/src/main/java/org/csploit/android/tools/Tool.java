@@ -44,8 +44,14 @@ public abstract class Tool
   public Child async(String args, Child.EventReceiver receiver) throws ChildManager.ChildNotStartedException {
 
     if(!mEnabled) {
-      Logger.warning(mHandler + (mCmdPrefix != null ? ":" + mCmdPrefix : "" ) + ": disabled");
-      throw new ChildManager.ChildNotStartedException();
+      String msg = mHandler + (mCmdPrefix != null ? ":" + mCmdPrefix : "" ) + " is disabled";
+      if (ChildManager.handlers == null) {
+        msg += " (no handlers loaded - daemon may not be running)";
+      } else if (!ChildManager.handlers.contains(mHandler)) {
+        msg += " (handler not found in: " + ChildManager.handlers + ")";
+      }
+      Logger.warning(msg);
+      throw new ChildManager.ChildNotStartedException(msg);
     }
 
     if(mCmdPrefix!=null) {
