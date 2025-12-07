@@ -337,7 +337,7 @@ public class RPCClient
               }
               catch ( Exception e)
               {
-                Logger.warning("cannot parse ""+str+"" as stack trace");
+                Logger.warning("cannot parse \""+str+"\" as stack trace");
                 LoggingHelper.e(TAG, "Failed to parse MSF stack trace", e);
               }
             }

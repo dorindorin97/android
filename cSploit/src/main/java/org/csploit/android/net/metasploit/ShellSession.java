@@ -63,7 +63,7 @@ public class ShellSession extends Session {
     }
 
     // send command
-    client.call("session.shell_write", mJobId,cmd.command+"\necho\necho "$?"+token+""\n");
+    client.call("session.shell_write", mJobId, cmd.command + "\necho\necho \"$?\"" + token + "\"\"\n");
 
     // read until token is found
     timeout = java.lang.System.currentTimeMillis() + TIMEOUT;
