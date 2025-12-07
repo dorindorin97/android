@@ -261,6 +261,8 @@ public class System {
     String line;
     int ret = -1;
 
+    Logger.debug("Starting core daemon with su...");
+    
     try {
       Process shell = Runtime.getRuntime().exec("su");
       writer = new DataOutputStream(shell.getOutputStream());
@@ -269,10 +271,14 @@ public class System {
       cmd = String.format("{ echo 'ACCESS GRANTED' >&2; cd '%s' && exec ./start_daemon.sh ;} || exit 1\n",
               System.getCorePath());
 
+      Logger.debug("Executing: " + cmd);
       writer.write(cmd.getBytes());
       writer.flush();
+      writer.close(); // Close stdin to signal end of input
+      writer = null;
 
       ret = shell.waitFor();
+      Logger.debug("su process exited with code: " + ret);
 
       if (ret != 0) {
         reader = new BufferedReader(new InputStreamReader(shell.getErrorStream()));
@@ -289,10 +295,10 @@ public class System {
 
     } catch (IOException e) {
       // command "su" not found or cannot write to it's stdin
-      Logger.error(e.getMessage());
+      Logger.error("IOException during su execution: " + e.getMessage());
     } catch (InterruptedException e) {
       // interrupted while waiting for shell exit value
-      Logger.error(e.getMessage());
+      Logger.error("Interrupted during su execution: " + e.getMessage());
     } finally {
       if (writer != null)
         try {
@@ -308,20 +314,24 @@ public class System {
 
     mKnownIssues.fromFile(String.format("%s/issues", getCorePath()));
 
-    if (!access_granted)
+    if (!access_granted) {
+      Logger.error("Root access was not granted. Make sure the device is rooted and su permission is allowed for this app.");
       throw new SuException();
+    }
 
     if (ret != 0) {
       File log = new File(System.getCorePath(), "cSploitd.log");
-      DaemonException daemonException = new DaemonException("core daemon returned " + ret);
-   /*   if (log.exists() && log.canRead()) {
-        ACRAConfiguration conf = ACRA.getConfig();
-        conf.setApplicationLogFile(log.getAbsolutePath());
-        ACRA.setConfig(conf);
-        ACRA.getErrorReporter().handleException(daemonException, false);
-      }*/
+      String logContent = "";
+      if (log.exists() && log.canRead()) {
+        try {
+          logContent = " Log: " + readFirstLine(log.getAbsolutePath());
+        } catch (Exception ignored) {}
+      }
+      DaemonException daemonException = new DaemonException("core daemon returned " + ret + logContent);
       throw daemonException;
     }
+    
+    Logger.debug("Core daemon started successfully");
   }
 
   /**
@@ -351,8 +361,26 @@ public class System {
     if (!Client.isConnected()) {
       if (!Client.Connect(socket_path)) {
         startCoreDaemon();
-        if (!Client.Connect(socket_path))
-          throw new DaemonException("cannot connect to core daemon");
+        
+        // Wait for daemon to be ready with retries
+        int maxRetries = 10;
+        int retryDelayMs = 500;
+        boolean connected = false;
+        
+        for (int i = 0; i < maxRetries && !connected; i++) {
+          try {
+            Thread.sleep(retryDelayMs);
+          } catch (InterruptedException ignored) {}
+          
+          connected = Client.Connect(socket_path);
+          if (!connected) {
+            Logger.debug("Waiting for daemon... attempt " + (i + 1) + "/" + maxRetries);
+          }
+        }
+        
+        if (!connected) {
+          throw new DaemonException("cannot connect to core daemon after " + maxRetries + " attempts");
+        }
       }
     }
 
