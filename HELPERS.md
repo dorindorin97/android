@@ -4,9 +4,9 @@ This document describes the comprehensive helper utilities added to improve code
 
 ## Overview
 
-The `org.csploit.android.helpers` package contains **120+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
+The `org.csploit.android.helpers` package contains **136+ utility classes** designed to simplify common operations and improve code quality across the cSploit application.
 
-**Last Updated:** January 2025 (v1.8.0 - Iteration 10)
+**Last Updated:** January 2025 (v1.8.0 - Iteration 11)
 
 ## Helper Categories
 
@@ -29,7 +29,7 @@ The `org.csploit.android.helpers` package contains **120+ utility classes** desi
 | `EventBus` | Event publish/subscribe pattern |
 | `ConfigHelper` | Configuration management |
 
-### Network Utilities (35)
+### Network Utilities (43)
 | Helper | Purpose |
 |--------|---------|
 | `TracerouteHelper` | Traceroute parsing and analysis |
@@ -50,6 +50,7 @@ The `org.csploit.android.helpers` package contains **120+ utility classes** desi
 | `MacVendorHelper` | MAC vendor lookup (OUI database) |
 | `ArpHelper` | ARP table operations |
 | `DnsHelper` | DNS resolution with caching |
+| `DnsProtocolHelper` | Low-level DNS protocol implementation |
 | `HttpHelper` | HTTP request utilities |
 | `ProbeHelper` | Network probing utilities |
 | `ConnectivityHelper` | Connectivity checks |
@@ -69,6 +70,11 @@ The `org.csploit.android.helpers` package contains **120+ utility classes** desi
 | `FtpHelper` | FTP protocol operations and fingerprinting |
 | `SmtpHelper` | SMTP protocol operations and analysis |
 | `SshHelper` | SSH protocol fingerprinting and security analysis |
+| `TelnetHelper` | Telnet protocol operations and fingerprinting |
+| `SnmpHelper` | SNMP protocol queries and device enumeration |
+| `LdapHelper` | LDAP protocol operations and enumeration |
+| `ImapHelper` | IMAP protocol operations and security analysis |
+| `IrcHelper` | IRC protocol fingerprinting and security assessment |
 
 ### Security Utilities (18)
 | Helper | Purpose |

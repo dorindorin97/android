@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🚀 Added
 
-#### Comprehensive Helper Utilities (120+ Classes)
-- **Network Utilities (35)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, TracerouteHelper, PacketHelper, ServiceEnumerator, FtpHelper, SmtpHelper, SshHelper, and more
+#### Comprehensive Helper Utilities (136+ Classes)
+- **Network Utilities (43)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, DnsProtocolHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, TracerouteHelper, PacketHelper, ServiceEnumerator, FtpHelper, SmtpHelper, SshHelper, TelnetHelper, SnmpHelper, LdapHelper, ImapHelper, IrcHelper, and more
 - **Security Utilities (18)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, PayloadHelper, HashHelper, CredentialHelper, RegexHelper, and more
 - **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
 - **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
 - **System Utilities (16)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, UserAgentHelper, and more
 - **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
 - **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Iteration 11 Additions
+- `TelnetHelper` - Telnet protocol operations, banner parsing, option negotiation, and server fingerprinting
+- `DnsProtocolHelper` - Low-level DNS protocol implementation with query building and response parsing
+- `SnmpHelper` - SNMP v1/v2c queries, community string testing, and device information gathering
+- `LdapHelper` - LDAP protocol operations, anonymous bind testing, and Active Directory detection
+- `ImapHelper` - IMAP protocol analysis, capability enumeration, and security assessment
+- `IrcHelper` - IRC server fingerprinting, IRCD type detection, and security analysis
 
 #### Iteration 10 Additions
 - `TracerouteHelper` - Traceroute output parsing, hop analysis, and anomaly detection
@@ -55,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Version Update
 - Version bumped to 1.8.0-stable from 1.7.1-stable
+- Total helper classes: 136+ (was 130)
+- Total lines of helper code: ~40,000+
 - Total helper classes: 120+ (was 114)
 - Total lines of helper code: ~35,000+
 
