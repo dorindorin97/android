@@ -74,20 +74,17 @@ public class Sessions extends Plugin {
       new ListChoiceDialog(R.string.choose_an_option,availableChoices.toArray(new Integer[availableChoices.size()]),Sessions.this, new ChoiceDialog.ChoiceDialogListener() {
         @Override
         public void onChoice(int choice) {
-          switch (availableChoices.get(choice)) {
-            case R.string.open_shell:
+          int selectedChoice = availableChoices.get(choice);
+          if (selectedChoice == R.string.open_shell) {
               System.setCurrentSession(s);
               startActivity(new Intent(Sessions.this, Console.class));
               overridePendingTransition(R.anim.fadeout, R.anim.fadein);
-              break;
-            case R.string.show_full_description:
+          } else if (selectedChoice == R.string.show_full_description) {
               StringBuilder message = new StringBuilder(s.getDescription());
               if(s.getInfo().length()>0)
                 message.append("\n\nInfo:\n").append(s.getInfo());
               UIHelper.error(Sessions.this, s.getName(), message.toString());
-              break;
-            case R.string.clear_event_log:
-
+          } else if (selectedChoice == R.string.clear_event_log) {
               ((ShellSession)s).addCommand("clearev", new ShellSession.RpcShellReceiver() {
                 @Override
                 public void onNewLine(String line) { }
@@ -107,12 +104,10 @@ public class Sessions extends Plugin {
                   ToastHelper.error(Sessions.this,"command timed out");
                 }
               });
-              break;
-            case R.string.delete:
+          } else if (selectedChoice == R.string.delete) {
               s.stopSession();
               System.getCurrentTarget().getSessions().remove(s);
               mAdapter.notifyDataSetChanged();
-              break;
           }
         }
       }).show();

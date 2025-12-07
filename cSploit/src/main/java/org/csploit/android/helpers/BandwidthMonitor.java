@@ -82,8 +82,6 @@ import org.csploit.android.helpers.LoggingHelper;
 public class BandwidthMonitor {
   private static final String TAG = "BandwidthMonitor";
     
-    public static final String TAG = "BandwidthMonitor";
-    
     private static final int DEFAULT_INTERVAL_MS = 1000;
     private static final int HISTORY_SIZE = 60; // 1 minute of history at 1s intervals
     

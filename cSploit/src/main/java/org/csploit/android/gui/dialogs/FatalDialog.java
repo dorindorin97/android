@@ -39,7 +39,7 @@ public class FatalDialog extends AlertDialog{
       TextView text = new TextView(activity);
 
       text.setMovementMethod(LinkMovementMethod.getInstance());
-      text.setText(HtmlCompat.fromHtml(message));
+      text.setText(HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY));
       text.setPadding(10, 10, 10, 10);
 
       this.setView(text);

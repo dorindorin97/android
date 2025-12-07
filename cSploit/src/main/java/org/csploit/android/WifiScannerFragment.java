@@ -175,11 +175,11 @@ public class WifiScannerFragment extends ListFragment
 
     public void onSuccessfulConnection(){
         if(mCurrentKey != null){
-            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3)));
+            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to, HtmlCompat.FROM_HTML_MODE_LEGACY) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3)));
             ToastHelper.success(getActivity(), getString(R.string.wifi_key_copied));
             mClipboard.setText(mCurrentKey);
         } else
-            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + "</b> !"));
+            mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to, HtmlCompat.FROM_HTML_MODE_LEGACY) + mCurrentAp.SSID + "</b> !"));
 
         mConnectionReceiver.unregister();
         mConnected = true;
@@ -195,7 +195,7 @@ public class WifiScannerFragment extends ListFragment
             return;
         }
 
-        mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connection_to) + mCurrentAp.SSID + getString(R.string.connection_to2)));
+        mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connection_to, HtmlCompat.FROM_HTML_MODE_LEGACY) + mCurrentAp.SSID + getString(R.string.connection_to2)));
 
         List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
         if(configurations != null){
@@ -281,9 +281,9 @@ public class WifiScannerFragment extends ListFragment
             @Override
             public void run() {
                 if (key != null)
-                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_attempting_to) + " <b>" + ap.SSID + "</b> " + getString(R.string.wifi_with_key) + " <b>" + key + "</b> ..."));
+                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_attempting_to, HtmlCompat.FROM_HTML_MODE_LEGACY) + " <b>" + ap.SSID + "</b> " + getString(R.string.wifi_with_key) + " <b>" + key + "</b> ..."));
                 else
-                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_connecting_to) + " <b>" + ap.SSID + "</b> ..."));
+                    mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.wifi_connecting_to, HtmlCompat.FROM_HTML_MODE_LEGACY) + " <b>" + ap.SSID + "</b> ..."));
             }
         });
 
