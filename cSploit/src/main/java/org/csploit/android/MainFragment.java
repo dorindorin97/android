@@ -771,8 +771,7 @@ public class MainFragment extends Fragment {
                                                     + filename + " .");
                                 } catch (IOException e) {
                                     UIHelper.error(getActivity(), getString(R.string.error),
-                                            e.toString())
-                                            .show();
+                                            e.toString());
                                 }
                             } else
                                 UIHelper.error(getActivity(), getString(R.string.error),
@@ -798,15 +797,13 @@ public class MainFragment extends Fragment {
                         } catch (Exception e) {
                             LoggingHelper.e(TAG, "Failed to load session", e);
                             UIHelper.error(getActivity(), getString(R.string.error),
-                                    e.getMessage())
-                                    .show();
+                                    e.getMessage());
                         }
                     }
                 });
             } else
                 UIHelper.error(getActivity(), getString(R.string.error),
-                        getString(R.string.no_session_found))
-                        .show();
+                        getString(R.string.no_session_found));
             return true;
         } else if (itemId == R.id.settings) {
             startActivity(new Intent(getActivity(), SettingsActivity.class));

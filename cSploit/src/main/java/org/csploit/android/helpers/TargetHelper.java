@@ -207,7 +207,7 @@ public final class TargetHelper {
             return null;
         }
         
-        String normalizedMac = NetworkHelper.normalizeMacAddress(macAddress);
+        String normalizedMac = MacAddressHelper.normalizeMac(macAddress);
         if (normalizedMac == null) {
             return null;
         }
@@ -216,7 +216,7 @@ public final class TargetHelper {
             if (target != null) {
                 String targetMac = target.getMacAddress();
                 if (targetMac != null) {
-                    String normalizedTargetMac = NetworkHelper.normalizeMacAddress(targetMac);
+                    String normalizedTargetMac = MacAddressHelper.normalizeMac(targetMac);
                     if (normalizedMac.equals(normalizedTargetMac)) {
                         return target;
                     }

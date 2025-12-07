@@ -1,6 +1,7 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 import android.util.Log;
@@ -14,7 +15,7 @@ public class SecureCredentialsHelper {
     private static final String TAG = "SecureCredentialsHelper";
     private static final String ENCRYPTED_PREFS_NAME = "csploit_secure_prefs";
 
-    private final EncryptedSharedPreferences encryptedPreferences;
+    private final SharedPreferences encryptedPreferences;
 
     /**
      * Initialize encrypted preferences with master key.

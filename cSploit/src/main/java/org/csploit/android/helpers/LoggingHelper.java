@@ -69,6 +69,13 @@ public final class LoggingHelper {
     }
 
     /**
+     * Log a warning with exception
+     */
+    public static void w(@NonNull String tag, @NonNull String message, @NonNull Throwable throwable) {
+        log(LogLevel.WARN, tag, message, throwable);
+    }
+
+    /**
      * Log an error message
      */
     public static void e(@NonNull String tag, @NonNull String message) {

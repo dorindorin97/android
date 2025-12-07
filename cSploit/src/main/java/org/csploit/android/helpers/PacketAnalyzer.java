@@ -142,12 +142,12 @@ public final class PacketAnalyzer {
         
         @NonNull
         public String getSrcAddressString() {
-            return IpAddressHelper.bytesToIpv4(srcAddress);
+            return IpAddressHelper.bytesToIp(srcAddress);
         }
         
         @NonNull
         public String getDestAddressString() {
-            return IpAddressHelper.bytesToIpv4(destAddress);
+            return IpAddressHelper.bytesToIp(destAddress);
         }
         
         @NonNull

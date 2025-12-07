@@ -343,7 +343,7 @@ public final class NetworkInterfaceHelper {
         }
         
         String safeName = InputSanitizer.sanitizeForShell(interfaceName);
-        String safeMac = MacAddressHelper.formatMac(macAddress, ':');
+        String safeMac = MacAddressHelper.format(macAddress, ':', false);
         
         // Must be down to change MAC
         setInterfaceDown(interfaceName);
