@@ -36,6 +36,7 @@ import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ErrorDialog;
 import org.csploit.android.gui.dialogs.ListChoiceDialog;
 import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.metasploit.RPCClient;

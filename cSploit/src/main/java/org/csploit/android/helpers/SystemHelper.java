@@ -115,7 +115,7 @@ public final class SystemHelper {
      * @return native heap size in bytes
      */
     public static long getNativeHeapSize() {
-        return Debug.getNativeHeapAllocated();
+        return Debug.getNativeHeapAllocatedSize();
     }
     
     /**

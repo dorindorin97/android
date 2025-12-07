@@ -95,6 +95,7 @@ import org.csploit.android.gui.dialogs.WifiCrackDialog.WifiCrackDialogListener;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.wifi.Keygen;
@@ -125,6 +126,7 @@ import org.csploit.android.helpers.LoggingHelper;
 @SuppressWarnings("deprecation")
 public class WifiScannerFragment extends ListFragment
 {
+    private static final String TAG = "WifiScannerFragment";
     public static final String CONNECTED = "WifiScannerActivity.CONNECTED";
     private WifiManager mWifiManager = null;
     private WirelessMatcher mWifiMatcher = null;

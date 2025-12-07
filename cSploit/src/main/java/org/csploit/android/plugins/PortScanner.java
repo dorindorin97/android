@@ -326,7 +326,7 @@ public class PortScanner extends Plugin {
 
                       if (mCustomPorts.isEmpty()) {
                         mCustomPorts = null;
-                        UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.invalid_custom_ports));
+                        UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.invalid_ports));
                       }
 
                       hideParametersField();

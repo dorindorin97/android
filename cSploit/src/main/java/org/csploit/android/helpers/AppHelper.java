@@ -132,9 +132,10 @@ public final class AppHelper {
     /**
      * Extract version code from PackageInfo (handles API version differences)
      */
+    @SuppressWarnings("deprecation")
     private static long getVersionCodeLong(@NonNull PackageInfo info) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return info.longVersionCode;
+            return info.getLongVersionCode();
         } else {
             return info.versionCode;
         }
@@ -385,8 +386,8 @@ public final class AppHelper {
         sb.append("Target SDK: ").append(getTargetSdkLevel(context)).append("\n");
         sb.append("Min SDK: ").append(getMinSdkLevel(context)).append("\n");
         sb.append("Debug: ").append(isDebugBuild(context)).append("\n");
-        sb.append("Build: ").append(getBuildName(context)).append("\n");
-        sb.append("Built: ").append(getBuildTime(context)).append("\n");
+        sb.append("Build: ").append(getBuildName()).append("\n");
+        sb.append("Built: ").append(getBuildTime()).append("\n");
         sb.append("Installed: ").append(getInstallationTime(context)).append("\n");
         sb.append("Updated: ").append(getLastUpdateTime(context)).append("\n");
         return sb.toString();

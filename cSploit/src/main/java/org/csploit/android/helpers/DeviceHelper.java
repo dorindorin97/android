@@ -247,7 +247,8 @@ public final class DeviceHelper {
      * @return true if vibrator is available
      */
     public static boolean hasVibrator(@NonNull Context context) {
-        return hasFeature(context, PackageManager.FEATURE_VIBRATOR);
+        android.os.Vibrator vibrator = (android.os.Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        return vibrator != null && vibrator.hasVibrator();
     }
     
     /**

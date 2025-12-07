@@ -123,10 +123,10 @@ public class CSploitApplication extends Application {
                    .withHttpMethod(HttpSender.Method.PUT)
                    .build(),
             new NotificationConfigurationBuilder()
-               .withResChannelName(R.string.csploitChannelId)
-               .withResText(R.string.crash_dialog_text)
+               .withChannelName(getString(R.string.csploitChannelId))
+               .withText(getString(R.string.crash_dialog_text))
                .withResIcon(R.drawable.dsploit_icon)
-               .withResTitle(R.string.crash_dialog_title)
+               .withTitle(getString(R.string.crash_dialog_title))
                .build()
         );
       }

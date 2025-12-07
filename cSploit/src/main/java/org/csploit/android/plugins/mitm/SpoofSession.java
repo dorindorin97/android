@@ -19,25 +19,19 @@
 package org.csploit.android.plugins.mitm;
 
 import org.csploit.android.R;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Child;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.ArpSpoof;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ettercap.OnAccountListener;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ettercap.OnDNSSpoofedReceiver;
-import org.csploit.android.helpers.LoggingHelper;
 
 
 public class SpoofSession
 {
+  private static final String TAG = "SpoofSession";
   private boolean mWithProxy = false;
   private boolean mWithServer = false;
   private String mServerFileName = null;

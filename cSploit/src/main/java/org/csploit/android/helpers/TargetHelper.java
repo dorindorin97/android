@@ -404,15 +404,19 @@ public final class TargetHelper {
         }
         
         try {
-            Target gateway = System.getNetwork().getGateway();
-            if (gateway == null) {
+            org.csploit.android.net.Network network = System.getNetwork();
+            if (network == null) {
+                return false;
+            }
+            
+            InetAddress gatewayAddr = network.getGatewayAddress();
+            if (gatewayAddr == null) {
                 return false;
             }
             
             InetAddress targetAddr = target.getAddress();
-            InetAddress gatewayAddr = gateway.getAddress();
             
-            if (targetAddr != null && gatewayAddr != null) {
+            if (targetAddr != null) {
                 return targetAddr.equals(gatewayAddr);
             }
         } catch (Exception e) {

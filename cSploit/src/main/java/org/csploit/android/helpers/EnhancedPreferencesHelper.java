@@ -70,10 +70,11 @@ public class EnhancedPreferencesHelper {
     /**
      * Get the global instance using PreferencesHelper.
      * 
+     * @param context Android context
      * @return SharedPreferences instance
      */
-    public static SharedPreferences getGlobalPreferences() {
-        return PreferencesHelper.getInstance();
+    public static SharedPreferences getGlobalPreferences(@NonNull Context context) {
+        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
     
     // Dark Mode
