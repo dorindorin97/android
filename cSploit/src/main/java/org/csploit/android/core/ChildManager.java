@@ -83,10 +83,40 @@ public class ChildManager {
 
     c = new Child();
 
+    // Check if client is connected, try to reconnect if not
+    if (!Client.isConnected()) {
+      Logger.warning("Client not connected, attempting to reconnect...");
+      try {
+        System.initCore();
+      } catch (Exception e) {
+        Logger.error("Failed to reconnect to daemon: " + e.getMessage());
+        throw new ChildNotStartedException("Daemon not connected: " + e.getMessage());
+      }
+    }
+
+    // Check if authenticated
+    if (!Client.isAuthenticated()) {
+      Logger.warning("Client not authenticated, attempting to login...");
+      if (!Client.Login("android", "DEADBEEF")) {
+        throw new ChildNotStartedException("Failed to authenticate with daemon");
+      }
+    }
+
     c.id = Client.StartCommand(handler, cmd, env);
     if (c.id == -1) {
       Logger.debug(String.format("{ handler='%s', cmd='%s' } => FAILED", handler, cmd));
-      throw new ChildNotStartedException();
+      
+      // Try to get more info about why it failed
+      String errorDetails = "Unknown error";
+      if (!Client.isConnected()) {
+        errorDetails = "Lost connection to daemon";
+      } else if (handlers == null) {
+        errorDetails = "No handlers loaded - daemon may not be initialized properly";
+      } else if (!handlers.contains(handler)) {
+        errorDetails = "Handler '" + handler + "' not available. Available: " + handlers;
+      }
+      
+      throw new ChildNotStartedException(errorDetails);
     }
 
     Logger.debug(String.format("{ handler='%s', cmd='%s' } => %d", handler, cmd, c.id));
@@ -238,6 +268,10 @@ public class ChildManager {
   public static class ChildNotStartedException extends Exception {
     public ChildNotStartedException() {
       super("cannot start commands");
+    }
+    
+    public ChildNotStartedException(String message) {
+      super(message);
     }
   }
 }
