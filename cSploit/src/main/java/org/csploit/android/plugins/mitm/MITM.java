@@ -413,7 +413,8 @@ public class MITM extends Plugin
       for(i = 0; i < rows; i++){
         if((row = mActionListView.getChildAt(i)) != null){
           holder = (ActionAdapter.ActionHolder) row.getTag();
-          AnimationHelper.fadeOut(holder.activity, 300, () -> holder.activity.setVisibility(View.INVISIBLE));
+          final ActionAdapter.ActionHolder finalHolder = holder;
+          AnimationHelper.fadeOut(holder.activity, 300, () -> finalHolder.activity.setVisibility(View.INVISIBLE));
         }
       }
     }
