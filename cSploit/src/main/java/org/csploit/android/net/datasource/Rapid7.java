@@ -60,6 +60,8 @@ import org.csploit.android.helpers.LoggingHelper;
 
 class Rapid7
 {
+  private static final String TAG = "Rapid7";
+  
   private static class ExploitReceiver implements RemoteReader.Receiver {
 
     private static final Pattern SECTION = Pattern.compile("<section[^>]*>(.*?)</section>", Pattern.MULTILINE | Pattern.DOTALL);

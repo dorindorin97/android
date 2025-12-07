@@ -36,6 +36,7 @@ import org.csploit.android.helpers.LoggingHelper;
 
 public class ServerThread extends Thread
 {
+  private static final String TAG = "ServerThread";
   private final static int MAX_REQUEST_SIZE = 8192;
 
   private Socket mSocket = null;

@@ -22,6 +22,7 @@ import org.csploit.android.R;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.FatalDialog;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.net.metasploit.ShellSession;
 
 /**

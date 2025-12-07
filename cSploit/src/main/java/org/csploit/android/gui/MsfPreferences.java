@@ -9,6 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
+import android.util.Patterns;
 import org.csploit.android.helpers.ToastHelper;
 import android.widget.Toast;
 
