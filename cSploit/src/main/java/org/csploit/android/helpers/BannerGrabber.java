@@ -226,7 +226,9 @@ public final class BannerGrabber {
             if (socket != null) {
                 try {
                     socket.close();
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    Log.d(TAG, "Failed to close socket: " + e.getMessage());
+                }
             }
         }
     }

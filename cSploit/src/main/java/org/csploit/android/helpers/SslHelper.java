@@ -196,11 +196,13 @@ public final class SslHelper {
             if (socket != null) {
                 try {
                     socket.close();
-                } catch (IOException ignored) {}
+                } catch (IOException e) {
+                    Log.d(TAG, "Failed to close SSL socket: " + e.getMessage());
+                }
             }
         }
     }
-    
+
     /**
      * Get certificate chain for a host (accepts all certificates for inspection).
      */
@@ -243,10 +245,12 @@ public final class SslHelper {
             if (socket != null) {
                 try {
                     socket.close();
-                } catch (IOException ignored) {}
+                } catch (IOException e) {
+                    Log.d(TAG, "Failed to close SSL socket during cert chain retrieval: " + e.getMessage());
+                }
             }
         }
-        
+
         return chain;
     }
     
