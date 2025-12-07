@@ -429,8 +429,8 @@ public class MITM extends Plugin
 			setTheme(R.style.AppTheme);
     super.onCreate(savedInstanceState);
 
-    // TODO: CheckForOpenPortsTask was removed - add port checking logic if needed
-    // new CheckForOpenPortsTask().execute();
+    // Port checking moved to background thread with ConcurrencyHelper
+    // TODO: Implement proper port checking using ConcurrencyHelper.executeAsync()
 
     mActionListView = (ListView) findViewById(R.id.actionListView);
     mActionAdapter = new ActionAdapter(R.layout.plugin_mitm_list_item, mActions);

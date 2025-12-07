@@ -38,6 +38,7 @@ import org.csploit.android.helpers.LoggingHelper;
 
 public class Server implements Runnable
 {
+  private static final String TAG = "Server";
   private static final int BACKLOG = 255;
   private static final int MAX_FILE_SIZE = 10 * 1024 * 1024;
 

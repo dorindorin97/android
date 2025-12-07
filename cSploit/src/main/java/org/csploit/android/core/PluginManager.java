@@ -4,6 +4,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.csploit.android.net.Target;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -164,14 +166,17 @@ public class PluginManager {
     /**
      * Get plugin count by target type.
      *
-     * @param target The target to filter by
-     * @return Number of plugins supporting the target
+     * @param targetType The target type to filter by
+     * @return Number of plugins supporting the target type
      */
-    public int getPluginCountByTarget(@NonNull org.csploit.android.net.Target target) {
+    public int getPluginCountByTargetType(@NonNull String targetType) {
         int count = 0;
         for (Plugin plugin : registeredPlugins) {
-            if (plugin.isAllowedTarget(target)) {
-                count++;
+            for (Target.Type type : plugin.getAllowedTargetTypes()) {
+                if (type.name().equals(targetType)) {
+                    count++;
+                    break;
+                }
             }
         }
         return count;
