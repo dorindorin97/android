@@ -455,4 +455,278 @@ public final class StringHelper {
         sb.append(str.substring(maskLength));
         return sb.toString();
     }
+
+    /**
+     * Convert bytes array to hex string
+     */
+    @NonNull
+    public static String bytesToHex(@Nullable byte[] bytes) {
+        return bytesToHex(bytes, "");
+    }
+
+    /**
+     * Convert bytes array to hex string with separator
+     */
+    @NonNull
+    public static String bytesToHex(@Nullable byte[] bytes, @NonNull String separator) {
+        if (bytes == null || bytes.length == 0) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            if (i > 0 && !separator.isEmpty()) sb.append(separator);
+            sb.append(String.format("%02X", bytes[i]));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Convert hex string to bytes array
+     */
+    @Nullable
+    public static byte[] hexToBytes(@Nullable String hex) {
+        if (ValidationHelper.isEmpty(hex)) return null;
+
+        // Remove common separators
+        hex = hex.replaceAll("[:\\s-]", "");
+
+        if (hex.length() % 2 != 0) return null;
+
+        byte[] bytes = new byte[hex.length() / 2];
+        for (int i = 0; i < bytes.length; i++) {
+            int index = i * 2;
+            bytes[i] = (byte) Integer.parseInt(hex.substring(index, index + 2), 16);
+        }
+        return bytes;
+    }
+
+    /**
+     * Format IP address with leading zeros (for sorting)
+     */
+    @NonNull
+    public static String formatIpForSort(@Nullable String ip) {
+        if (ValidationHelper.isEmpty(ip)) return "";
+
+        String[] parts = ip.split("\\.");
+        if (parts.length != 4) return ip;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            if (i > 0) sb.append(".");
+            try {
+                sb.append(String.format("%03d", Integer.parseInt(parts[i])));
+            } catch (NumberFormatException e) {
+                return ip;
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Format MAC address to standard format (XX:XX:XX:XX:XX:XX)
+     */
+    @NonNull
+    public static String formatMacAddress(@Nullable String mac) {
+        if (ValidationHelper.isEmpty(mac)) return "";
+
+        // Remove all separators and convert to uppercase
+        String cleaned = mac.replaceAll("[:\\-.]", "").toUpperCase();
+
+        if (cleaned.length() != 12) return mac;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 12; i += 2) {
+            if (i > 0) sb.append(":");
+            sb.append(cleaned.substring(i, i + 2));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Get Levenshtein distance between two strings
+     */
+    public static int levenshteinDistance(@Nullable String s1, @Nullable String s2) {
+        if (s1 == null) s1 = "";
+        if (s2 == null) s2 = "";
+
+        int len1 = s1.length();
+        int len2 = s2.length();
+
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        for (int i = 0; i <= len1; i++) dp[i][0] = i;
+        for (int j = 0; j <= len2; j++) dp[0][j] = j;
+
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                int cost = s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1;
+                dp[i][j] = Math.min(
+                        Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
+                        dp[i - 1][j - 1] + cost
+                );
+            }
+        }
+
+        return dp[len1][len2];
+    }
+
+    /**
+     * Calculate string similarity (0.0 to 1.0)
+     */
+    public static double similarity(@Nullable String s1, @Nullable String s2) {
+        if (s1 == null) s1 = "";
+        if (s2 == null) s2 = "";
+
+        int maxLen = Math.max(s1.length(), s2.length());
+        if (maxLen == 0) return 1.0;
+
+        int distance = levenshteinDistance(s1, s2);
+        return 1.0 - ((double) distance / maxLen);
+    }
+
+    /**
+     * Convert to slug (URL-friendly string)
+     */
+    @NonNull
+    public static String toSlug(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+
+        return str.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-+", "-")
+                .replaceAll("^-|-$", "");
+    }
+
+    /**
+     * Pluralize a word based on count
+     */
+    @NonNull
+    public static String pluralize(int count, @NonNull String singular, @NonNull String plural) {
+        return count == 1 ? singular : plural;
+    }
+
+    /**
+     * Pluralize with simple 's' suffix
+     */
+    @NonNull
+    public static String pluralize(int count, @NonNull String word) {
+        return count == 1 ? word : word + "s";
+    }
+
+    /**
+     * Format number with thousand separators
+     */
+    @NonNull
+    public static String formatNumber(long number) {
+        return java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format(number);
+    }
+
+    /**
+     * Generate initials from full name
+     */
+    @NonNull
+    public static String getInitials(@Nullable String name) {
+        if (ValidationHelper.isEmpty(name)) return "";
+
+        StringBuilder initials = new StringBuilder();
+        String[] words = name.trim().split("\\s+");
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                initials.append(Character.toUpperCase(word.charAt(0)));
+            }
+        }
+
+        return initials.toString();
+    }
+
+    /**
+     * Check if string is valid Base64
+     */
+    public static boolean isBase64(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return false;
+        return str.matches("^[A-Za-z0-9+/]*={0,2}$");
+    }
+
+    /**
+     * Encode string to Base64
+     */
+    @NonNull
+    public static String toBase64(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        return android.util.Base64.encodeToString(str.getBytes(), android.util.Base64.NO_WRAP);
+    }
+
+    /**
+     * Decode Base64 string
+     */
+    @Nullable
+    public static String fromBase64(@Nullable String base64) {
+        if (ValidationHelper.isEmpty(base64)) return null;
+        try {
+            byte[] decoded = android.util.Base64.decode(base64, android.util.Base64.NO_WRAP);
+            return new String(decoded);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Extract all numbers from string
+     */
+    @NonNull
+    public static String extractNumbers(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        return str.replaceAll("[^0-9]", "");
+    }
+
+    /**
+     * Extract all letters from string
+     */
+    @NonNull
+    public static String extractLetters(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+        return str.replaceAll("[^a-zA-Z]", "");
+    }
+
+    /**
+     * Check if string is valid hexadecimal
+     */
+    public static boolean isHexadecimal(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return false;
+        return str.matches("^[0-9A-Fa-f]+$");
+    }
+
+    /**
+     * Convert string to ASCII representation
+     */
+    @NonNull
+    public static String toAsciiCodes(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append((int) c);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Remove duplicate characters from string
+     */
+    @NonNull
+    public static String removeDuplicateChars(@Nullable String str) {
+        if (ValidationHelper.isEmpty(str)) return "";
+
+        StringBuilder sb = new StringBuilder();
+        java.util.Set<Character> seen = new java.util.HashSet<>();
+
+        for (char c : str.toCharArray()) {
+            if (seen.add(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 }

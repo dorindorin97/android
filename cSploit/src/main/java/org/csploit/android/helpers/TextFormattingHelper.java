@@ -357,7 +357,9 @@ public final class TextFormattingHelper {
                 if (color != 0) {
                     return color;
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException e) {
+                // Invalid ANSI code format, skip this part
+            }
         }
         
         return 0xFFFFFFFF;

@@ -235,21 +235,33 @@ public class ProxyThread extends Thread
   private void closeQuietly() {
     try {
       if (mWriter != null) mWriter.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close writer: " + e.getMessage());
+    }
     try {
       if (mReader != null) mReader.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close reader: " + e.getMessage());
+    }
     try {
       if (mServerReader != null) mServerReader.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close server reader: " + e.getMessage());
+    }
     try {
       if (mServerWriter != null) mServerWriter.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close server writer: " + e.getMessage());
+    }
     try {
       if (mServer != null) mServer.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close server socket: " + e.getMessage());
+    }
     try {
       if (mSocket != null) mSocket.close();
-    } catch (IOException ignored) {}
+    } catch (IOException e) {
+      LoggingHelper.d(TAG, "Failed to close client socket: " + e.getMessage());
+    }
   }
 }

@@ -287,7 +287,7 @@ public final class ProxyHelper {
             result.errorMessage = e.getMessage();
         } finally {
             if (reader != null) {
-                try { reader.close(); } catch (IOException ignored) {}
+                try { reader.close(); } catch (IOException e) { Log.d(TAG, "Failed to close reader: " + e.getMessage()); }
             }
             if (conn != null) {
                 conn.disconnect();
