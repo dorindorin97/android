@@ -296,7 +296,7 @@ public class MITM extends Plugin
           js = buffer.toString().trim();
 
           if(!js.startsWith("<script") && !js.startsWith("<SCRIPT"))
-            js = "<script type="text/javascript">\n" + js + "\n</script>\n";
+            js = "<script type=\"text/javascript\">\n" + js + "\n</script>\n";
 
           mCurrentActivity.setVisibility(View.VISIBLE);
           AnimationHelper.fadeIn(mCurrentActivity, 300);
@@ -900,7 +900,7 @@ public class MITM extends Plugin
                     (
                       "Javascript",
                       getString(R.string.enter_js_code),
-                      "<script type="text/javascript">\n" +
+                      "<script type=\"text/javascript\">\n" +
                         "  alert('This site has been hacked with cSploit!');\n" +
                         "</script>",
                       true,

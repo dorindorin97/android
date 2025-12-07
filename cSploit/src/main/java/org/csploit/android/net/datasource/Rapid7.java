@@ -47,7 +47,7 @@ class Rapid7
     private static final Pattern TITLE = Pattern.compile("<h1>(.+?)</h1>");
     private static final Pattern PARAGRAPH = Pattern.compile("<p>(.+?)</p>", Pattern.MULTILINE | Pattern.DOTALL);
     private static final Pattern ITEM = Pattern.compile("<li>(.*?)</li>", Pattern.MULTILINE | Pattern.DOTALL);
-    private static final Pattern LINK = Pattern.compile("<a +href=['"]([^"]+?)['"][^>]*>([^<]+)</a>");
+    private static final Pattern LINK = Pattern.compile("<a +href=['\"]([^\"]+?)['\"][^>]*>([^<]+)</a>");
 
     private final Search.Receiver<Target.Exploit> receiver;
     private final MsfExploit exploit;
