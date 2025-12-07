@@ -63,12 +63,13 @@ echo "Output: $OUTPUT_DIR"
 
 # Create a temporary Android.mk that only builds the client libraries
 # Note: -Werror removed to allow building with older code that has warnings
+# -fgnu89-inline uses GNU inline semantics (inline definitions also serve as external definitions)
 cat > "$JNI_DIR/Android_client_only.mk" << 'MKEOF'
 LOCAL_PATH := $(call my-dir)
 
 # cSploitCommon - shared library
 include $(CLEAR_VARS)
-LOCAL_CFLAGS := -Wall -Wno-error
+LOCAL_CFLAGS := -Wall -Wno-error -fgnu89-inline
 LOCAL_EXPORT_LDLIBS := -ldl
 LOCAL_SRC_FILES := $(wildcard $(LOCAL_PATH)/cSploitCommon/*.c)
 LOCAL_MODULE := cSploitCommon
@@ -76,7 +77,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 # cSploitClient - shared library
 include $(CLEAR_VARS)
-LOCAL_CFLAGS := -Wall -Wno-error -D_U_="__attribute__((unused))"
+LOCAL_CFLAGS := -Wall -Wno-error -fgnu89-inline -D_U_="__attribute__((unused))"
 LOCAL_SHARED_LIBRARIES := cSploitCommon
 LOCAL_LDLIBS := -llog
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/cSploitCommon $(LOCAL_PATH)/cSploitHandlers
