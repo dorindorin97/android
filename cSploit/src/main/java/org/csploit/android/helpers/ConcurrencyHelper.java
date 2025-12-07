@@ -134,7 +134,8 @@ public final class ConcurrencyHelper {
             }
             
             if (lastError != null) {
-                ThreadHelper.runOnMainThread(() -> callback.onError(lastError));
+                final Exception error = lastError;
+                ThreadHelper.runOnMainThread(() -> callback.onError(error));
             }
         });
     }
