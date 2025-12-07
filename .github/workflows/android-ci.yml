@@ -2,480 +2,246 @@ name: Android CI/CD
 
 on:
   push:
-    branches: [ develop, main, master ]
+    branches: [develop, main, master]
     tags:
       - 'v*'
   pull_request:
-    branches: [ develop, main, master ]
+    branches: [develop, main, master]
   schedule:
-    # Nightly build at 2 AM UTC
     - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       build_type:
-        description: 'Build type (debug/release)'
+        description: 'Build type'
         required: true
         default: 'debug'
         type: choice
         options:
           - debug
           - release
-      clean_old_artifacts:
-        description: 'Clean old artifacts'
-        required: false
-        default: true
-        type: boolean
-
-env:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
 
 jobs:
   lint:
     name: Lint Check
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: Run lint
-      run: ./gradlew lint --stacktrace
-      continue-on-error: true
-      
-    - name: Upload lint results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: lint-results-${{ github.sha }}
-        path: |
-          cSploit/build/reports/lint-results*.html
-          cSploit/build/reports/lint-results*.xml
-        retention-days: 7
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Run lint
+        run: ./gradlew lint --stacktrace
+        continue-on-error: true
+      - name: Upload lint results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-results
+          path: cSploit/build/reports/lint-results*.html
+          retention-days: 7
 
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: Run unit tests
-      run: ./gradlew test --stacktrace
-      continue-on-error: true
-      
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results-${{ github.sha }}
-        path: cSploit/build/test-results/**/*.xml
-        retention-days: 7
-
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Run dependency check
-      uses: dependency-check/Dependency-Check_Action@main
-      continue-on-error: true
-      with:
-        project: 'cSploit'
-        path: '.'
-        format: 'HTML'
-        
-    - name: Upload dependency check results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: dependency-check-report-${{ github.sha }}
-        path: reports/
-        retention-days: 14
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace
+        continue-on-error: true
 
   build-debug:
     name: Build Debug APK
     runs-on: ubuntu-latest
     needs: [lint, test]
-    if: always() && github.event_name != 'schedule'
-    
+    if: github.event_name != 'schedule'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Clean previous builds
-      run: ./gradlew clean
-      
-    - name: Get version info
-      id: version
-      run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-        echo "branch=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
-      
-    - name: Build debug APK
-      run: ./gradlew assembleDebug --stacktrace
-      env:
-        BUILD_NAME: ${{ github.actor }}
-        BUILD_NUMBER: ${{ github.run_number }}
-
-    - name: Rename APK with version info
-      run: |
-        cd cSploit/build/outputs/apk/debug
-        for f in *.apk; do
-          mv "$f" "cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
-        done
-        
-    - name: Upload debug APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}
-        path: cSploit/build/outputs/apk/debug/*.apk
-        retention-days: 14
-
-    - name: Comment on PR with APK link
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '✅ **Debug APK Built Successfully!**\n\n📦 Artifact: `cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}`\n\nDownload from the [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-          })
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Clean build
+        run: ./gradlew clean
+      - name: Get version info
+        id: version
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+      - name: Rename APK
+        run: |
+          cd cSploit/build/outputs/apk/debug
+          for f in *.apk; do
+            mv "$f" "cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
+          done
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}
+          path: cSploit/build/outputs/apk/debug/*.apk
+          retention-days: 14
 
   build-release:
     name: Build Release APK
     runs-on: ubuntu-latest
     needs: [lint, test]
-    if: always() && startsWith(github.ref, 'refs/tags/v')
-    
+    if: startsWith(github.ref, 'refs/tags/v')
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Clean previous builds
-      run: ./gradlew clean
-      
-    - name: Get version info
-      id: version
-      run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-        VERSION=$(grep "versionName" cSploit/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
-        echo "app_version=$VERSION" >> $GITHUB_OUTPUT
-      
-    - name: Decode keystore
-      if: ${{ secrets.KEYSTORE_BASE64 }}
-      run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $HOME/keystore.jks
-        
-    - name: Build release APK
-      run: ./gradlew assembleRelease --stacktrace
-      env:
-        KEYSTORE_FILE: ${{ secrets.KEYSTORE_BASE64 && format('{0}/keystore.jks', env.HOME) || '' }}
-        KEYSTORE_PWD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-        KEYSTORE_ALIAS_PWD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-        BUILD_NAME: "GitHub Actions"
-        BUILD_NUMBER: ${{ github.run_number }}
-
-    - name: Rename APK with version info
-      run: |
-        cd cSploit/build/outputs/apk/release
-        for f in *.apk; do
-          mv "$f" "cSploit-v${{ steps.version.outputs.app_version }}-release-${{ steps.version.outputs.sha_short }}.apk"
-        done
-        
-    - name: Upload release APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: cSploit-release-v${{ steps.version.outputs.app_version }}-${{ steps.version.outputs.sha_short }}
-        path: cSploit/build/outputs/apk/release/*.apk
-        retention-days: 90
-        
-    - name: Create GitHub Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: cSploit/build/outputs/apk/release/*.apk
-        draft: false
-        generate_release_notes: true
-        name: "cSploit v${{ steps.version.outputs.app_version }}"
-        body: |
-          ## 📦 Release v${{ steps.version.outputs.app_version }}
-          
-          ### Downloads
-          - **Release APK**: `cSploit-v${{ steps.version.outputs.app_version }}-release-${{ steps.version.outputs.sha_short }}.apk`
-          
-          ### Commit
-          - SHA: `${{ github.sha }}`
-          - Branch: `${{ github.ref_name }}`
-          
-          ---
-          *Built automatically by GitHub Actions*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Delete old release artifacts (keep only last 5 releases)
-    - name: Cleanup old releases
-      uses: dev-drprasad/delete-older-releases@v0.3.2
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        keep_latest: 5
-        delete_tags: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Clean build
+        run: ./gradlew clean
+      - name: Get version info
+        id: version
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          VERSION=$(grep "versionName" cSploit/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          echo "app_version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Decode keystore
+        if: env.KEYSTORE_BASE64 != ''
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 -d > $HOME/keystore.jks
+      - name: Build release APK
+        run: ./gradlew assembleRelease --stacktrace
+        env:
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_BASE64 && format('{0}/keystore.jks', env.HOME) || '' }}
+          KEYSTORE_PWD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+          KEYSTORE_ALIAS_PWD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
+      - name: Rename APK
+        run: |
+          cd cSploit/build/outputs/apk/release
+          for f in *.apk; do
+            mv "$f" "cSploit-v${{ steps.version.outputs.app_version }}-release-${{ steps.version.outputs.sha_short }}.apk"
+          done
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cSploit-release-v${{ steps.version.outputs.app_version }}
+          path: cSploit/build/outputs/apk/release/*.apk
+          retention-days: 90
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: cSploit/build/outputs/apk/release/*.apk
+          draft: false
+          generate_release_notes: true
+          name: cSploit v${{ steps.version.outputs.app_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   nightly-build:
     name: Nightly Build
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
     needs: [lint, test]
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Clean build
+        run: ./gradlew clean
+      - name: Get version info
+        id: version
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - name: Build nightly APK
+        run: ./gradlew assembleDebug --stacktrace
+      - name: Rename APK
+        run: |
+          cd cSploit/build/outputs/apk/debug
+          for f in *.apk; do
+            mv "$f" "cSploit-nightly-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
+          done
+      - name: Upload nightly APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cSploit-nightly-${{ steps.version.outputs.date }}
+          path: cSploit/build/outputs/apk/debug/*.apk
+          retention-days: 7
 
-    - name: Clean previous builds
-      run: ./gradlew clean
-      
-    - name: Get version info
-      id: version
-      run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-      
-    - name: Build nightly APK
-      run: ./gradlew assembleDebug --stacktrace
-      env:
-        NIGHTLY_BUILD: "true"
-        NIGHTLY_BUILD_COMMIT: ${{ github.sha }}
-        BUILD_NAME: "Nightly"
-        BUILD_NUMBER: ${{ github.run_number }}
-
-    - name: Rename APK
-      run: |
-        cd cSploit/build/outputs/apk/debug
-        for f in *.apk; do
-          mv "$f" "cSploit-nightly-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
-        done
-        
-    - name: Upload nightly APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: cSploit-nightly-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}
-        path: cSploit/build/outputs/apk/debug/*.apk
-        retention-days: 7
-
-  # PR builds - fast feedback
   pr-build:
-    name: PR Quick Build
+    name: PR Build
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Get PR info
-      id: pr
-      run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-      
-    - name: Build debug APK
-      run: ./gradlew assembleDebug --stacktrace
-      env:
-        BUILD_NAME: "PR-${{ github.event.pull_request.number }}"
-        BUILD_NUMBER: ${{ github.run_number }}
-
-    - name: Rename APK
-      run: |
-        cd cSploit/build/outputs/apk/debug
-        for f in *.apk; do
-          mv "$f" "cSploit-PR${{ steps.pr.outputs.pr_number }}-${{ steps.pr.outputs.sha_short }}.apk"
-        done
-        
-    - name: Upload PR APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: cSploit-PR${{ steps.pr.outputs.pr_number }}-${{ steps.pr.outputs.sha_short }}
-        path: cSploit/build/outputs/apk/debug/*.apk
-        retention-days: 7
-
-    - name: Add PR Comment
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const { data: comments } = await github.rest.issues.listComments({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.issue.number,
-          });
-          
-          const botComment = comments.find(comment => 
-            comment.user.type === 'Bot' && 
-            comment.body.includes('APK Build Status')
-          );
-          
-          const body = `## 🤖 APK Build Status
-          
-          | Status | Details |
-          |--------|---------|
-          | ✅ Build | **Successful** |
-          | 📦 Artifact | \`cSploit-PR${{ steps.pr.outputs.pr_number }}-${{ steps.pr.outputs.sha_short }}\` |
-          | 🔗 Download | [Actions Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
-          | 📝 Commit | \`${{ steps.pr.outputs.sha_short }}\` |
-          
-          *Last updated: ${new Date().toISOString()}*`;
-          
-          if (botComment) {
-            await github.rest.issues.updateComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: botComment.id,
-              body: body
-            });
-          } else {
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Get PR info
+        id: pr
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+      - name: Rename APK
+        run: |
+          cd cSploit/build/outputs/apk/debug
+          for f in *.apk; do
+            mv "$f" "cSploit-PR${{ steps.pr.outputs.pr_number }}-${{ steps.pr.outputs.sha_short }}.apk"
+          done
+      - name: Upload PR APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: cSploit-PR${{ steps.pr.outputs.pr_number }}
+          path: cSploit/build/outputs/apk/debug/*.apk
+          retention-days: 7
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
-              body: body
-            });
-          }
-
-  code-quality:
-    name: Code Quality Analysis
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: SonarCloud Scan
-      if: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonarqube
-      continue-on-error: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  notify:
-    name: Notify Build Status
-    runs-on: ubuntu-latest
-    needs: [build-debug, build-release, nightly-build, pr-build]
-    if: always() && (github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/'))
-    
-    steps:
-    - name: Determine build status
-      id: status
-      run: |
-        if [[ "${{ needs.build-debug.result }}" == "success" ]] || \
-           [[ "${{ needs.build-release.result }}" == "success" ]] || \
-           [[ "${{ needs.nightly-build.result }}" == "success" ]] || \
-           [[ "${{ needs.pr-build.result }}" == "success" ]]; then
-          echo "status=success" >> $GITHUB_OUTPUT
-          echo "emoji=✅" >> $GITHUB_OUTPUT
-        else
-          echo "status=failure" >> $GITHUB_OUTPUT
-          echo "emoji=❌" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Send notification
-      run: |
-        echo "${{ steps.status.outputs.emoji }} Build completed with status: ${{ steps.status.outputs.status }}"
-        echo "Repository: ${{ github.repository }}"
-        echo "Branch: ${{ github.ref_name }}"
-        echo "Commit: ${{ github.sha }}"
-        # Add your notification logic here (Slack, Discord, Email, etc.)
-        # Example for Discord webhook:
-        # curl -H "Content-Type: application/json" \
-        #   -d '{"content": "${{ steps.status.outputs.emoji }} Build ${{ steps.status.outputs.status }} for ${{ github.repository }}"}' \
-        #   ${{ secrets.DISCORD_WEBHOOK }}
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **APK Built!** Download from [Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
