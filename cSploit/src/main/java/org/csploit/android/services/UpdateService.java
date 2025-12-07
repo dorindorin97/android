@@ -41,7 +41,7 @@ import org.csploit.android.R;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.Logger;
-import org.csploit.android.core.LoggingHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.update.CoreUpdate;
 import org.csploit.android.update.MsfUpdate;

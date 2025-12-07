@@ -25,7 +25,7 @@ import android.content.SharedPreferences;
 import com.github.zafarkhaja.semver.Version;
 
 import org.csploit.android.core.Logger;
-import org.csploit.android.core.LoggingHelper;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.net.GitHubParser;
 import org.csploit.android.services.UpdateService;

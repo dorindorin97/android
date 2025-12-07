@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.tukaani:xz:1.9'
     
     // ACRA crash reporting - updated
+    implementation 'ch.acra:acra-core:5.11.3'
     implementation 'ch.acra:acra-http:5.11.3'
     implementation 'ch.acra:acra-notification:5.11.3'
     
