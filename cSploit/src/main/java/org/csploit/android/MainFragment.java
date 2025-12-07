@@ -281,6 +281,9 @@ public class MainFragment extends Fragment {
 
         mIsCoreInstalled = System.isCoreInstalled();
         mIsDaemonBeating = System.isCoreInitialized();
+        
+        // Log core status for debugging
+        Logger.debug("Core installation status:\n" + System.getCoreInstallStatus());
 
         // check minimum requirements for system initialization
 
@@ -288,6 +291,7 @@ public class MainFragment extends Fragment {
             EMPTY_LIST_MESSAGE = mIsConnectivityAvailable ?
                     getString(R.string.missing_core_update) :
                     getString(R.string.no_connectivity);
+            Logger.warning("Core not installed. Status: " + System.getCoreInstallStatus());
             return;
         } else if (!mIsDaemonBeating) {
             try {
@@ -304,10 +308,13 @@ public class MainFragment extends Fragment {
                 onInitializationError("hi developer, you missed to build JNI stuff, thanks for playing with me :)");
                 return;
             } catch (System.SuException e) {
+                Logger.error("Root access denied. Make sure:\n1. Device is rooted\n2. Root manager (Magisk/SuperSU) is working\n3. cSploit has root permission granted");
                 onInitializationError(getString(R.string.only_4_root));
                 return;
             } catch (System.DaemonException e) {
-                Logger.error(e.getMessage());
+                Logger.error("Daemon exception: " + e.getMessage());
+                onInitializationError(e.getMessage());
+                return;
             }
 
             if (!mIsDaemonBeating) {

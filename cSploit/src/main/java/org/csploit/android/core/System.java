@@ -1082,7 +1082,49 @@ public class System {
   }
 
   public static boolean isCoreInstalled() {
-    return new File(getCorePath() + "/VERSION").exists();
+    String corePath = getCorePath();
+    File versionFile = new File(corePath + "/VERSION");
+    File startDaemon = new File(corePath + "/start_daemon.sh");
+    File daemon = new File(corePath + "/cSploitd");
+    
+    boolean hasVersion = versionFile.exists();
+    boolean hasStartScript = startDaemon.exists();
+    boolean hasDaemon = daemon.exists();
+    
+    if (hasVersion && (!hasStartScript || !hasDaemon)) {
+      Logger.warning("Core partially installed - VERSION exists but missing: " +
+        (!hasStartScript ? "start_daemon.sh " : "") +
+        (!hasDaemon ? "cSploitd" : ""));
+    }
+    
+    return hasVersion && hasStartScript && hasDaemon;
+  }
+
+  /**
+   * Get detailed status about core installation for debugging
+   */
+  public static String getCoreInstallStatus() {
+    String corePath = getCorePath();
+    StringBuilder sb = new StringBuilder();
+    sb.append("Core path: ").append(corePath).append("\n");
+    
+    File coreDir = new File(corePath);
+    if (!coreDir.exists()) {
+      sb.append("Core directory does not exist!\n");
+      return sb.toString();
+    }
+    
+    String[] requiredFiles = {"VERSION", "start_daemon.sh", "cSploitd", "tools"};
+    for (String filename : requiredFiles) {
+      File f = new File(corePath, filename);
+      sb.append(filename).append(": ").append(f.exists() ? "OK" : "MISSING");
+      if (f.exists() && f.isFile()) {
+        sb.append(" (").append(f.canExecute() ? "executable" : "not executable").append(")");
+      }
+      sb.append("\n");
+    }
+    
+    return sb.toString();
   }
 
   public static boolean isCoreInitialized() {
