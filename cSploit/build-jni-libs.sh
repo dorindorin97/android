@@ -22,17 +22,31 @@ if [ ! -d "$JNI_DIR/cSploitClient" ]; then
     exit 1
 fi
 
+echo "Contents of JNI_DIR:"
+ls -la "$JNI_DIR"
+
 # Check for NDK
-if [ -z "$ANDROID_NDK_HOME" ]; then
-    if command -v ndk-build &> /dev/null; then
-        echo "Using ndk-build from PATH"
+echo "Checking for NDK..."
+echo "ANDROID_NDK_HOME: ${ANDROID_NDK_HOME:-not set}"
+
+NDK_BUILD=""
+if [ -n "$ANDROID_NDK_HOME" ]; then
+    if [ -f "$ANDROID_NDK_HOME/ndk-build" ]; then
+        NDK_BUILD="$ANDROID_NDK_HOME/ndk-build"
+        echo "Using ndk-build from ANDROID_NDK_HOME: $NDK_BUILD"
     else
-        echo "ERROR: ANDROID_NDK_HOME not set and ndk-build not in PATH"
+        echo "WARNING: ndk-build not found in ANDROID_NDK_HOME"
+    fi
+fi
+
+if [ -z "$NDK_BUILD" ]; then
+    NDK_BUILD=$(which ndk-build 2>/dev/null) || true
+    if [ -n "$NDK_BUILD" ]; then
+        echo "Using ndk-build from PATH: $NDK_BUILD"
+    else
+        echo "ERROR: ndk-build not found. Set ANDROID_NDK_HOME or add NDK to PATH"
         exit 1
     fi
-else
-    echo "Using NDK from: $ANDROID_NDK_HOME"
-    export PATH="$ANDROID_NDK_HOME:$PATH"
 fi
 
 # ABIs to build for
@@ -83,7 +97,7 @@ for ABI in $ABIS; do
     mkdir -p "$OUTPUT_DIR/$ABI"
     
     # Run ndk-build from jni directory
-    ndk-build \
+    "$NDK_BUILD" \
         NDK_PROJECT_PATH="$JNI_DIR" \
         APP_BUILD_SCRIPT="$JNI_DIR/Android_client_only.mk" \
         APP_ABI="$ABI" \
