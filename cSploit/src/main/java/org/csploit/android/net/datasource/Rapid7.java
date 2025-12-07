@@ -232,7 +232,7 @@ class Rapid7
 
     private static final String  SEARCHFORMID = "search_form";
     private static final Pattern PAGES = Pattern.compile("[&?]page=([0-9]+)");
-    private static final Pattern RESULT = Pattern.compile("<a +href=['"]/db/modules/(exploit/[^"]+)['"] *>([^<]+)</a>");
+    private static final Pattern RESULT = Pattern.compile("<a +href=['\"]//db/modules/(exploit/[^\"]+)['\"] *>([^<]+)</a>");
 
     private final Search.Receiver<Target.Exploit> receiver;
     private final RemoteReader.Job job;
