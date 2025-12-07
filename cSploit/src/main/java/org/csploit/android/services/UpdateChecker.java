@@ -39,6 +39,7 @@ import java.io.File;
 
 public class UpdateChecker extends Thread
 {
+  private static final String TAG = "UpdateChecker";
   public static final String UPDATE_CHECKING = "UpdateChecker.action.CHECKING";
   public static final String UPDATE_AVAILABLE = "UpdateChecker.action.UPDATE_AVAILABLE";
   public static final String UPDATE_NOT_AVAILABLE = "UpdateChecker.action.UPDATE_NOT_AVAILABLE";

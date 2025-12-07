@@ -68,6 +68,7 @@ import org.csploit.android.gui.dialogs.MultipleChoiceDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
+import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.ConcurrencyHelper;
 import org.csploit.android.helpers.DeviceHelper;
@@ -1018,7 +1019,7 @@ public class MainFragment extends Fragment {
             if (target.hasAlias()) {
                 holder.itemTitle.setText(HtmlCompat.fromHtml("<b>"
                         + target.getAlias() + "</b> <small>( "
-                        + target.getDisplayAddress() + " )</small>"));
+                        + target.getDisplayAddress() + " )</small>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
                 holder.itemTitle.setText(target.toString());
             }
