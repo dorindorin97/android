@@ -67,7 +67,14 @@ public class ToolExecutor {
 
             Log.d(TAG, "Executing command: " + command);
 
-            boolean completed = process.waitFor(timeoutSeconds, TimeUnit.SECONDS);
+            boolean completed;
+            try {
+                completed = process.waitFor(timeoutSeconds, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                process.destroyForcibly();
+                return new ProcessResult(-1, "Process interrupted");
+            }
 
             if (!completed) {
                 process.destroyForcibly();
