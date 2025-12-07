@@ -110,18 +110,28 @@ for ABI in $ABIS; do
         -j$(nproc) \
         cSploitCommon cSploitClient
     
-    # Copy the built libraries
-    # ndk-build creates $LIB_DIR/$ABI/ structure
-    echo "Looking for libraries in $LIB_DIR/$ABI/"
-    ls -la "$LIB_DIR/$ABI/" 2>/dev/null || echo "Directory not found"
+    # ndk-build puts libraries in $NDK_OUT/local/$ABI/ when NDK_LIBS_OUT isn't working
+    # Try multiple possible locations
+    LIB_LOCATIONS=(
+        "$LIB_DIR/$ABI"
+        "$OBJ_DIR/local/$ABI"
+    )
     
-    if [ -f "$LIB_DIR/$ABI/libcSploitCommon.so" ]; then
-        cp "$LIB_DIR/$ABI/libcSploitCommon.so" "$OUTPUT_DIR/$ABI/"
-        cp "$LIB_DIR/$ABI/libcSploitClient.so" "$OUTPUT_DIR/$ABI/"
-        echo "✓ Built and copied libraries for $ABI"
-    else
-        echo "WARNING: Libraries not found at $LIB_DIR/$ABI/"
-        # Try alternate location
+    FOUND=false
+    for LOC in "${LIB_LOCATIONS[@]}"; do
+        echo "Checking for libraries in $LOC/"
+        if [ -f "$LOC/libcSploitCommon.so" ]; then
+            cp "$LOC/libcSploitCommon.so" "$OUTPUT_DIR/$ABI/"
+            cp "$LOC/libcSploitClient.so" "$OUTPUT_DIR/$ABI/"
+            echo "✓ Built and copied libraries for $ABI from $LOC"
+            FOUND=true
+            break
+        fi
+    done
+    
+    if [ "$FOUND" = false ]; then
+        echo "WARNING: Libraries not found for $ABI"
+        echo "Searching for libraries..."
         find "$JNI_DIR" -name "libcSploitCommon.so" 2>/dev/null | head -5
     fi
 done
