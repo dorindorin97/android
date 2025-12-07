@@ -105,7 +105,7 @@ jobs:
     name: Build Release APK
     runs-on: ubuntu-latest
     needs: [lint, test]
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && github.event_name != 'schedule'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -127,6 +127,7 @@ jobs:
           echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
           VERSION=$(grep "versionName" cSploit/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
           echo "app_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag_name=v${VERSION}-$(date +'%Y%m%d')-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Decode keystore
         if: env.KEYSTORE_BASE64 != ''
         env:
@@ -148,16 +149,18 @@ jobs:
       - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
-          name: cSploit-release-v${{ steps.version.outputs.app_version }}
+          name: cSploit-release-v${{ steps.version.outputs.app_version }}-${{ steps.version.outputs.sha_short }}
           path: cSploit/build/outputs/apk/release/*.apk
           retention-days: 90
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ steps.version.outputs.tag_name }}
           files: cSploit/build/outputs/apk/release/*.apk
           draft: false
           generate_release_notes: true
-          name: cSploit v${{ steps.version.outputs.app_version }}
+          name: cSploit ${{ steps.version.outputs.tag_name }}
+          prerelease: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
