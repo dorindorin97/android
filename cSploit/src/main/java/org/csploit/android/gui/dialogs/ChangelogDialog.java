@@ -67,10 +67,10 @@ public class ChangelogDialog extends AlertDialog
     try {
       view.setText(GitHubParser.getcSploitRepo().getReleaseBody(System.getAppVersionName()));
     } catch (JSONException e) {
-      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
+      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage()), HtmlCompat.FROM_HTML_MODE_LEGACY));
       LoggingHelper.e(TAG, "Failed to load changelog", e);
     } catch (IOException e) {
-      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage())));
+      view.setText(HtmlCompat.fromHtml(ERROR_HTML.replace("{DESCRIPTION}", e.getMessage()), HtmlCompat.FROM_HTML_MODE_LEGACY));
       LoggingHelper.e(TAG, "Failed to load changelog", e);
     }
 
