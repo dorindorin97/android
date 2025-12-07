@@ -193,8 +193,8 @@ public final class ShellHelper {
     private static ShellResult execInternal(String command, boolean asRoot, 
                                              long timeoutMs, @Nullable String input) {
         Process process = null;
-        StringBuilder outputBuilder = new StringBuilder();
-        StringBuilder errorBuilder = new StringBuilder();
+        final StringBuilder outputBuilder = new StringBuilder();
+        final StringBuilder errorBuilder = new StringBuilder();
         boolean timedOut = false;
         int exitCode = -1;
         

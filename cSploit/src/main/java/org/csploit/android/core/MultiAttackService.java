@@ -318,25 +318,18 @@ public class MultiAttackService extends IntentService {
 
     //fetch tasks
     for(int stringId : actions) {
-      switch (stringId) {
-        case R.string.trace:
-          tasks |=TRACE;
-          break;
-        case R.string.port_scanner:
-          tasks |=SCAN;
-          break;
-        case R.string.inspector:
-          tasks |=INSPECT;
-          break;
-        case R.string.exploit_finder:
-          tasks |=EXPLOIT;
-          break;
-        case R.string.login_cracker:
-          tasks |=CRACK;
-          break;
-        default:
-          LoggingHelper.w("MultiAttackService", "Unexpected action string ID: " + stringId);
-          break;
+      if (stringId == R.string.trace) {
+        tasks |=TRACE;
+      } else if (stringId == R.string.port_scanner) {
+        tasks |=SCAN;
+      } else if (stringId == R.string.inspector) {
+        tasks |=INSPECT;
+      } else if (stringId == R.string.exploit_finder) {
+        tasks |=EXPLOIT;
+      } else if (stringId == R.string.login_cracker) {
+        tasks |=CRACK;
+      } else {
+        LoggingHelper.w("MultiAttackService", "Unexpected action string ID: " + stringId);
       }
     }
 

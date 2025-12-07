@@ -164,13 +164,13 @@ public class PluginManager {
     /**
      * Get plugin count by target type.
      *
-     * @param targetType The target type to filter by
-     * @return Number of plugins supporting the target type
+     * @param target The target to filter by
+     * @return Number of plugins supporting the target
      */
-    public int getPluginCountByTargetType(@NonNull String targetType) {
+    public int getPluginCountByTarget(@NonNull org.csploit.android.net.Target target) {
         int count = 0;
         for (Plugin plugin : registeredPlugins) {
-            if (plugin.supportsTargetType(targetType)) {
+            if (plugin.isAllowedTarget(target)) {
                 count++;
             }
         }

@@ -81,7 +81,7 @@ public class HijackerWebView extends AppCompatActivity {
     mSettings.setJavaScriptEnabled(true);
     mSettings.setJavaScriptCanOpenWindowsAutomatically(true);
     mSettings.setBuiltInZoomControls(true);
-    mSettings.setAppCacheEnabled(false);
+    // setAppCacheEnabled is deprecated and removed in newer Android versions
     mSettings.setUserAgentString(DEFAULT_USER_AGENT);
     mSettings.setUseWideViewPort(true);
 

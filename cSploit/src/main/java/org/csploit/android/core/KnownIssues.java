@@ -20,8 +20,8 @@ public class KnownIssues {
   public void check() {
     // Check for known Java/Android compatibility issues
     try {
-      String javaVersion = System.getProperty("java.version");
-      String osVersion = System.getProperty("os.version");
+      String javaVersion = java.lang.System.getProperty("java.version");
+      String osVersion = java.lang.System.getProperty("os.version");
       
       // Log detected runtime environment
       Logger.debug(String.format("Java version: %s, OS: %s", javaVersion, osVersion));

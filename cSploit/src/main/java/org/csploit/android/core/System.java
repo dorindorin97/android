@@ -394,7 +394,11 @@ public class System {
   }
 
   private static void uncaughtReloadNetworkMapping() throws UnknownHostException, SocketException {
-    mNetwork = new Network(mContext, mIfname);
+    Context ctx = mContext != null ? mContext.get() : null;
+    if (ctx == null) {
+      throw new IllegalStateException("Context is null");
+    }
+    mNetwork = new Network(ctx, mIfname);
     mIfname = mNetwork.getInterface().getName();
 
     reset();
@@ -677,7 +681,11 @@ public class System {
   public static String getAppVersionName() {
     if (mApkVersion != null)
       return mApkVersion;
-    return (mApkVersion = org.csploit.android.helpers.AppHelper.getVersionName(mContext));
+    Context ctx = mContext != null ? mContext.get() : null;
+    if (ctx == null) {
+      return "unknown";
+    }
+    return (mApkVersion = org.csploit.android.helpers.AppHelper.getVersionName(ctx));
   }
 
   /**
@@ -925,8 +933,10 @@ public class System {
 
   public static HTTPSRedirector getHttpsRedirector() {
     try {
-      if (mRedirector == null)
-        mRedirector = new HTTPSRedirector(mContext, getNetwork().getLocalAddress(), HTTPS_REDIR_PORT);
+      if (mRedirector == null) {
+        Context ctx = mContext != null ? mContext.get() : null;
+        mRedirector = new HTTPSRedirector(ctx, getNetwork().getLocalAddress(), HTTPS_REDIR_PORT);
+      }
     } catch (Exception e) {
       errorLogging(e);
     }

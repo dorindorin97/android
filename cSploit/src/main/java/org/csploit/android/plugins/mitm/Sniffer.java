@@ -108,6 +108,7 @@ import org.csploit.android.helpers.LoggingHelper;
 
 public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClickListener
 {
+  private static final String TAG = "Sniffer";
   private static final String[] SORT = {
     "Bandwidth ↓",
     "Bandwidth ↑",
