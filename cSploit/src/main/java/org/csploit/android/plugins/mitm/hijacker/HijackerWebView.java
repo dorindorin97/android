@@ -221,34 +221,24 @@ public class HijackerWebView extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-
-        mWebView = null;
-        onBackPressed();
-
-        return true;
-
-      case R.id.back:
-
-        if (mWebView.canGoBack())
-          mWebView.goBack();
-
-        return true;
-
-      case R.id.forward:
-
-        if (mWebView.canGoForward())
-          mWebView.goForward();
-
-        return true;
-
-      case R.id.reload:
-
-        mWebView.reload();
-
-      default:
-        return super.onOptionsItemSelected(item);
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      mWebView = null;
+      onBackPressed();
+      return true;
+    } else if (itemId == R.id.back) {
+      if (mWebView.canGoBack())
+        mWebView.goBack();
+      return true;
+    } else if (itemId == R.id.forward) {
+      if (mWebView.canGoForward())
+        mWebView.goForward();
+      return true;
+    } else if (itemId == R.id.reload) {
+      mWebView.reload();
+      return true;
+    } else {
+      return super.onOptionsItemSelected(item);
     }
   }
 

@@ -565,15 +565,10 @@ public class Hijacker extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 
-		switch (itemId) {
-		case android.R.id.home:
-
+		if (itemId == android.R.id.home) {
 			onBackPressed();
-
 			return true;
-
-		case R.id.load:
-
+		} else if (itemId == R.id.load) {
 			final ArrayList<String> sessions = System
 					.getAvailableHijackerSessionFiles();
 
@@ -603,8 +598,7 @@ public class Hijacker extends AppCompatActivity {
 				UIHelper.error(Hijacker.this, getString(R.string.error), getString(R.string.no_session_found));
 
 			return true;
-
-		default:
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}

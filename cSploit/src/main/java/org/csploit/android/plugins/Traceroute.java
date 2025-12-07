@@ -132,13 +132,13 @@ public class Traceroute extends Plugin {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item){
-    switch (item.getItemId()) {
-      case R.id.resolve_names:
-        resolveNames=!item.isChecked();
-        item.setChecked(resolveNames);
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
+    int itemId = item.getItemId();
+    if (itemId == R.id.resolve_names) {
+      resolveNames=!item.isChecked();
+      item.setChecked(resolveNames);
+      return true;
+    } else {
+      return super.onOptionsItemSelected(item);
     }
   }
 

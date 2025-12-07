@@ -272,21 +272,18 @@ public class PasswordSniffer extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_fields:
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_fields) {
 			if (!mSniffToggleButton.isEnabled())
-				ToastHelper.info(this, "The changes won't take effect until you stop the current traffic sniffing");				Intent _fields = new Intent(PasswordSniffer.this, FileEdit.class);
-				_fields.putExtra(FileEdit.KEY_FILEPATH, "/tools/ettercap/share/etter.fields");
-				startActivityForResult(_fields, 0);
-
-				return true;
-		case android.R.id.home:
-
-			onBackPressed();
-
+				ToastHelper.info(this, "The changes won't take effect until you stop the current traffic sniffing");
+			Intent _fields = new Intent(PasswordSniffer.this, FileEdit.class);
+			_fields.putExtra(FileEdit.KEY_FILEPATH, "/tools/ettercap/share/etter.fields");
+			startActivityForResult(_fields, 0);
 			return true;
-
-		default:
+		} else if (itemId == android.R.id.home) {
+			onBackPressed();
+			return true;
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}

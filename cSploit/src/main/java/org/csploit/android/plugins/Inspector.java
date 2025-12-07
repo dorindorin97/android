@@ -211,18 +211,18 @@ public class Inspector extends Plugin {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item){
-    switch (item.getItemId()) {
-      case R.id.focused_scan:
-        if(item.isChecked()) {
-          item.setChecked(false);
-          mFocusedScan =false;
-        } else {
-          item.setChecked(true);
-          mFocusedScan =true;
-        }
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
+    int itemId = item.getItemId();
+    if (itemId == R.id.focused_scan) {
+      if(item.isChecked()) {
+        item.setChecked(false);
+        mFocusedScan =false;
+      } else {
+        item.setChecked(true);
+        mFocusedScan =true;
+      }
+      return true;
+    } else {
+      return super.onOptionsItemSelected(item);
     }
   }
 

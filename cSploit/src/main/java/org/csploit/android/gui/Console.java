@@ -153,22 +153,22 @@ public class Console extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.clear:
-                mOutput.setText("");
-                return true;
-            case android.R.id.copy:
-                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboard.setText(mOutput.getText().toString());
-                } else {
-                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", mOutput.getText().toString());
-                    clipboard.setPrimaryClip(clip);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.clear) {
+            mOutput.setText("");
+            return true;
+        } else if (itemId == android.R.id.copy) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setText(mOutput.getText().toString());
+            } else {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", mOutput.getText().toString());
+                clipboard.setPrimaryClip(clip);
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }
