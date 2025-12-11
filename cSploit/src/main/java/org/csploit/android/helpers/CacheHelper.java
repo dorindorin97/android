@@ -20,27 +20,17 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.graphics.Bitmap;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Iterator;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.LinkedHashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ConcurrentHashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicLong;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * CacheHelper - Flexible caching utility for objects, bitmaps, and HTTP responses

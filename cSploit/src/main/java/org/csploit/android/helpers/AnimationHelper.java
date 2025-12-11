@@ -20,36 +20,21 @@ package org.csploit.android.helpers;
 import android.animation.Animator;
 import org.csploit.android.helpers.LoggingHelper;
 import android.animation.AnimatorListenerAdapter;
-import org.csploit.android.helpers.LoggingHelper;
 import android.animation.ObjectAnimator;
-import org.csploit.android.helpers.LoggingHelper;
 import android.animation.ValueAnimator;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.View;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.AlphaAnimation;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.Animation;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.AnimationSet;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.DecelerateInterpolator;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.Interpolator;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.LinearInterpolator;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.RotateAnimation;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.ScaleAnimation;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.animation.TranslateAnimation;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * AnimationHelper - Smooth animations and transitions utility

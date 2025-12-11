@@ -20,26 +20,16 @@ import android.os.Build;
 import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.OutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeoutException;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ShellHelper - Execute shell commands with proper error handling.

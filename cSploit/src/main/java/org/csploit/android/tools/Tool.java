@@ -20,7 +20,7 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 public abstract class Tool
 {
@@ -50,7 +50,7 @@ public abstract class Tool
       } else if (!ChildManager.handlers.contains(mHandler)) {
         msg += " (handler not found in: " + ChildManager.handlers + ")";
       }
-      Logger.warning(msg);
+      LoggingHelper.warning(msg);
       throw new ChildManager.ChildNotStartedException(msg);
     }
 

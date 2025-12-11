@@ -19,28 +19,17 @@ package org.csploit.android.helpers;
 import android.os.Handler;
 import org.csploit.android.helpers.LoggingHelper;
 import android.os.Looper;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.concurrent.Callable;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Future;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledFuture;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for executing tasks on the main thread.

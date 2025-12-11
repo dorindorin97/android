@@ -3,18 +3,12 @@ package org.csploit.android.core;
 import java.io.BufferedReader;
 import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.UUID;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.tools.Fusemounts;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * this class check if there is a way to execute binary files in some place

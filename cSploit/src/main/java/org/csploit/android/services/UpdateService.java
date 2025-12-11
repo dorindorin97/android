@@ -40,7 +40,6 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.csploit.android.R;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.update.CoreUpdate;
@@ -281,11 +280,11 @@ public class UpdateService extends IntentService
     contentIntent = mCurrentTask.haveIntent() ? mCurrentTask.buildIntent() : null;
 
     if(errorOccurred || contentIntent==null){
-      Logger.debug("deleting notifications");
+      LoggingHelper.debug("deleting notifications");
       if(mNotificationManager!=null)
         mNotificationManager.cancel(NOTIFICATION_ID);
     } else {
-      Logger.debug("assign '"+contentIntent.toString()+"' to notification");
+      LoggingHelper.debug("assign '"+contentIntent.toString()+"' to notification");
      if(mBuilder!=null&&mNotificationManager!=null) {
        mBuilder.setContentIntent(PendingIntent.getActivity(this, DOWNLOAD_COMPLETE_CODE, contentIntent, 0))
                .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
@@ -317,7 +316,7 @@ public class UpdateService extends IntentService
     if((child.exitValue!=0 || child.signal >= 0) && mErrorOutput.length() > 0)
       for(String line : mErrorOutput.toString().split("\n"))
         if(line.length()>0)
-          Logger.error(line);
+          LoggingHelper.error(line);
 
     if(child.signal>=0) {
       return 128 + child.signal;
@@ -338,7 +337,7 @@ public class UpdateService extends IntentService
     byte[] buffer;
     String rootDirectory;
 
-    Logger.info("verifying archive integrity");
+    LoggingHelper.info("verifying archive integrity");
 
     if(mCurrentTask==null||mCurrentTask.path==null)
       throw new RuntimeException("no archive to test");
@@ -499,11 +498,11 @@ public class UpdateService extends IntentService
           throw new KeyException("wrong MD5");
         if (sha1!=null && !mCurrentTask.sha1.equals(digest2string(sha1.digest())))
           throw new KeyException("wrong SHA-1");
-        Logger.info(String.format("checksum ok: '%s'", mCurrentTask.path));
+        LoggingHelper.info(String.format("checksum ok: '%s'", mCurrentTask.path));
       } else if (mCurrentTask.archiver != null) {
         verifyArchiveIntegrity();
       }
-      Logger.info(String.format("file already exists: '%s'", mCurrentTask.path));
+      LoggingHelper.info(String.format("file already exists: '%s'", mCurrentTask.path));
       mBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
               .setContentTitle(getString(R.string.update_available))
               .setContentText(getString(R.string.click_here_to_upgrade))
@@ -513,7 +512,7 @@ public class UpdateService extends IntentService
       return true;
     } finally {
       if(exitForError&&file!=null&&file.exists()&&!file.delete())
-        Logger.error(String.format("cannot delete local file '%s'", mCurrentTask.path));
+        LoggingHelper.error(String.format("cannot delete local file '%s'", mCurrentTask.path));
       try {
         if(reader!=null)
           reader.close();
@@ -589,7 +588,7 @@ public class UpdateService extends IntentService
               .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
       mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
-      Logger.info(String.format("downloading '%s' to '%s'", mCurrentTask.url, mCurrentTask.path));
+      LoggingHelper.info(String.format("downloading '%s' to '%s'", mCurrentTask.url, mCurrentTask.path));
 
       while( mRunning && (read = reader.read(buffer)) != -1 ) {
         writer.write(buffer, 0, read);
@@ -616,7 +615,7 @@ public class UpdateService extends IntentService
       if(!mRunning)
         throw new CancellationException("download cancelled");
 
-      Logger.info("download finished successfully");
+      LoggingHelper.info("download finished successfully");
 
       if( md5 != null || sha1 != null ) {
         if (md5 != null && !mCurrentTask.md5.equals(digest2string(md5.digest()))) {
@@ -632,7 +631,7 @@ public class UpdateService extends IntentService
 
     } finally {
       if(exitForError&&file!=null&&file.exists()&&!file.delete())
-          Logger.error(String.format("cannot delete file '%s'", mCurrentTask.path));
+          LoggingHelper.error(String.format("cannot delete file '%s'", mCurrentTask.path));
       try {
         if(writer!=null)
           writer.close();
@@ -681,7 +680,7 @@ public class UpdateService extends IntentService
             .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
     mNotificationManager.notify(NOTIFICATION_ID,mBuilder.build());
 
-    Logger.info(String.format("extracting '%s' to '%s'", mCurrentTask.path, mCurrentTask.outputDir));
+    LoggingHelper.info(String.format("extracting '%s' to '%s'", mCurrentTask.path, mCurrentTask.outputDir));
 
     envPath = null;
     which = null;
@@ -817,26 +816,26 @@ public class UpdateService extends IntentService
         }
 
         if(!f.setExecutable(x, true)) {
-          Logger.warning(String.format("cannot set executable permission of '%s'",name));
+          LoggingHelper.warning(String.format("cannot set executable permission of '%s'",name));
         }
 
         if(!f.setWritable(w, true)) {
-          Logger.warning(String.format("cannot set writable permission of '%s'",name));
+          LoggingHelper.warning(String.format("cannot set writable permission of '%s'",name));
         }
 
         if(!f.setReadable(r, true)) {
-          Logger.warning(String.format("cannot set readable permission of '%s'",name));
+          LoggingHelper.warning(String.format("cannot set readable permission of '%s'",name));
         }
       }
 
       if (!mRunning)
         throw new CancellationException("extraction cancelled.");
 
-      Logger.info("extraction completed");
+      LoggingHelper.info("extraction completed");
 
       f = new File(mCurrentTask.outputDir, ".nomedia");
       if (f.createNewFile())
-        Logger.info(".nomedia created");
+        LoggingHelper.info(".nomedia created");
 
       mBuilder.setContentInfo("")
               .setProgress(100, 100, true)
@@ -912,7 +911,7 @@ public class UpdateService extends IntentService
     if(mCurrentTask.outputDir==null||mCurrentTask.path==null||mCurrentTask.path.isEmpty())
       return;
     if(!(new File(mCurrentTask.path)).delete())
-      Logger.error(String.format("cannot delete temporary file '%s'", mCurrentTask.path));
+      LoggingHelper.error(String.format("cannot delete temporary file '%s'", mCurrentTask.path));
   }
 
   private void createVersionFile() throws IOException {
@@ -923,7 +922,7 @@ public class UpdateService extends IntentService
       return;
 
     if(mCurrentTask.version == null || mCurrentTask.version.isEmpty()) {
-      Logger.warning("version string not found");
+      LoggingHelper.warning("version string not found");
       return;
     }
 
@@ -950,7 +949,7 @@ public class UpdateService extends IntentService
     boolean exitForError=true;
 
     if(mCurrentTask==null) {
-      Logger.error("received null update");
+      LoggingHelper.error("received null update");
       return;
     }
 
@@ -979,13 +978,13 @@ public class UpdateService extends IntentService
       sendDone();
     } catch ( SecurityException e) {
       sendError(R.string.bad_permissions);
-      Logger.warning(e.getClass().getName() + ": " + e.getMessage());
+      LoggingHelper.warning(e.getClass().getName() + ": " + e.getMessage());
     } catch (KeyException e) {
       sendError(R.string.checksum_failed);
-      Logger.warning(e.getClass().getName() + ": " + e.getMessage());
+      LoggingHelper.warning(e.getClass().getName() + ": " + e.getMessage());
     } catch (CancellationException e) {
       sendError(R.string.update_cancelled);
-      Logger.warning(e.getClass().getName() + ": " + e.getMessage());
+      LoggingHelper.warning(e.getClass().getName() + ": " + e.getMessage());
     } catch (NoSuchAlgorithmException | RuntimeException | ChildManager.ChildDiedException | ChildManager.ChildNotStartedException | InterruptedException | IOException e) {
       sendError(R.string.error_occured);
       LoggingHelper.e(TAG, "Update service error", e);

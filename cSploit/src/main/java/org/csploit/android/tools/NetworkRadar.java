@@ -22,7 +22,7 @@ package org.csploit.android.tools;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.System;
 import org.csploit.android.core.Child;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Host;
 import org.csploit.android.events.HostLost;
@@ -48,7 +48,7 @@ public class NetworkRadar extends Tool {
       } else if ( e instanceof HostLost ) {
         onHostLost(((HostLost)e).ipAddress);
       } else {
-        Logger.error("Unknown event: " + e);
+        LoggingHelper.error("Unknown event: " + e);
       }
     }
   }

@@ -20,14 +20,13 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.events.Account;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Message;
 import org.csploit.android.events.Newline;
 import org.csploit.android.events.Ready;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
 
 public class Ettercap extends Tool
@@ -49,7 +48,7 @@ public class Ettercap extends Tool
         Account a = (Account)e;
         onAccount(a.protocol, a.address.getHostAddress(), a.username, a.password);
       } else {
-        Logger.warning("unknown event: " + e);
+        LoggingHelper.warning("unknown event: " + e);
       }
     }
 
@@ -70,19 +69,19 @@ public class Ettercap extends Tool
     public static abstract class OnDNSSpoofedReceiver extends Child.EventReceiver {
       @Override
       public void onEvent(Event e) {
-        Logger.info("OnDNSSpooferReceiver() event: " + e);
+        LoggingHelper.info("OnDNSSpooferReceiver() event: " + e);
 
         if(e instanceof Ready) {
           onReady();
         }
         else if(e instanceof Message) {
-          Logger.info("OnDNSSpooferReceiver() message: " + e);
+          LoggingHelper.info("OnDNSSpooferReceiver() message: " + e);
           Message m = (Message)e;
           if (m.severity == Message.Severity.ERROR)
             onError(((Message) e).message);
         }
         else if (e instanceof Newline){
-          Logger.info("OnDNSSpooferReceiver() Newline: " + e.toString());
+          LoggingHelper.info("OnDNSSpooferReceiver() Newline: " + e.toString());
           onSpoofed(e.toString());
         }
         else {

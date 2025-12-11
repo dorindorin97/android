@@ -20,7 +20,7 @@
 
 package org.csploit.android.net;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.RemoteReader;
 import org.csploit.android.core.System;
 import org.json.JSONArray;
@@ -256,7 +256,7 @@ public class GitHubParser {
 
   public synchronized String getBranch() throws JSONException {
     if(mBranch == null) {
-      Logger.debug("no branch has been selected yet");
+      LoggingHelper.debug("no branch has been selected yet");
       return null;
     }
     return mBranch.getString("name");

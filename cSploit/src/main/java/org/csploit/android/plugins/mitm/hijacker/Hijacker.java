@@ -46,7 +46,7 @@ import android.widget.ToggleButton;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
@@ -56,7 +56,6 @@ import org.csploit.android.gui.dialogs.SpinnerDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.http.RequestParser;
@@ -532,7 +531,7 @@ public class Hijacker extends AppCompatActivity {
         }
       });
     } catch (ChildManager.ChildNotStartedException e) {
-      Logger.error(e.getMessage());
+      LoggingHelper.error(e.getMessage());
       ToastHelper.error(Hijacker.this, getString(R.string.child_not_started));
     }
   }

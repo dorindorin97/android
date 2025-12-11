@@ -20,39 +20,23 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.os.Handler;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Looper;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Future;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Matcher;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * NetworkDiagnostics - Network diagnostic and troubleshooting utilities.

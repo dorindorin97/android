@@ -20,11 +20,10 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Message;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.Target.Type;
 
@@ -45,9 +44,9 @@ public class ArpSpoof extends Tool
         if(m.severity == Message.Severity.ERROR)
           onError(m.message);
         else
-          Logger.warning("unexpected message from arpspoof: " + m);
+          LoggingHelper.warning("unexpected message from arpspoof: " + m);
       } else {
-        Logger.warning("unknown event " + e);
+        LoggingHelper.warning("unknown event " + e);
       }
     }
 

@@ -25,9 +25,8 @@ import java.util.Stack;
 import java.util.concurrent.TimeoutException;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 
 /**
  * Meterpreter session handler for advanced post-exploitation operations.
@@ -542,7 +541,7 @@ public class MeterpreterSession extends Session {
                 }
             }
         } catch (InterruptedException e) {
-            Logger.info("Meterpreter session thread interrupted");
+            LoggingHelper.info("Meterpreter session thread interrupted");
         } finally {
             stopSession();
         }

@@ -20,19 +20,13 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.ApplicationInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 
 import com.github.zafarkhaja.semver.Version;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * AppHelper - Application information and state management utility

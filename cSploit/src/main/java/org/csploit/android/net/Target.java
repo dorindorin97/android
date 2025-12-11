@@ -19,9 +19,8 @@
 package org.csploit.android.net;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network.Protocol;
 import org.csploit.android.net.metasploit.MsfExploit;
@@ -687,7 +686,7 @@ public class Target implements Comparable<Target>
     // Use async DNS resolution to avoid NetworkOnMainThreadException
     mAddress = resolveHostnameAsync(mHostname);
     if(mAddress == null){
-      Logger.debug("Failed to resolve hostname: " + hostname);
+      LoggingHelper.debug("Failed to resolve hostname: " + hostname);
     }
   }
 

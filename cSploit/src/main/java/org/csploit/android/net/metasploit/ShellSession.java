@@ -8,9 +8,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.tools.Raw;
 
 /**
@@ -127,9 +126,9 @@ public class ShellSession extends Session {
         processCommand(grabCommand());
       }
     } catch (InterruptedException e) {
-      Logger.warning("interrupted");
+      LoggingHelper.warning("interrupted");
     } catch (TimeoutException e) {
-      Logger.error("Session timed out: " + e.getMessage());
+      LoggingHelper.error("Session timed out: " + e.getMessage());
     } catch (RPCClient.MSFException e) {
       LoggingHelper.e(TAG, "Shell session MSF error", e);
     } catch (IOException e) {

@@ -20,29 +20,18 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.os.Handler;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Looper;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ScanProgressTracker - Track and report progress for multi-target scanning operations.

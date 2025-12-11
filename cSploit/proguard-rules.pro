@@ -1,13 +1,29 @@
 # ProGuard/R8 rules for cSploit
+# Updated: Improved rules with better targeting
+
+# ==================== Debug Information ====================
 
 # Keep source file names and line numbers for better crash reports
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
+# Keep annotations for runtime reflection
+-keepattributes *Annotation*,Signature,Exceptions
+
+# ==================== Native Code ====================
+
 # Keep all native methods
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+
+# Keep native library loading
+-keep class org.csploit.android.core.Client {
+    public protected *;
+    native <methods>;
+}
+
+# ==================== Core Application ====================
 
 # Keep all classes with @Keep annotation
 -keep @androidx.annotation.Keep class * {*;}
@@ -21,6 +37,8 @@
 -keep class * extends org.csploit.android.core.Plugin {
     public protected *;
 }
+
+# ==================== Android Components ====================
 
 # Keep all Activity classes
 -keep class * extends android.app.Activity {
@@ -37,6 +55,11 @@
     public protected *;
 }
 
+# Keep BroadcastReceivers
+-keep class * extends android.content.BroadcastReceiver {
+    public protected *;
+}
+
 # Keep custom views
 -keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
@@ -45,6 +68,8 @@
 -keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
+
+# ==================== Data Classes ====================
 
 # Keep enum classes
 -keepclassmembers enum * {
@@ -67,21 +92,19 @@
     java.lang.Object readResolve();
 }
 
-# Keep native library loading
--keep class org.csploit.android.core.Client {
-    public protected *;
-}
+# ==================== Network & Security ====================
 
-# Keep WiFi algorithm classes - they may use reflection
+# Keep WiFi algorithm classes - they use reflection
 -keep class org.csploit.android.wifi.algorithms.** {
     public protected *;
 }
 
-# Keep network/metasploit classes
+# Keep network classes
 -keep class org.csploit.android.net.** {
     public protected *;
 }
 
+# Keep metasploit classes
 -keep class org.csploit.android.net.metasploit.** {
     public protected *;
 }
@@ -91,59 +114,96 @@
     public protected *;
 }
 
+# ==================== Third-party Libraries ====================
+
 # ACRA crash reporting
 -keep class org.acra.** { *; }
 -dontwarn org.acra.**
 
-# Apache Commons
+# Apache Commons - only keep what's used
+-keep class org.apache.commons.compress.** { *; }
+-keep class org.apache.commons.net.** { *; }
 -dontwarn org.apache.commons.**
--keep class org.apache.commons.** { *; }
 
-# MessagePack
--dontwarn org.msgpack.**
+# MessagePack - used for MSF RPC
 -keep class org.msgpack.** { *; }
+-dontwarn org.msgpack.**
 
-# Suppress warnings for known issues
--dontwarn javax.annotation.**
--dontwarn javax.inject.**
--dontwarn sun.misc.Unsafe
+# ==================== AndroidX ====================
 
-# Keep AndroidX libraries
--keep class androidx.** { *; }
--dontwarn androidx.**
+# Only suppress specific known warnings
+-dontwarn androidx.lifecycle.LiveData
+-dontwarn androidx.lifecycle.LifecycleOwner
 
-# Material Design
--keep class com.google.android.material.** { *; }
--dontwarn com.google.android.material.**
+# Keep preference classes for settings
+-keep class androidx.preference.** { *; }
 
-# Remove logging in release builds for performance
+# ==================== Material Design ====================
+
+# Keep only what's needed for proper functioning
+-keep class com.google.android.material.** {
+    public protected *;
+}
+
+# ==================== Logging Optimization ====================
+
+# Remove verbose and debug logs in release builds, keep error logs
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);
     public static int d(...);
     public static int i(...);
-    public static int w(...);
-    public static int e(...);
 }
 
-# Optimization settings
+# Keep our LoggingHelper functional
+-keep class org.csploit.android.helpers.LoggingHelper {
+    public static *;
+}
+
+# ==================== Optimization ====================
+
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
--verbose
 
 # Allow optimization but keep meaningful stack traces
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 
-# Security: Obfuscate all class names except main components
+# Security: Obfuscate class names
 -repackageclasses ''
 -allowaccessmodification
 
+# ==================== Exception Handling ====================
+
 # Keep custom exceptions for better debugging
 -keep public class * extends java.lang.Exception
+-keep public class * extends java.lang.RuntimeException
 
-# Keep view binding if used
+# Keep System exception classes
+-keep class org.csploit.android.core.System$SuException { *; }
+-keep class org.csploit.android.core.System$DaemonException { *; }
+
+# ==================== View Binding ====================
+
 -keep class * extends androidx.viewbinding.ViewBinding {
     public static ** inflate(...);
     public static ** bind(...);
 }
+
+# ==================== Reflection ====================
+
+# Keep classes that are accessed via reflection
+-keepclassmembers class * {
+    @androidx.annotation.Keep *;
+}
+
+# ==================== Known Suppressions ====================
+
+# Suppress known annotation warnings
+-dontwarn javax.annotation.**
+-dontwarn javax.inject.**
+-dontwarn sun.misc.Unsafe
+
+# Suppress Kotlin metadata warnings if Kotlin is not used
+-dontwarn kotlin.**
+-dontwarn kotlinx.**

@@ -2,43 +2,24 @@ package org.csploit.android.net;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.core.Logger;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.MalformedURLException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URLConnection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayDeque;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Deque;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.LinkedList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Queue;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutionException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Future;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeoutException;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * take advantage of persistent HTTP connections
@@ -383,7 +364,7 @@ public class RemoteReader implements Runnable {
 
     Thread.currentThread().setName("RemoteReader[" + host + "]");
 
-    Logger.debug("RemoteReader[" + host +"] started");
+    LoggingHelper.debug("RemoteReader[" + host +"] started");
 
     while(running) {
 
@@ -394,7 +375,7 @@ public class RemoteReader implements Runnable {
           }
         }
       } catch (InterruptedException e) {
-        Logger.warning("RemoteReader[" + host +"] interrupted");
+        LoggingHelper.warning("RemoteReader[" + host +"] interrupted");
         break;
       }
 
@@ -412,12 +393,12 @@ public class RemoteReader implements Runnable {
       }
 
       if(!url.getHost().equals(host)) {
-        Logger.error(String.format("RemoteReader[%s]: URL '%s' does not belong to me", host, task.getUrl()));
+        LoggingHelper.error(String.format("RemoteReader[%s]: URL '%s' does not belong to me", host, task.getUrl()));
         notifiers.execute(new Notifier(task, "Host mismatch".getBytes(), true));
         continue;
       }
 
-      Logger.info("fetching '" + url.toString() + "'");
+      LoggingHelper.info("fetching '" + url.toString() + "'");
 
       try {
         connection = url.openConnection();
@@ -445,7 +426,7 @@ public class RemoteReader implements Runnable {
       notifiers.execute(notifier);
     }
 
-    Logger.debug("RemoteReader[" + host +"] quitting");
+    LoggingHelper.debug("RemoteReader[" + host +"] quitting");
 
     running = false;
 

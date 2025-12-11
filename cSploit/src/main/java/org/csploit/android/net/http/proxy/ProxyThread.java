@@ -33,10 +33,9 @@ import java.util.regex.Pattern;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.http.RequestParser;
 import org.csploit.android.net.http.proxy.Proxy.OnRequestListener;
 
@@ -80,7 +79,7 @@ public class ProxyThread extends Thread
       byte[] buffer = new byte[MAX_REQUEST_SIZE];
       final String client = mSocket.getInetAddress().getHostAddress();
 
-      Logger.debug("Connection from " + client);
+      LoggingHelper.debug("Connection from " + client);
       Profiler.instance().profile("proxy request read");
 
       // Read the header and rebuild it
@@ -152,7 +151,7 @@ public class ProxyThread extends Thread
     Profiler.instance().profile("getUrlFromRequest");
 
     long millis = java.lang.System.currentTimeMillis();
-    Logger.debug("Connection to " + mServerName);
+    LoggingHelper.debug("Connection to " + mServerName);
 
     String url = RequestParser.getUrlFromRequest(mServerName, request);
     String response = null;
@@ -163,10 +162,10 @@ public class ProxyThread extends Thread
     // connect to host
     if (mHostRedirect == null) {
       if (url != null && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true) && HTTPSMonitor.getInstance().hasURL(client, url)) {
-        Logger.warning("Found stripped HTTPS url : " + url);
+        LoggingHelper.warning("Found stripped HTTPS url : " + url);
 
         if (!CookieCleaner.getInstance().isClean(client, mServerName, request)) {
-          Logger.warning("Sending expired cookie for " + mServerName);
+          LoggingHelper.warning("Sending expired cookie for " + mServerName);
           response = CookieCleaner.getInstance().getExpiredResponse(request, mServerName);
           CookieCleaner.getInstance().addCleaned(client, mServerName);
         }
@@ -175,7 +174,7 @@ public class ProxyThread extends Thread
         mServer = DNSCache.getInstance().connect(mSocketFactory, mServerName, HTTPS_SERVER_PORT);
       } else {
         mServer = DNSCache.getInstance().connect(mServerName, HTTP_SERVER_PORT);
-        Logger.debug(client + " > " + mServerName + " [" + (java.lang.System.currentTimeMillis() - millis) + " ms]");
+        LoggingHelper.debug(client + " > " + mServerName + " [" + (java.lang.System.currentTimeMillis() - millis) + " ms]");
       }
     } else {
       // just redirect requests

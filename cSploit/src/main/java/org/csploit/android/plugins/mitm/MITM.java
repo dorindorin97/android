@@ -44,7 +44,7 @@ import org.csploit.android.SettingsActivity;
 import org.csploit.android.SettingsFragment;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
@@ -57,7 +57,6 @@ import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ConcurrencyHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.RedirectionDialog;
@@ -403,7 +402,7 @@ public class MITM extends Plugin
     }
 
     if(somethingIsRunning){
-      Logger.debug("Stopping current jobs ...");
+      LoggingHelper.debug("Stopping current jobs ...");
 
       if(mSpoofSession != null){
         mSpoofSession.stop();

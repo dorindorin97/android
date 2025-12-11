@@ -20,41 +20,24 @@ package org.csploit.android.helpers;
 import androidx.annotation.NonNull;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.ByteArrayInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.MessageDigest;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.cert.Certificate;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.cert.CertificateFactory;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.cert.X509Certificate;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Date;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 
 import javax.net.ssl.HttpsURLConnection;
-import org.csploit.android.helpers.LoggingHelper;
 import javax.net.ssl.SSLContext;
-import org.csploit.android.helpers.LoggingHelper;
 import javax.net.ssl.SSLSocket;
-import org.csploit.android.helpers.LoggingHelper;
 import javax.net.ssl.SSLSocketFactory;
-import org.csploit.android.helpers.LoggingHelper;
 import javax.net.ssl.TrustManager;
-import org.csploit.android.helpers.LoggingHelper;
 import javax.net.ssl.X509TrustManager;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * SslCertificateHelper - SSL/TLS certificate analysis and validation utilities.

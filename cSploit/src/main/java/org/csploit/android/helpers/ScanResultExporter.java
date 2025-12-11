@@ -20,40 +20,24 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.Intent;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.Uri;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Environment;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.core.content.FileProvider;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedWriter;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileWriter;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.text.SimpleDateFormat;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Date;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Locale;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ScanResultExporter - Export scan results to various formats

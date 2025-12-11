@@ -1,6 +1,6 @@
 package org.csploit.android.net.datasource;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.RemoteReader;
 import org.csploit.android.net.reference.Link;
 
@@ -32,7 +32,7 @@ class Generic {
 
     @Override
     public void onError(byte[] description) {
-      Logger.warning(String.format("%s: %s", link.getUrl(), new String(description)));
+      LoggingHelper.warning(String.format("%s: %s", link.getUrl(), new String(description)));
     }
   }
 }

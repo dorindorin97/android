@@ -20,28 +20,17 @@ package org.csploit.android.helpers;
 import androidx.annotation.NonNull;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Date;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.UUID;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ConcurrentHashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * NetworkSessionManager - Manages network scanning sessions and state.

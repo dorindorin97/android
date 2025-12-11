@@ -14,12 +14,31 @@ import java.util.Locale;
 /**
  * Enhanced logging utility with structured logging capabilities.
  * Provides methods for consistent logging across the application.
+ *
+ * This class consolidates logging functionality from the legacy Logger class
+ * and provides both explicit tag logging and automatic class/method detection.
+ *
+ * Usage:
+ * {@code
+ * // With explicit tag
+ * LoggingHelper.d("MyClass", "Debug message");
+ *
+ * // With automatic detection (slower but convenient for debugging)
+ * LoggingHelper.debug("Debug message");
+ *
+ * // With exception
+ * LoggingHelper.e("MyClass", "Error occurred", exception);
+ * }
  */
 public final class LoggingHelper {
 
     private static final String TAG = "cSploit";
-    private static final SimpleDateFormat dateFormat = 
+    private static final String CLASS_NAME = LoggingHelper.class.getName();
+    private static final SimpleDateFormat dateFormat =
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+
+    // Enable/disable debug logging globally
+    private static volatile boolean sDebugEnabled = true;
 
     /**
      * Log level for categorizing messages
@@ -39,6 +58,26 @@ public final class LoggingHelper {
             this.letter = letter;
         }
     }
+
+    // ==================== Debug Control ====================
+
+    /**
+     * Enable or disable debug logging globally.
+     * @param enabled true to enable debug logging
+     */
+    public static void setDebugEnabled(boolean enabled) {
+        sDebugEnabled = enabled;
+    }
+
+    /**
+     * Check if debug logging is enabled.
+     * @return true if debug logging is enabled
+     */
+    public static boolean isDebugEnabled() {
+        return sDebugEnabled;
+    }
+
+    // ==================== Tagged Logging Methods ====================
 
     /**
      * Log a verbose message
@@ -110,14 +149,85 @@ public final class LoggingHelper {
         e(tag, "Exception occurred", throwable);
     }
 
+    // ==================== Auto-detecting Logging Methods ====================
+    // These methods automatically detect the calling class and method name
+
     /**
-     * Core logging method
+     * Log a verbose message with automatic class/method detection.
+     */
+    public static void verbose(@NonNull String message) {
+        logAuto(LogLevel.VERBOSE, message, null);
+    }
+
+    /**
+     * Log a debug message with automatic class/method detection.
+     */
+    public static void debug(@NonNull String message) {
+        logAuto(LogLevel.DEBUG, message, null);
+    }
+
+    /**
+     * Log an info message with automatic class/method detection.
+     */
+    public static void info(@NonNull String message) {
+        logAuto(LogLevel.INFO, message, null);
+    }
+
+    /**
+     * Log a warning message with automatic class/method detection.
+     */
+    public static void warning(@NonNull String message) {
+        logAuto(LogLevel.WARN, message, null);
+    }
+
+    /**
+     * Log an error message with automatic class/method detection.
+     */
+    public static void error(@NonNull String message) {
+        logAuto(LogLevel.ERROR, message, null);
+    }
+
+    /**
+     * Log an error message with exception using automatic detection.
+     */
+    public static void error(@NonNull String message, @NonNull Throwable throwable) {
+        logAuto(LogLevel.ERROR, message, throwable);
+    }
+
+    /**
+     * Log just an exception with automatic detection.
+     */
+    public static void exception(@NonNull Throwable throwable) {
+        logAuto(LogLevel.ERROR, "Exception occurred", throwable);
+    }
+
+    /**
+     * Log with custom tag (useful for specific components).
+     * @param customTag custom tag suffix
+     * @param message log message
+     */
+    public static void debugWithTag(@NonNull String customTag, @NonNull String message) {
+        if (!sDebugEnabled) {
+            return;
+        }
+        Log.d(TAG + "[" + customTag + "]", message != null ? message : "(null)");
+    }
+
+    // ==================== Core Logging Methods ====================
+
+    /**
+     * Core logging method with explicit tag.
      */
     private static void log(
             @NonNull LogLevel level,
             @NonNull String tag,
             @NonNull String message,
             @Nullable Throwable throwable) {
+
+        // Skip debug logs if disabled
+        if (!sDebugEnabled && level.level <= Log.DEBUG) {
+            return;
+        }
 
         String logMessage = String.format(
             "%s [%s] %s: %s",
@@ -136,6 +246,37 @@ public final class LoggingHelper {
     }
 
     /**
+     * Core logging method with automatic class/method detection.
+     */
+    private static void logAuto(
+            @NonNull LogLevel level,
+            @NonNull String message,
+            @Nullable Throwable throwable) {
+
+        // Skip debug logs if disabled
+        if (!sDebugEnabled && level.level <= Log.DEBUG) {
+            return;
+        }
+
+        // Get caller info
+        CallerInfo caller = getCallerInfo();
+
+        String logTag = String.format("%s[%s.%s:%d]",
+            TAG, caller.className, caller.methodName, caller.lineNumber);
+
+        String logMessage = message != null ? message : "(null)";
+
+        // Log to Android logger
+        if (throwable != null) {
+            Log.println(level.level, logTag, logMessage + "\n" + getStackTrace(throwable));
+        } else {
+            Log.println(level.level, logTag, logMessage);
+        }
+    }
+
+    // ==================== Helper Methods ====================
+
+    /**
      * Get current timestamp
      */
     @NonNull
@@ -152,6 +293,44 @@ public final class LoggingHelper {
         throwable.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
+
+    /**
+     * Get caller class and method information.
+     */
+    @NonNull
+    private static CallerInfo getCallerInfo() {
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+
+        for (StackTraceElement element : elements) {
+            String className = element.getClassName();
+            if (className.startsWith("org.csploit.android.") && !className.equals(CLASS_NAME)) {
+                return new CallerInfo(
+                    className.replace("org.csploit.android.", ""),
+                    element.getMethodName(),
+                    element.getLineNumber()
+                );
+            }
+        }
+
+        return new CallerInfo("unknown", "unknown", -1);
+    }
+
+    /**
+     * Caller information holder
+     */
+    private static class CallerInfo {
+        final String className;
+        final String methodName;
+        final int lineNumber;
+
+        CallerInfo(String className, String methodName, int lineNumber) {
+            this.className = className;
+            this.methodName = methodName;
+            this.lineNumber = lineNumber;
+        }
+    }
+
+    // ==================== Debug Utility Methods ====================
 
     /**
      * Log method entry (for debugging)
@@ -181,7 +360,7 @@ public final class LoggingHelper {
             @NonNull String tag,
             @NonNull String operation,
             long durationMs) {
-        
+
         d(tag, operation + " took " + durationMs + "ms");
     }
 
@@ -200,7 +379,7 @@ public final class LoggingHelper {
             @NonNull String tag,
             @NonNull String name,
             @Nullable Object obj) {
-        
+
         d(tag, name + " = " + (obj != null ? obj : "null"));
     }
 
@@ -211,7 +390,54 @@ public final class LoggingHelper {
             @NonNull String tag,
             @NonNull String name,
             @Nullable java.util.Collection<?> collection) {
-        
+
         d(tag, name + " size = " + (collection != null ? collection.size() : 0));
+    }
+
+    // ==================== Timing Utilities ====================
+
+    /**
+     * Start a timed operation. Returns the start time in nanoseconds.
+     */
+    public static long startTiming() {
+        return java.lang.System.nanoTime();
+    }
+
+    /**
+     * End a timed operation and log the duration.
+     */
+    public static void endTiming(@NonNull String tag, @NonNull String operation, long startNanos) {
+        long durationMs = (java.lang.System.nanoTime() - startNanos) / 1_000_000;
+        logPerformance(tag, operation, durationMs);
+    }
+
+    /**
+     * Create a scoped timer that logs duration when closed.
+     */
+    @NonNull
+    public static ScopedTimer scopedTimer(@NonNull String tag, @NonNull String operation) {
+        return new ScopedTimer(tag, operation);
+    }
+
+    /**
+     * Scoped timer that logs duration when closed.
+     * Use with try-with-resources for automatic timing.
+     */
+    public static class ScopedTimer implements AutoCloseable {
+        private final String tag;
+        private final String operation;
+        private final long startNanos;
+
+        ScopedTimer(String tag, String operation) {
+            this.tag = tag;
+            this.operation = operation;
+            this.startNanos = java.lang.System.nanoTime();
+        }
+
+        @Override
+        public void close() {
+            long durationMs = (java.lang.System.nanoTime() - startNanos) / 1_000_000;
+            logPerformance(tag, operation, durationMs);
+        }
     }
 }

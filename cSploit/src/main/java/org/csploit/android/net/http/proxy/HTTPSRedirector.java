@@ -20,10 +20,9 @@ package org.csploit.android.net.http.proxy;
 
 import android.content.Context;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.ConcurrencyHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.http.RequestParser;
 
 import java.io.BufferedOutputStream;
@@ -84,7 +83,7 @@ public class HTTPSRedirector implements Runnable
   }
 
   public void stop(){
-    Logger.debug("Stopping HTTPS redirector ...");
+    LoggingHelper.debug("Stopping HTTPS redirector ...");
 
     try{
       if(mSocket != null)
@@ -102,7 +101,7 @@ public class HTTPSRedirector implements Runnable
   @Override
   public void run(){
     try{
-      Logger.debug("HTTPS redirector started on " + mAddress + ":" + mPort);
+      LoggingHelper.debug("HTTPS redirector started on " + mAddress + ":" + mPort);
 
       if(mSocket == null)
         mSocket = getSSLSocket();
@@ -117,7 +116,7 @@ public class HTTPSRedirector implements Runnable
             try{
               String clientAddress = client.getInetAddress().getHostAddress();
 
-              Logger.debug("Incoming connection from " + clientAddress);
+              LoggingHelper.debug("Incoming connection from " + clientAddress);
 
               InputStream reader = client.getInputStream();
 
@@ -171,7 +170,7 @@ public class HTTPSRedirector implements Runnable
                     CookieCleaner.getInstance().addCleaned(clientAddress, serverName);
                     HTTPSMonitor.getInstance().addURL(clientAddress, url);
 
-                    Logger.warning("Redirecting " + clientAddress + " to " + url);
+                    LoggingHelper.warning("Redirecting " + clientAddress + " to " + url);
 
                     writer.write(response.getBytes());
                     writer.flush();
@@ -193,7 +192,7 @@ public class HTTPSRedirector implements Runnable
         }
       }
 
-      Logger.debug("HTTPS redirector stopped.");
+      LoggingHelper.debug("HTTPS redirector stopped.");
     }
     catch(Exception e){
       LoggingHelper.e(TAG, "HTTPS redirector error", e);

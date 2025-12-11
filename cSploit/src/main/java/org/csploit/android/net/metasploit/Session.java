@@ -6,9 +6,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.net.Target;
 
 /**
@@ -105,10 +104,10 @@ public class Session extends Thread {
         mRunning=false;
       }
     } catch (RPCClient.MSFException e) {
-      Logger.warning("cannot stop session #"+mJobId);
+      LoggingHelper.warning("cannot stop session #"+mJobId);
       LoggingHelper.e(TAG, "Failed to stop MSF session", e);
     } catch (IOException e) {
-      Logger.warning("cannot stop session #" + mJobId);
+      LoggingHelper.warning("cannot stop session #" + mJobId);
       LoggingHelper.e(TAG, "Failed to stop session IO", e);
     }
   }

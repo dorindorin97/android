@@ -22,7 +22,7 @@ import java.net.InetAddress;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Packet;
 
@@ -41,7 +41,7 @@ public class TcpDump extends Tool{
         Packet p = (Packet)e;
         onPacket(p.src, p.dst, p.len);
       } else {
-        Logger.warning("Unknown event: " + e);
+        LoggingHelper.warning("Unknown event: " + e);
       }
     }
 
