@@ -19,20 +19,13 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.ApplicationInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.pm.PackageManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.BuildConfig;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for application information and version management.

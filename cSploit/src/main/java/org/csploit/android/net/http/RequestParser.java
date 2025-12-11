@@ -20,7 +20,7 @@ package org.csploit.android.net.http;
 
 import android.util.Patterns;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.ByteBuffer;
 import org.csploit.android.net.http.proxy.DNSCache;
 
@@ -378,7 +378,7 @@ public class RequestParser
       try {
         cookie = new HttpCookie(cookieName, cookieValue);
        } catch (IllegalArgumentException e){
-         Logger.error("Invalid cookie. name=" + cookieName + ":" + cookieValue);
+         LoggingHelper.error("Invalid cookie. name=" + cookieName + ":" + cookieValue);
          continue;
        }
 

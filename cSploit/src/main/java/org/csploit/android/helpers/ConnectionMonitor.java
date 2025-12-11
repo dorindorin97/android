@@ -20,33 +20,20 @@ package org.csploit.android.helpers;
 import android.content.BroadcastReceiver;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.Context;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.Intent;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.IntentFilter;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.ConnectivityManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.Network;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkCapabilities;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkRequest;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.lang.ref.WeakReference;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ConnectionMonitor - Monitor network connectivity changes

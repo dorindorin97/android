@@ -40,7 +40,7 @@ import android.widget.TextView;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Plugin;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
@@ -48,7 +48,6 @@ import org.csploit.android.gui.dialogs.ConfirmDialog.ConfirmDialogListener;
 import org.csploit.android.gui.dialogs.InputDialog;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.net.Network;
@@ -332,7 +331,7 @@ public class PortScanner extends Plugin {
                       hideParametersField();
                       mMenu.findItem(R.id.scanner_custom_parameters).setChecked(false);
 
-                      Logger.debug("mCustomPorts = " + mCustomPorts);
+                      LoggingHelper.debug("mCustomPorts = " + mCustomPorts);
                     } else
                       UIHelper.error(PortScanner.this, getString(R.string.error), getString(R.string.empty_port_list));
                   }

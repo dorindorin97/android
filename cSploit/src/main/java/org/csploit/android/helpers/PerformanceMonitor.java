@@ -17,16 +17,12 @@
 package org.csploit.android.helpers;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
+
 import org.csploit.android.BuildConfig;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ConcurrentHashMap;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Performance monitoring helper to track operation durations and identify bottlenecks.

@@ -1,6 +1,6 @@
 package org.csploit.android.net.datasource;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.RemoteReader;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.reference.CVE;
@@ -100,7 +100,7 @@ class CVEDetails {
 
     @Override
     public void onError(byte[] description) {
-      Logger.error(String.format("%s: %s", reference.getUrl(), new String(description)));
+      LoggingHelper.error(String.format("%s: %s", reference.getUrl(), new String(description)));
     }
   }
 }

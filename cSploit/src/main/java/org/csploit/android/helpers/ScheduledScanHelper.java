@@ -19,19 +19,13 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.lang.ref.WeakReference;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledFuture;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper for scheduling and managing periodic network scans.

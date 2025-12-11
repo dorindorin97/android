@@ -42,6 +42,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.csploit.android.R;
 import org.csploit.android.WifiScannerFragment;
 import org.csploit.android.gui.dialogs.FatalDialog;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.NetworkHelper;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.GitHubParser;
@@ -154,7 +155,7 @@ public class System {
   public static void init(Context context) throws Exception {
     mContext = new WeakReference<>(context);
     try {
-      Logger.debug("initializing System...");
+      LoggingHelper.debug("initializing System...");
       Context ctx = getContextSafe();
       if (ctx == null) {
         throw new IllegalStateException("Context is null during initialization");
@@ -261,7 +262,7 @@ public class System {
     String line;
     int ret = -1;
 
-    Logger.debug("Starting core daemon with su...");
+    LoggingHelper.debug("Starting core daemon with su...");
     
     try {
       Process shell = Runtime.getRuntime().exec("su");
@@ -271,14 +272,14 @@ public class System {
       cmd = String.format("{ echo 'ACCESS GRANTED' >&2; cd '%s' && exec ./start_daemon.sh ;} || exit 1\n",
               System.getCorePath());
 
-      Logger.debug("Executing: " + cmd);
+      LoggingHelper.debug("Executing: " + cmd);
       writer.write(cmd.getBytes());
       writer.flush();
       writer.close(); // Close stdin to signal end of input
       writer = null;
 
       ret = shell.waitFor();
-      Logger.debug("su process exited with code: " + ret);
+      LoggingHelper.debug("su process exited with code: " + ret);
 
       if (ret != 0) {
         reader = new BufferedReader(new InputStreamReader(shell.getErrorStream()));
@@ -286,19 +287,19 @@ public class System {
         while ((line = reader.readLine()) != null) {
           if (line.equals("ACCESS GRANTED")) {
             access_granted = true;
-            Logger.debug("'ACCESS GRANTED' found");
+            LoggingHelper.debug("'ACCESS GRANTED' found");
           } else
-            Logger.warning("STDERR: " + line);
+            LoggingHelper.warning("STDERR: " + line);
         }
       } else
         access_granted = true;
 
     } catch (IOException e) {
       // command "su" not found or cannot write to it's stdin
-      Logger.error("IOException during su execution: " + e.getMessage());
+      LoggingHelper.error("IOException during su execution: " + e.getMessage());
     } catch (InterruptedException e) {
       // interrupted while waiting for shell exit value
-      Logger.error("Interrupted during su execution: " + e.getMessage());
+      LoggingHelper.error("Interrupted during su execution: " + e.getMessage());
     } finally {
       if (writer != null)
         try {
@@ -315,7 +316,7 @@ public class System {
     mKnownIssues.fromFile(String.format("%s/issues", getCorePath()));
 
     if (!access_granted) {
-      Logger.error("Root access was not granted. Make sure the device is rooted and su permission is allowed for this app.");
+      LoggingHelper.error("Root access was not granted. Make sure the device is rooted and su permission is allowed for this app.");
       throw new SuException();
     }
 
@@ -331,7 +332,7 @@ public class System {
       throw daemonException;
     }
     
-    Logger.debug("Core daemon started successfully");
+    LoggingHelper.debug("Core daemon started successfully");
   }
 
   /**
@@ -342,7 +343,7 @@ public class System {
       return; // daemon is not running
     }
     if (!Client.isAuthenticated() && !Client.Login("android", "DEADBEEF")) {
-      Logger.error("cannot login to daemon");
+      LoggingHelper.error("cannot login to daemon");
     }
     Client.Shutdown();
     Client.Disconnect();
@@ -374,7 +375,7 @@ public class System {
           
           connected = Client.Connect(socket_path);
           if (!connected) {
-            Logger.debug("Waiting for daemon... attempt " + (i + 1) + "/" + maxRetries);
+            LoggingHelper.debug("Waiting for daemon... attempt " + (i + 1) + "/" + maxRetries);
           }
         }
         
@@ -512,14 +513,14 @@ public class System {
         try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(filename, true))) {
           bWriter.write(trace);
         } catch (IOException ioe) {
-          Logger.error(ioe.toString());
+          LoggingHelper.error(ioe.toString());
         }
       }
     }
 
     setLastError(message);
-    Logger.error(message);
-    Logger.error(trace);
+    LoggingHelper.error(message);
+    LoggingHelper.error(trace);
   }
 
   public static String getPlatform() {
@@ -541,7 +542,7 @@ public class System {
   public static boolean isARM() {
     String abi = Build.CPU_ABI;
 
-    Logger.debug("Build.CPU_ABI = " + abi);
+    LoggingHelper.debug("Build.CPU_ABI = " + abi);
 
     return Build.CPU_ABI.toLowerCase().startsWith("armeabi");
   }
@@ -633,7 +634,7 @@ public class System {
 
     Context ctx = getContextSafe();
     if (ctx == null) {
-      Logger.error("Context has been garbage collected in preloadServices");
+      LoggingHelper.error("Context has been garbage collected in preloadServices");
       return;
     }
     String servicesFilePath = ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-services";
@@ -663,7 +664,7 @@ public class System {
       mVendors = new HashMap<>();
       Context ctx = getContextSafe();
       if (ctx == null) {
-        Logger.error("Context has been garbage collected in preloadVendors");
+        LoggingHelper.error("Context has been garbage collected in preloadVendors");
         return;
       }
       String vendorFilePath = ctx.getFilesDir().getAbsolutePath() + "/tools/nmap/nmap-mac-prefixes";
@@ -724,7 +725,7 @@ public class System {
       reader = new BufferedReader(new FileReader(filePath));
       return reader.readLine().trim();
     } catch (IOException e) {
-      Logger.debug(e.getMessage());
+      LoggingHelper.debug(e.getMessage());
     } finally {
       try {
         if (reader != null)
@@ -766,7 +767,7 @@ public class System {
   public static boolean isServiceRunning(String name) {
     Context ctx = getContextSafe();
     if (ctx == null) {
-      Logger.error("Context has been garbage collected in isServiceRunning");
+      LoggingHelper.error("Context has been garbage collected in isServiceRunning");
       return false;
     }
     ActivityManager manager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
@@ -1092,7 +1093,7 @@ public class System {
     boolean hasDaemon = daemon.exists();
     
     if (hasVersion && (!hasStartScript || !hasDaemon)) {
-      Logger.warning("Core partially installed - VERSION exists but missing: " +
+      LoggingHelper.warning("Core partially installed - VERSION exists but missing: " +
         (!hasStartScript ? "start_daemon.sh " : "") +
         (!hasDaemon ? "cSploitd" : ""));
     }
@@ -1235,7 +1236,7 @@ public class System {
     try {
       return getTargetByAddress(InetAddress.getByName(address));
     } catch (UnknownHostException e) {
-      Logger.error("cannot convert '" + address + "' to InetAddress: " + e.getMessage());
+      LoggingHelper.error("cannot convert '" + address + "' to InetAddress: " + e.getMessage());
     }
     return null;
   }
@@ -1254,7 +1255,7 @@ public class System {
 
   public static void registerPlugin(Plugin plugin) {
     if (mPlugins.contains(plugin)) {
-      Logger.warning("registerPlugin() plugin " + plugin.getName() + " already added");
+      LoggingHelper.warning("registerPlugin() plugin " + plugin.getName() + " already added");
     } else
       mPlugins.add(plugin);
   }
@@ -1282,7 +1283,7 @@ public class System {
   public static void setCurrentPlugin(Plugin plugin) {
     Context ctx = getContextSafe();
     String pluginName = (ctx != null) ? ctx.getString(plugin.getName()) : "unknown";
-    Logger.debug("Setting current plugin : " + pluginName);
+    LoggingHelper.debug("Setting current plugin : " + pluginName);
 
     mCurrentPlugin = plugin;
   }
@@ -1324,13 +1325,13 @@ public class System {
       String line = reader.readLine();
       return line != null && line.trim().equals("1");
     } catch (IOException e) {
-      Logger.warning(e.toString());
+      LoggingHelper.warning(e.toString());
       return false;
     }
   }
 
   public static void setForwarding(boolean enabled) {
-    Logger.debug("Setting ipv4 forwarding to " + enabled);
+    LoggingHelper.debug("Setting ipv4 forwarding to " + enabled);
 
     String status = (enabled ? "1" : "0"),
             cmd = "echo " + status + " > " + IPV4_FORWARD_FILEPATH;
@@ -1338,7 +1339,7 @@ public class System {
     try {
       getTools().shell.run(cmd);
     } catch (Exception e) {
-      Logger.error(e.getMessage());
+      LoggingHelper.error(e.getMessage());
     }
   }
 
@@ -1347,7 +1348,7 @@ public class System {
 
     try {
       if (releaseLocks) {
-        Logger.debug("Releasing locks.");
+        LoggingHelper.debug("Releasing locks.");
 
         if (mWifiLock != null && mWifiLock.isHeld())
           mWifiLock.release();

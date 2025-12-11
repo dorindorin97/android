@@ -20,7 +20,7 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.FuseBind;
 
@@ -39,7 +39,7 @@ public class Fusemounts extends Tool
         FuseBind f = (FuseBind)e;
         onNewMountpoint(f.source, f.mountpoint);
       } else {
-        Logger.error("unknown event: " + e);
+        LoggingHelper.error("unknown event: " + e);
       }
     }
 

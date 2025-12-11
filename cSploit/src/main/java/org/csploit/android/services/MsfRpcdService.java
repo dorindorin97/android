@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.SecureCredentialsHelper;
 import org.csploit.android.net.metasploit.RPCClient;
@@ -136,7 +136,7 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
 
     if(connect(isLocal())) {
       if(isLocal()) {
-        Logger.warning("connected to a lost instance of the msfrpcd");
+        LoggingHelper.warning("connected to a lost instance of the msfrpcd");
       }
       return true;
     }
@@ -149,7 +149,7 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
       nativeProcess = System.getTools().msfrpcd.async(user, password, port, ssl, new Receiver());
       return true;
     } catch (ChildManager.ChildNotStartedException e) {
-      Logger.error(e.getMessage());
+      LoggingHelper.error(e.getMessage());
       sendIntent(STATUS_ACTION, STATUS, Status.START_FAILED);
     }
     return false;
@@ -164,11 +164,11 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
     do {
       try {
         System.setMsfRpc(new RPCClient(host, user, password, port, ssl));
-        Logger.info("successfully connected to MSF RPC Daemon ");
+        LoggingHelper.info("successfully connected to MSF RPC Daemon ");
         sendIntent(STATUS_ACTION, STATUS, Status.CONNECTED);
         return true;
       } catch (Exception e) {
-        Logger.warning(e.getClass().getName() + ": " + e.getMessage());
+        LoggingHelper.warning(e.getClass().getName() + ": " + e.getMessage());
       }
 
       if(isRunning()) {

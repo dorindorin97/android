@@ -19,44 +19,24 @@ package org.csploit.android.helpers;
 import org.apache.commons.compress.utils.IOUtils;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Child;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.core.Logger;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ip;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.NetworkInterface;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.SocketException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.UnknownHostException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Locale;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Matcher;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Unified network utility class for cSploit.
@@ -501,7 +481,7 @@ public final class NetworkHelper {
                     }
                 }
                 String res = sb.toString();
-                Logger.debug("found system default gateway for interface " + iface + ": " + res);
+                LoggingHelper.debug("found system default gateway for interface " + iface + ": " + res);
                 return res;
             }
         } catch (IOException e) {
@@ -510,7 +490,7 @@ public final class NetworkHelper {
             IOUtils.closeQuietly(reader);
         }
 
-        Logger.warning("falling back to ip tool");
+        LoggingHelper.warning("falling back to ip tool");
         return getIfaceGatewayUsingIp(iface);
     }
 

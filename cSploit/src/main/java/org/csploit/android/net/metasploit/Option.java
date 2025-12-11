@@ -1,6 +1,6 @@
 package org.csploit.android.net.metasploit;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -178,7 +178,7 @@ public class Option {
           for(Object v : valid) {
             validLineBuilder.append(" ").append(v);
           }
-          Logger.warning("expected: (" + validLineBuilder.toString() + ") got: " + value);
+          LoggingHelper.warning("expected: (" + validLineBuilder.toString() + ") got: " + value);
           throw new NumberFormatException("invalid choice");
         }
         mValue = value;

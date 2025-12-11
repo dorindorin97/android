@@ -20,7 +20,7 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Attempts;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Login;
@@ -56,14 +56,14 @@ public class Hydra extends Tool
         } else if(m.severity == Message.Severity.WARNING) {
           onWarning(m.message);
         } else {
-          Logger.error("Unknown event: " + e);
+          LoggingHelper.error("Unknown event: " + e);
         }
       } else if(e instanceof Login) {
         Login login = (Login) e;
 
         onAccountFound(login.login, login.password);
       } else {
-        Logger.error("Unknown event: " + e);
+        LoggingHelper.error("Unknown event: " + e);
       }
     }
   }

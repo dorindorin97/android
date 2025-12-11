@@ -28,9 +28,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.net.GitHubParser;
 import org.json.JSONException;
 

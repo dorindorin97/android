@@ -20,29 +20,18 @@ package org.csploit.android.helpers;
 import android.app.NotificationChannel;
 import org.csploit.android.helpers.LoggingHelper;
 import android.app.NotificationManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.app.PendingIntent;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.Context;
-import org.csploit.android.helpers.LoggingHelper;
 import android.graphics.Bitmap;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.core.app.NotificationCompat;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * NotificationHelper - Centralized notification management utility

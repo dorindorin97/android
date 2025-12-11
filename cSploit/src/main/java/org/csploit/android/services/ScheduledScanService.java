@@ -39,9 +39,8 @@ import androidx.preference.PreferenceManager;
 import org.csploit.android.R;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.helpers.ScanResultExporter;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
@@ -193,7 +192,7 @@ public class ScheduledScanService extends Service {
 
     private void startScan() {
         if (mScanning.getAndSet(true)) {
-            Logger.warning("Scan already in progress");
+            LoggingHelper.warning("Scan already in progress");
             return;
         }
 
@@ -230,13 +229,13 @@ public class ScheduledScanService extends Service {
     }
 
     private void performScan(ScanType scanType, boolean autoExport) {
-        Logger.info("Starting scheduled scan: " + scanType.name);
+        LoggingHelper.info("Starting scheduled scan: " + scanType.name);
         List<Target> discoveredTargets = new ArrayList<>();
 
         try {
             // Initialize network if needed
             if (!System.isCoreInitialized()) {
-                Logger.warning("Core not initialized, attempting initialization");
+                LoggingHelper.warning("Core not initialized, attempting initialization");
                 // Cannot initialize here, need main activity
                 sendScanCompleteNotification(false, 0, "System not initialized");
                 return;
@@ -329,7 +328,7 @@ public class ScheduledScanService extends Service {
     private void performVulnerabilityScan() {
         // Trigger exploit search for targets with open ports
         // This would integrate with the existing exploit finder
-        Logger.info("Vulnerability scan placeholder - integrate with ExploitFinder");
+        LoggingHelper.info("Vulnerability scan placeholder - integrate with ExploitFinder");
     }
 
     private void exportResults(List<Target> targets) {
@@ -342,7 +341,7 @@ public class ScheduledScanService extends Service {
             exporter.exportToJson(targets, filename);
             exporter.exportToHtml(targets, filename);
 
-            Logger.info("Scheduled scan results exported: " + filename);
+            LoggingHelper.info("Scheduled scan results exported: " + filename);
         } catch (Exception e) {
             LoggingHelper.e(TAG, "Failed to export results", e);
         }
@@ -443,7 +442,7 @@ public class ScheduledScanService extends Service {
                 pendingIntent
         );
 
-        Logger.info("Scheduled scan: " + scanType.name + " every " + interval.label);
+        LoggingHelper.info("Scheduled scan: " + scanType.name + " every " + interval.label);
     }
 
     /**
@@ -465,7 +464,7 @@ public class ScheduledScanService extends Service {
 
         alarmManager.cancel(pendingIntent);
 
-        Logger.info("Cancelled scheduled scans");
+        LoggingHelper.info("Cancelled scheduled scans");
     }
 
     /**

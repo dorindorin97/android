@@ -21,18 +21,11 @@ package org.csploit.android.net.http.server;
 import java.io.BufferedOutputStream;
 import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.Socket;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Arrays;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.core.Logger;
-import org.csploit.android.helpers.LoggingHelper;
 
 public class ServerThread extends Thread
 {
@@ -71,7 +64,7 @@ public class ServerThread extends Thread
         mWriter.write(mData);
       }
       else
-        Logger.warning("Empty HTTP request.");
+        LoggingHelper.warning("Empty HTTP request.");
     }
     catch(IOException e){
       LoggingHelper.e(TAG, "ServerThread request error", e);

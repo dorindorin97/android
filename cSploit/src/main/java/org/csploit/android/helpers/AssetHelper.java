@@ -19,45 +19,26 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.res.AssetManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileOutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStreamReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.OutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.nio.charset.StandardCharsets;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.MessageDigest;
-import org.csploit.android.helpers.LoggingHelper;
 import java.security.NoSuchAlgorithmException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.zip.GZIPInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.zip.GZIPOutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.zip.ZipEntry;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.zip.ZipInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * AssetHelper - Utilities for working with app assets and files.

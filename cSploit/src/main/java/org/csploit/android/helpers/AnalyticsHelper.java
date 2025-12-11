@@ -19,14 +19,10 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Privacy-focused analytics helper for tracking app usage patterns.

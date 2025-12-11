@@ -21,20 +21,12 @@ package org.csploit.android.net.http.server;
 import java.io.File;
 import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileInputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.ServerSocket;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.Socket;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.core.Logger;
-import org.csploit.android.helpers.LoggingHelper;
 
 public class Server implements Runnable
 {
@@ -100,13 +92,13 @@ public class Server implements Runnable
   }
 
   public void stop(){
-    Logger.debug("Stopping server ...");
+    LoggingHelper.debug("Stopping server ...");
 
     try{
       if(mSocket != null)
         mSocket.close();
     } catch(IOException e){
-      Logger.debug("Server socket close failed: " + e.getMessage());
+      LoggingHelper.debug("Server socket close failed: " + e.getMessage());
     }
 
     mRunning = false;
@@ -119,7 +111,7 @@ public class Server implements Runnable
       if(mSocket == null)
         mSocket = new ServerSocket(mPort, BACKLOG, mAddress);
 
-      Logger.debug("Server started on " + mAddress + ":" + mPort);
+      LoggingHelper.debug("Server started on " + mAddress + ":" + mPort);
 
       mRunning = true;
 
@@ -134,7 +126,7 @@ public class Server implements Runnable
         }
       }
 
-      Logger.debug("Server stopped.");
+      LoggingHelper.debug("Server stopped.");
     }
     catch(IOException e){
       LoggingHelper.e(TAG, "Server IO error", e);

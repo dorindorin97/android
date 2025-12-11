@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 
 import com.github.zafarkhaja.semver.Version;
 
-import org.csploit.android.core.Logger;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.net.GitHubParser;
@@ -89,8 +88,8 @@ public class UpdateChecker extends Thread
 
       remoteURL = GitHubParser.getcSploitRepo().getLastReleaseAssetUrl();
 
-      Logger.debug(String.format("localVersion   = %s", localVersion));
-      Logger.debug(String.format("remoteVersion  = %s", remoteVersion));
+      LoggingHelper.debug(String.format("localVersion   = %s", localVersion));
+      LoggingHelper.debug(String.format("remoteVersion  = %s", remoteVersion));
 
       update = new ApkUpdate(mContext, remoteURL, remoteVersion);
 
@@ -118,18 +117,18 @@ public class UpdateChecker extends Thread
       remoteURL = GitHubParser.getCoreRepo().getLastReleaseAssetUrl(platform + ".");
 
       if(remoteURL == null) {
-        Logger.warning(String.format("unsupported platform ( %s )", platform));
+        LoggingHelper.warning(String.format("unsupported platform ( %s )", platform));
         platform = System.getCompatiblePlatform();
-        Logger.debug(String.format("trying with '%s'", platform));
+        LoggingHelper.debug(String.format("trying with '%s'", platform));
 
         remoteURL = GitHubParser.getCoreRepo().getLastReleaseAssetUrl(platform + ".");
       }
 
-      Logger.debug(String.format("localVersion   = %s", localVersion));
-      Logger.debug(String.format("remoteVersion  = %s", remoteVersion));
+      LoggingHelper.debug(String.format("localVersion   = %s", localVersion));
+      LoggingHelper.debug(String.format("remoteVersion  = %s", remoteVersion));
 
       if(remoteURL == null) {
-        Logger.warning(String.format("unsupported platform ( %s )", platform));
+        LoggingHelper.warning(String.format("unsupported platform ( %s )", platform));
         return null;
       }
 
@@ -162,19 +161,19 @@ public class UpdateChecker extends Thread
       remoteURL = GitHubParser.getRubyRepo().getLastReleaseAssetUrl(platform + ".");
 
       if(remoteURL == null) {
-        Logger.warning(String.format("unsupported platform ( %s )", platform));
+        LoggingHelper.warning(String.format("unsupported platform ( %s )", platform));
 
         platform = System.getCompatiblePlatform();
-        Logger.debug(String.format("trying with '%s'", platform));
+        LoggingHelper.debug(String.format("trying with '%s'", platform));
 
         remoteURL = GitHubParser.getRubyRepo().getLastReleaseAssetUrl(platform + ".");
       }
 
-      Logger.debug(String.format("localVersion   = %s", localVersion));
-      Logger.debug(String.format("remoteVersion  = %s", remoteVersion));
+      LoggingHelper.debug(String.format("localVersion   = %s", localVersion));
+      LoggingHelper.debug(String.format("remoteVersion  = %s", remoteVersion));
 
       if(remoteURL == null) {
-        Logger.warning(String.format("unsupported platform ( %s )", platform));
+        LoggingHelper.warning(String.format("unsupported platform ( %s )", platform));
         return null;
       }
 
@@ -224,7 +223,7 @@ public class UpdateChecker extends Thread
 
     send(UPDATE_CHECKING);
 
-    Logger.debug("Service started.");
+    LoggingHelper.debug("Service started.");
 
     SharedPreferences prefs = System.getSettings();
 
@@ -259,6 +258,6 @@ public class UpdateChecker extends Thread
       send(UPDATE_NOT_AVAILABLE);
     }
 
-    Logger.debug("Service stopped.");
+    LoggingHelper.debug("Service stopped.");
   }
 }

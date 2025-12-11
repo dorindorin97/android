@@ -14,7 +14,7 @@ import org.csploit.android.helpers.ToastHelper;
 import android.widget.Toast;
 
 import org.csploit.android.R;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.net.metasploit.MsfExploit;
 import org.csploit.android.net.metasploit.Option;
@@ -141,7 +141,7 @@ public class MsfPreferences extends PreferenceActivity {
       else
         error_message = "called without Payload or MsfExploit";
 
-      Logger.error(error_message);
+      LoggingHelper.error(error_message);
     }
 
     setTitle(title + " > " + getString(R.string.menu_settings));

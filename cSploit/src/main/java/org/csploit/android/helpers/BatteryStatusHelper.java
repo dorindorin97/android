@@ -19,20 +19,13 @@ package org.csploit.android.helpers;
 import android.content.BroadcastReceiver;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.Context;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.Intent;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.IntentFilter;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.BatteryManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.lang.ref.WeakReference;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper for monitoring device battery status.

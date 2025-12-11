@@ -19,43 +19,25 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.net.ConnectivityManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.Network;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkCapabilities;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkRequest;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.TrafficStats;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ConcurrentHashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ScheduledFuture;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicLong;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * NetworkMonitor - Real-time network traffic monitoring

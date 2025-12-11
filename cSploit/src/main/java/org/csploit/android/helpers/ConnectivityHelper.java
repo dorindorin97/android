@@ -19,19 +19,12 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.net.ConnectivityManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.Network;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkCapabilities;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkInfo;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for network connectivity detection and monitoring.

@@ -19,7 +19,6 @@
 package org.csploit.android.tools;
 
 import org.csploit.android.core.System;
-import org.csploit.android.core.Logger;
 import org.csploit.android.helpers.LoggingHelper;
 
 public class IPTables extends Tool
@@ -32,7 +31,7 @@ public class IPTables extends Tool
   }
 
   public void trafficRedirect(String to){
-    Logger.debug("Redirecting traffic to " + to);
+    LoggingHelper.debug("Redirecting traffic to " + to);
 
     try{
       super.run("-t nat -A PREROUTING -j DNAT -p tcp --to " + to);
@@ -43,7 +42,7 @@ public class IPTables extends Tool
   }
 
   public void undoTrafficRedirect(String to){
-    Logger.debug("Undoing traffic redirection");
+    LoggingHelper.debug("Undoing traffic redirection");
 
     try{
       super.run("-t nat -D PREROUTING -j DNAT -p tcp --to " + to);
@@ -54,7 +53,7 @@ public class IPTables extends Tool
   }
 
   public void portRedirect(int from, int to, boolean cleanRules){
-    Logger.debug("Redirecting traffic from port " + from + " to port " + to);
+    LoggingHelper.debug("Redirecting traffic from port " + from + " to port " + to);
 
     try{
       if (cleanRules) {
@@ -76,7 +75,7 @@ public class IPTables extends Tool
   }
 
   public void undoPortRedirect(int from, int to){
-    Logger.debug("Undoing port redirection");
+    LoggingHelper.debug("Undoing port redirection");
 
     try{
       // clear nat

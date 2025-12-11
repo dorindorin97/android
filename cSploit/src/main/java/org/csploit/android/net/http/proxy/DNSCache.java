@@ -18,7 +18,7 @@
  */
 package org.csploit.android.net.http.proxy;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -81,10 +81,10 @@ public class DNSCache
       address = InetAddress.getByName(server);
       mCache.put(server, address);
 
-      Logger.debug(server + " resolved to " + address.getHostAddress());
+      LoggingHelper.debug(server + " resolved to " + address.getHostAddress());
     }
     else
-      Logger.debug("Returning a cached DSN result for " + server + " : " + address.getHostAddress());
+      LoggingHelper.debug("Returning a cached DSN result for " + server + " : " + address.getHostAddress());
 
     return address;
   }

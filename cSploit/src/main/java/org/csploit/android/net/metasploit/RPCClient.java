@@ -25,7 +25,6 @@ import org.msgpack.unpacker.Unpacker;
 import org.msgpack.unpacker.Converter;
 
 import org.csploit.android.core.System;
-import org.csploit.android.core.Logger;
 import org.csploit.android.helpers.LoggingHelper;
 
 /**
@@ -230,7 +229,7 @@ public class RPCClient
           }
           org.csploit.android.core.System.getCurrentTarget().addSession(s);
         } catch ( UnknownHostException e) {
-          Logger.info(e.getMessage());
+          LoggingHelper.info(e.getMessage());
         }
       }
     } catch (IOException e) {
@@ -337,7 +336,7 @@ public class RPCClient
               }
               catch ( Exception e)
               {
-                Logger.warning("cannot parse \""+str+"\" as stack trace");
+                LoggingHelper.warning("cannot parse \""+str+"\" as stack trace");
                 LoggingHelper.e(TAG, "Failed to parse MSF stack trace", e);
               }
             }

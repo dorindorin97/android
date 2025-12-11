@@ -19,28 +19,17 @@ package org.csploit.android.helpers;
 import androidx.annotation.NonNull;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.net.Inet4Address;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.InetAddress;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.NetworkInterface;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.SocketException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.UnknownHostException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Enumeration;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for IP address manipulation and validation.

@@ -28,9 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Patterns;
 import org.apache.commons.net.util.SubnetUtils;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.helpers.NetworkHelper;
 
 import java.lang.reflect.Method;
@@ -144,7 +143,7 @@ public class Network implements Comparable<Network> {
     try {
       return connectivityManager.getClass().getDeclaredMethod("getTetheredIfaces");
     } catch (NoSuchMethodException e) {
-      Logger.warning("unable to get 'ConnectivityManager#getTetheredIfaces()': " + e.getMessage());
+      LoggingHelper.warning("unable to get 'ConnectivityManager#getTetheredIfaces()': " + e.getMessage());
       return null;
     }
   }
@@ -165,11 +164,11 @@ public class Network implements Comparable<Network> {
       for (InterfaceAddress ia : mInterface.getInterfaceAddresses()) {
         if(Patterns.IP_ADDRESS.matcher(ia.getAddress().getHostAddress()).matches()) {
           ifaceAddress = ia;
-          Logger.warning("interfaceAddress: " + ia.getAddress().getHostAddress() + "/" + Short.toString(ia.getNetworkPrefixLength()));
+          LoggingHelper.warning("interfaceAddress: " + ia.getAddress().getHostAddress() + "/" + Short.toString(ia.getNetworkPrefixLength()));
           break;
         }
         else
-          Logger.error("not valid ip: " + ia.getAddress().getHostAddress() + "/" + Short.toString(ia.getNetworkPrefixLength()));
+          LoggingHelper.error("not valid ip: " + ia.getAddress().getHostAddress() + "/" + Short.toString(ia.getNetworkPrefixLength()));
       }
       if (ifaceAddress == null){
         return false;
@@ -189,7 +188,7 @@ public class Network implements Comparable<Network> {
 
       return true;
     } catch (Exception e) {
-      Logger.error("Error: " + e.getLocalizedMessage());
+      LoggingHelper.error("Error: " + e.getLocalizedMessage());
     }
 
     return false;
@@ -201,7 +200,7 @@ public class Network implements Comparable<Network> {
     if(gateway != null) {
       mGateway = new IP4Address(gateway);
     } else {
-      Logger.warning("gateway not found");
+      LoggingHelper.warning("gateway not found");
     }
   }
 
@@ -212,7 +211,7 @@ public class Network implements Comparable<Network> {
     try {
       updateGateway();
     } catch (UnknownHostException e) {
-      Logger.warning(e.getMessage());
+      LoggingHelper.warning(e.getMessage());
     }
 
     if(!haveGateway())
@@ -262,7 +261,7 @@ public class Network implements Comparable<Network> {
     try {
       return isInternal(InetAddress.getByName(ip).getAddress());
     } catch (UnknownHostException e) {
-      Logger.error(e.getMessage());
+      LoggingHelper.error(e.getMessage());
     }
     return false;
   }
@@ -331,7 +330,7 @@ public class Network implements Comparable<Network> {
       String[] ifaces = (String[]) mTetheredIfacesMethod.invoke(mConnectivityManager);
       return ifaces.length > 0;
     } catch (Exception e) {
-      Logger.error("unable to retrieve tethered ifaces: " + e.getMessage());
+      LoggingHelper.error("unable to retrieve tethered ifaces: " + e.getMessage());
       return false;
     }
   }
@@ -358,11 +357,11 @@ public class Network implements Comparable<Network> {
       byte[] hwAddr = mInterface.getHardwareAddress();
       if (hwAddr != null && hwAddr.length > 0) {
         mCachedHardwareAddress = hwAddr;
-        Logger.debug("Successfully retrieved hardware address via NetworkInterface");
+        LoggingHelper.debug("Successfully retrieved hardware address via NetworkInterface");
         return mCachedHardwareAddress;
       }
     } catch (SocketException e) {
-      Logger.warning("NetworkInterface.getHardwareAddress() failed: " + e.getMessage());
+      LoggingHelper.warning("NetworkInterface.getHardwareAddress() failed: " + e.getMessage());
     }
 
     // Fallback method: Try WifiManager for WiFi interface (deprecated but reliable)
@@ -378,17 +377,17 @@ public class Network implements Comparable<Network> {
               hwAddr[i] = (byte) Integer.parseInt(parts[i], 16);
             }
             mCachedHardwareAddress = hwAddr;
-            Logger.debug("Successfully retrieved hardware address via WifiManager");
+            LoggingHelper.debug("Successfully retrieved hardware address via WifiManager");
             return mCachedHardwareAddress;
           }
         }
       } catch (Exception e) {
-        Logger.warning("WifiManager MAC retrieval failed: " + e.getMessage());
+        LoggingHelper.warning("WifiManager MAC retrieval failed: " + e.getMessage());
       }
     }
 
     // No hardware address available
-    Logger.debug("Could not retrieve hardware address - using null");
+    LoggingHelper.debug("Could not retrieve hardware address - using null");
     return null;
   }
 

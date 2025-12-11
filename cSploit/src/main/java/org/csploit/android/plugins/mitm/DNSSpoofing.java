@@ -21,55 +21,31 @@ package org.csploit.android.plugins.mitm;
 import android.content.SharedPreferences;
 import org.csploit.android.helpers.LoggingHelper;
 import android.os.Bundle;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.appcompat.app.AppCompatActivity;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.MenuItem;
-import org.csploit.android.helpers.LoggingHelper;
 import android.view.View;
-import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Button;
-import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ProgressBar;
-import org.csploit.android.helpers.LoggingHelper;
 import android.widget.TextView;
-import org.csploit.android.helpers.LoggingHelper;
 import android.widget.Toast;
-import org.csploit.android.helpers.LoggingHelper;
 import android.widget.ToggleButton;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.R;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.helpers.LoggingHelper;
-import org.csploit.android.core.Logger;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.gui.dialogs.ErrorDialog;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.AnimationHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.Ettercap;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.BufferedReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.BufferedWriter;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.File;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileOutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileReader;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.FileWriter;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 
 public class DNSSpoofing extends AppCompatActivity {
   private static final String TAG = "DNSSpoofing";
@@ -163,14 +139,14 @@ public class DNSSpoofing extends AppCompatActivity {
             }
         }
         catch (Exception e){
-            Logger.error("readDNSList() error: " + e.getLocalizedMessage());
+            LoggingHelper.error("readDNSList() error: " + e.getLocalizedMessage());
         }
     }
 
     public void saveDNSlist(){
 
         try {
-            Logger.info("saveDNSList() saving dnss to: " + System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns");
+            LoggingHelper.info("saveDNSList() saving dnss to: " + System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns");
             File f = new File(System.getContext().getFilesDir().getAbsolutePath() + "/tools/ettercap/share/etter.dns");
             try (FileOutputStream fos = new FileOutputStream(f)) {
                 fos.write(mTextDnsList.getText().toString().getBytes());
@@ -179,7 +155,7 @@ public class DNSSpoofing extends AppCompatActivity {
             ToastHelper.success(this, "Saved");
         }
         catch (Exception e){
-            Logger.error("readDNSList() error: " + e.getLocalizedMessage());
+            LoggingHelper.error("readDNSList() error: " + e.getLocalizedMessage());
             ToastHelper.error(this, "Error: " + e.getLocalizedMessage());
         }
     }
@@ -190,7 +166,7 @@ public class DNSSpoofing extends AppCompatActivity {
       mSpoofSession.start(new Ettercap.OnDNSSpoofedReceiver() {
         @Override
         public void onSpoofed(String line) {
-            Logger.info("DNSSpoofing.onevent() line: " + line);
+            LoggingHelper.info("DNSSpoofing.onevent() line: " + line);
 
             if (line.contains("spoofed to"))
                 ToastHelper.status(DNSSpoofing.this, line);

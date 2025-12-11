@@ -19,11 +19,8 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
-import org.csploit.android.helpers.LoggingHelper;
 import android.os.Build;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for tracking and managing feature flags.

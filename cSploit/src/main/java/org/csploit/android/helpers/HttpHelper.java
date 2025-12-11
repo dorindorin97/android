@@ -3,37 +3,22 @@ package org.csploit.android.helpers;
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import android.net.ConnectivityManager;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.Network;
-import org.csploit.android.helpers.LoggingHelper;
 import android.net.NetworkCapabilities;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.HttpURLConnection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.SocketTimeoutException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URL;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collections;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * HTTP utility helper for making HTTP requests with retry logic, timeout handling, and response caching.

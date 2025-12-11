@@ -18,11 +18,10 @@
  */
 package org.csploit.android.net.http.proxy;
 
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Profiler;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.ConcurrencyHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.ByteBuffer;
 import org.csploit.android.net.http.RequestParser;
 
@@ -111,7 +110,7 @@ public class StreamThread implements Runnable
           if(!isHandledContentType){
             Profiler.instance().profile("Fast streaming");
 
-            Logger.debug("Content type " + contentType + " not handled, start fast streaming ...");
+            LoggingHelper.debug("Content type " + contentType + " not handled, start fast streaming ...");
 
             mWriter.write(mBuffer.getData());
             mWriter.flush();
@@ -142,7 +141,7 @@ public class StreamThread implements Runnable
 
         // handle relocations for https support
         if(location != null && location.startsWith("https://") && System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true)){
-          Logger.warning("Patching 302 HTTPS redirect : " + location);
+          LoggingHelper.warning("Patching 302 HTTPS redirect : " + location);
 
           // update variables for further filtering
           mBuffer.replace("Location: https://".getBytes(), "Location: http://".getBytes());
@@ -181,7 +180,7 @@ public class StreamThread implements Runnable
             mBuffer.setData((headers + HEAD_SEPARATOR + body).getBytes(charset));
           }
           catch (UnsupportedEncodingException e){
-            Logger.error("UnsupportedEncoding: " + e.getLocalizedMessage());
+            LoggingHelper.error("UnsupportedEncoding: " + e.getLocalizedMessage());
             mBuffer.setData((headers + HEAD_SEPARATOR + body).getBytes());
           }
         }
@@ -197,7 +196,7 @@ public class StreamThread implements Runnable
       }
     }
     catch(OutOfMemoryError ome){
-      Logger.error(ome.toString());
+      LoggingHelper.error(ome.toString());
     }
     catch(Exception e){
       LoggingHelper.e(TAG, "Stream thread error", e);

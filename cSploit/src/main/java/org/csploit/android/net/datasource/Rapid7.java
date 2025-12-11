@@ -18,45 +18,26 @@
  */
 package org.csploit.android.net.datasource;
 
-import org.csploit.android.core.Logger;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.RemoteReader;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.metasploit.Author;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.metasploit.MsfExploit;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.CVE;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.Link;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.OSVDB;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.reference.Reference;
-import org.csploit.android.helpers.LoggingHelper;
 import org.unbescape.html.HtmlEscape;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.UnsupportedEncodingException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.MalformedURLException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.URLEncoder;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Collection;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.LinkedList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Matcher;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.regex.Pattern;
-import org.csploit.android.helpers.LoggingHelper;
 
 class Rapid7
 {
@@ -221,9 +202,9 @@ class Rapid7
                     new Generic.Receiver((Link) ref));
           }
         } catch (MalformedURLException e) {
-          Logger.error("Bad URL: " + ref);
+          LoggingHelper.error("Bad URL: " + ref);
         } catch (IllegalStateException e) {
-          Logger.warning(e.getMessage());
+          LoggingHelper.warning(e.getMessage());
         }
       }
     }
@@ -245,7 +226,7 @@ class Rapid7
 
     @Override
     public void onError(byte[] description) {
-      Logger.error(exploit.getId() + ": " + new String(description));
+      LoggingHelper.error(exploit.getId() + ": " + new String(description));
     }
   }
 
@@ -286,9 +267,9 @@ class Rapid7
         try {
           job.add(originalUrl + "&page=" + p, this);
         } catch (MalformedURLException e) {
-          Logger.error("Bad URL: " + originalUrl + "&page=" + p);
+          LoggingHelper.error("Bad URL: " + originalUrl + "&page=" + p);
         } catch (IllegalStateException e) {
-          Logger.warning(e.getMessage());
+          LoggingHelper.warning(e.getMessage());
         }
       }
     }
@@ -314,9 +295,9 @@ class Rapid7
         try {
           job.add(ex.getUrl(), r);
         } catch (MalformedURLException e) {
-          Logger.error("Bad URL: " + ex.getUrl());
+          LoggingHelper.error("Bad URL: " + ex.getUrl());
         } catch (IllegalStateException e) {
-          Logger.warning(e.getMessage());
+          LoggingHelper.warning(e.getMessage());
         }
       }
 
@@ -353,7 +334,7 @@ class Rapid7
 
     @Override
     public void onError(byte[] description) {
-      Logger.error(this + ": " + new String(description));
+      LoggingHelper.error(this + ": " + new String(description));
     }
 
     @Override
@@ -375,14 +356,14 @@ class Rapid7
 
     url += "&t=m";
 
-    Logger.debug("url = '" + url + "'");
+    LoggingHelper.debug("url = '" + url + "'");
 
     ResultsReceiver r = new ResultsReceiver(job, url, port, receiver);
 
     try {
       job.add(url, r);
     } catch (MalformedURLException e) {
-      Logger.error("Bad URL: " + url);
+      LoggingHelper.error("Bad URL: " + url);
     } catch (IllegalStateException e) {
       LoggingHelper.e(TAG, "Rapid7 search failed", e);
     }

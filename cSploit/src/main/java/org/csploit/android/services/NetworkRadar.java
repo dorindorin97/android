@@ -7,9 +7,8 @@ import android.view.MenuItem;
 
 import org.csploit.android.R;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
-import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.core.System;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
@@ -40,7 +39,7 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
         .start(new Receiver());
       return true;
     } catch (ChildManager.ChildNotStartedException e) {
-      Logger.error(e.getMessage());
+      LoggingHelper.error(e.getMessage());
       sendIntent(NRDR_START_FAILED);
     }
     return false;
@@ -74,7 +73,7 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
 
   public void onAutoScanChanged() {
     autoScan = System.isCoreInitialized() && System.getSettings().getBoolean("PREF_AUTO_PORTSCAN", true);
-    Logger.info("autoScan has been set to " + autoScan);
+    LoggingHelper.info("autoScan has been set to " + autoScan);
   }
 
   public boolean isAutoScanEnabled() {
@@ -155,7 +154,7 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
     }
 
     public void onDeath(int signal) {
-      Logger.error("network-radar has been killed by signal #" + signal);
+      LoggingHelper.error("network-radar has been killed by signal #" + signal);
       sendIntent(NRDR_STOPPED);
     }
   }

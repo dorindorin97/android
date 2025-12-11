@@ -30,13 +30,12 @@ import android.widget.Toast;
 
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.ExecChecker;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.gui.DirectoryPicker;
 import org.csploit.android.gui.dialogs.ChoiceDialog;
 import org.csploit.android.gui.dialogs.ConfirmDialog;
 import org.csploit.android.helpers.ConcurrencyHelper;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.GitHubParser;
 import org.csploit.android.services.Services;
 import org.csploit.android.tools.Raw;
@@ -234,7 +233,7 @@ public class SettingsFragment extends Fragment {
                             }
                         });
             } catch (ChildManager.ChildNotStartedException e) {
-                Logger.error(e.getMessage());
+                LoggingHelper.error(e.getMessage());
             }
         }
 
@@ -248,7 +247,7 @@ public class SettingsFragment extends Fragment {
                 String oldPath = null;
 
                 if (extras == null) {
-                    Logger.debug("null extra: " + intent);
+                    LoggingHelper.debug("null extra: " + intent);
                     return;
                 }
 
@@ -256,7 +255,7 @@ public class SettingsFragment extends Fragment {
                 key = (String) extras.get(DirectoryPicker.AFFECTED_PREF);
 
                 if (path == null || key == null) {
-                    Logger.debug("null path or key: " + intent);
+                    LoggingHelper.debug("null path or key: " + intent);
                     return;
                 }
 
@@ -525,7 +524,7 @@ public class SettingsFragment extends Fragment {
                     try {
                         mBranchesWaiter.get();
                     } catch (Exception e) {
-                        Logger.error(e.getMessage());
+                        LoggingHelper.error(e.getMessage());
                     }
                 return;
             }
@@ -538,7 +537,7 @@ public class SettingsFragment extends Fragment {
                 } catch (JSONException e) {
                     LoggingHelper.e(TAG, "Error", e);
                 } catch (IOException e) {
-                    Logger.error(e.getMessage());
+                    LoggingHelper.error(e.getMessage());
                 }
                 return null;
             });
@@ -575,7 +574,7 @@ public class SettingsFragment extends Fragment {
             } catch (JSONException e) {
                 LoggingHelper.e(TAG, "Failed to parse MSF branches", e);
             } catch (IOException e) {
-                Logger.error(e.getMessage());
+                LoggingHelper.error(e.getMessage());
             }
         }
 

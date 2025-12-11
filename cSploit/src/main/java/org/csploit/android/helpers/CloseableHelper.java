@@ -19,18 +19,12 @@ package org.csploit.android.helpers;
 import androidx.annotation.NonNull;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.io.Closeable;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.IOException;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.InputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.io.OutputStream;
-import org.csploit.android.helpers.LoggingHelper;
 import java.net.Socket;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * Helper class for closing resources safely without exceptions.

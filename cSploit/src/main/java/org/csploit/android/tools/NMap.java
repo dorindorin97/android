@@ -22,7 +22,7 @@ import android.text.TextUtils;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Hop;
 import org.csploit.android.events.Os;
@@ -38,11 +38,11 @@ public class NMap extends Tool {
   {
     public void onEnd( int exitCode ) {
       if( exitCode != 0 )
-        Logger.error("nmap exited with code " + exitCode );
+        LoggingHelper.error("nmap exited with code " + exitCode );
     }
 
     public void onDeath( int signal ) {
-      Logger.error("nmap killed by signal " + signal);
+      LoggingHelper.error("nmap killed by signal " + signal);
     }
 
     public void onEvent(Event e) {
@@ -50,7 +50,7 @@ public class NMap extends Tool {
         Hop hop = (Hop)e;
         onHop(hop.hop, hop.usec, hop.node.getHostAddress(), hop.name);
       } else {
-        Logger.error("unknown event: " + e);
+        LoggingHelper.error("unknown event: " + e);
       }
     }
 
@@ -62,11 +62,11 @@ public class NMap extends Tool {
 
     public void onEnd( int exitCode ) {
       if( exitCode != 0 )
-        Logger.error( "nmap exited with code " + exitCode );
+        LoggingHelper.error( "nmap exited with code " + exitCode );
     }
 
     public void onDeath(int signal) {
-      Logger.error("nmap killed by signal " + signal);
+      LoggingHelper.error("nmap killed by signal " + signal);
     }
 
     public void onEvent( Event e) {
@@ -74,7 +74,7 @@ public class NMap extends Tool {
         Port p = (Port)e;
         onPortFound(p.port, p.protocol);
       } else {
-        Logger.error("unkown event: " + e);
+        LoggingHelper.error("unkown event: " + e);
       }
     }
 
@@ -86,11 +86,11 @@ public class NMap extends Tool {
 
     public void onEnd( int exitCode ) {
       if( exitCode != 0 )
-        Logger.error( "nmap exited with code " + exitCode );
+        LoggingHelper.error( "nmap exited with code " + exitCode );
     }
 
     public void onDeath(int signal) {
-      Logger.error( "nmap killed by signal " + signal);
+      LoggingHelper.error( "nmap killed by signal " + signal);
     }
 
     public void onEvent(Event e) {
@@ -106,7 +106,7 @@ public class NMap extends Tool {
         onOsFound(os.os);
         onDeviceFound(os.type);
       } else {
-        Logger.error("unknown event: " + e);
+        LoggingHelper.error("unknown event: " + e);
       }
     }
 
@@ -137,7 +137,7 @@ public class NMap extends Tool {
 
     command.append(target.getCommandLineRepresentation());
 
-    Logger.debug( "synScan - " + command.toString() );
+    LoggingHelper.debug( "synScan - " + command.toString() );
 
     return super.async( command.toString(), receiver );
   }
@@ -154,7 +154,7 @@ public class NMap extends Tool {
 
     command.append(target.getCommandLineRepresentation());
 
-    Logger.debug( "customScan - " + command.toString() );
+    LoggingHelper.debug( "customScan - " + command.toString() );
 
     return super.async( command.toString(), receiver );
   }
@@ -195,7 +195,7 @@ public class NMap extends Tool {
     else
       cmd = "-T4 -F -O -sV --privileged --send-ip --system-dns -oX - " + target.getCommandLineRepresentation();
 
-    Logger.debug( "Inspect - " + cmd );
+    LoggingHelper.debug( "Inspect - " + cmd );
 
     return super.async( cmd, receiver);
   }

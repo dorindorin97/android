@@ -18,25 +18,16 @@
 package org.csploit.android.helpers;
 
 import android.content.Context;
-import org.csploit.android.helpers.LoggingHelper;
 import android.content.SharedPreferences;
-import org.csploit.android.helpers.LoggingHelper;
 
 import androidx.annotation.NonNull;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 import androidx.preference.PreferenceManager;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.HashMap;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.HashSet;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Map;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.Set;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * ConfigHelper - Centralized configuration and settings management.
@@ -86,6 +77,21 @@ public final class ConfigHelper {
     public static final String KEY_MSF_ENABLED = "PREF_MSF_ENABLED";
     public static final String KEY_ROOT_GRANTED = "PREF_ROOT_GRANTED";
     
+    // Network port constants
+    public static final String KEY_HTTP_PROXY_PORT = "PREF_HTTP_PROXY_PORT";
+    public static final String KEY_HTTP_SERVER_PORT = "PREF_HTTP_SERVER_PORT";
+    public static final String KEY_HTTPS_REDIR_PORT = "PREF_HTTPS_REDIRECTOR_PORT";
+    public static final String KEY_MSF_RPC_PORT = "MSF_RPC_PORT";
+
+    // Default network ports
+    public static final int DEFAULT_HTTP_PROXY_PORT = 8080;
+    public static final int DEFAULT_HTTP_SERVER_PORT = 8081;
+    public static final int DEFAULT_HTTPS_REDIR_PORT = 8082;
+    public static final int DEFAULT_MSF_RPC_PORT = 55553;
+
+    // System paths
+    public static final String IPV4_FORWARD_FILEPATH = "/proc/sys/net/ipv4/ip_forward";
+
     // Default values
     public static final int DEFAULT_SCAN_TIMEOUT = 3000;
     public static final boolean DEFAULT_AUTO_PORTSCAN = true;
@@ -472,6 +478,92 @@ public final class ConfigHelper {
         editor.apply();
     }
     
+    // ==================== Network Ports ====================
+
+    /**
+     * Get HTTP proxy port.
+     */
+    public int getHttpProxyPort() {
+        String portStr = prefs.getString(KEY_HTTP_PROXY_PORT, String.valueOf(DEFAULT_HTTP_PROXY_PORT));
+        try {
+            return Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            return DEFAULT_HTTP_PROXY_PORT;
+        }
+    }
+
+    /**
+     * Set HTTP proxy port.
+     */
+    public void setHttpProxyPort(int port) {
+        port = Math.max(1, Math.min(65535, port));
+        editor.putString(KEY_HTTP_PROXY_PORT, String.valueOf(port));
+        editor.apply();
+    }
+
+    /**
+     * Get HTTP server port.
+     */
+    public int getHttpServerPort() {
+        String portStr = prefs.getString(KEY_HTTP_SERVER_PORT, String.valueOf(DEFAULT_HTTP_SERVER_PORT));
+        try {
+            return Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            return DEFAULT_HTTP_SERVER_PORT;
+        }
+    }
+
+    /**
+     * Set HTTP server port.
+     */
+    public void setHttpServerPort(int port) {
+        port = Math.max(1, Math.min(65535, port));
+        editor.putString(KEY_HTTP_SERVER_PORT, String.valueOf(port));
+        editor.apply();
+    }
+
+    /**
+     * Get HTTPS redirector port.
+     */
+    public int getHttpsRedirPort() {
+        String portStr = prefs.getString(KEY_HTTPS_REDIR_PORT, String.valueOf(DEFAULT_HTTPS_REDIR_PORT));
+        try {
+            return Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            return DEFAULT_HTTPS_REDIR_PORT;
+        }
+    }
+
+    /**
+     * Set HTTPS redirector port.
+     */
+    public void setHttpsRedirPort(int port) {
+        port = Math.max(1, Math.min(65535, port));
+        editor.putString(KEY_HTTPS_REDIR_PORT, String.valueOf(port));
+        editor.apply();
+    }
+
+    /**
+     * Get MSF RPC port.
+     */
+    public int getMsfRpcPort() {
+        String portStr = prefs.getString(KEY_MSF_RPC_PORT, String.valueOf(DEFAULT_MSF_RPC_PORT));
+        try {
+            return Integer.parseInt(portStr);
+        } catch (NumberFormatException e) {
+            return DEFAULT_MSF_RPC_PORT;
+        }
+    }
+
+    /**
+     * Set MSF RPC port.
+     */
+    public void setMsfRpcPort(int port) {
+        port = Math.max(1, Math.min(65535, port));
+        editor.putString(KEY_MSF_RPC_PORT, String.valueOf(port));
+        editor.apply();
+    }
+
     // ==================== Generic Methods ====================
     
     /**

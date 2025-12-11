@@ -20,7 +20,7 @@ package org.csploit.android.tools;
 
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Newline;
 
@@ -36,7 +36,7 @@ public class Raw extends Tool {
       if(e instanceof Newline)
         onNewLine(((Newline)e).line);
       else
-        Logger.warning("unknown event: " + e);
+        LoggingHelper.warning("unknown event: " + e);
     }
 
     public abstract void onNewLine(String line);

@@ -20,37 +20,22 @@ package org.csploit.android.helpers;
 import androidx.annotation.NonNull;
 import org.csploit.android.helpers.LoggingHelper;
 import androidx.annotation.Nullable;
-import org.csploit.android.helpers.LoggingHelper;
 
 import org.csploit.android.core.ChildManager;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Network;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.net.Target;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.tools.NMap;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.Child;
-import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.ArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.List;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.CountDownLatch;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.ExecutorService;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.Executors;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.TimeUnit;
-import org.csploit.android.helpers.LoggingHelper;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.csploit.android.helpers.LoggingHelper;
 
 /**
  * BatchScannerHelper - Enables batch port scanning across multiple targets.

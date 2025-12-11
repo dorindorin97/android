@@ -50,7 +50,7 @@ import android.widget.TextView;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.Client;
 import org.csploit.android.core.CrashReporter;
-import org.csploit.android.core.Logger;
+import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.ManagedReceiver;
 import org.csploit.android.core.MultiAttackService;
 import org.csploit.android.core.Plugin;
@@ -66,7 +66,6 @@ import org.csploit.android.gui.dialogs.InputDialog.InputDialogListener;
 import org.csploit.android.gui.dialogs.ListChoiceDialog;
 import org.csploit.android.gui.dialogs.MultipleChoiceDialog;
 import org.csploit.android.gui.dialogs.SpinnerDialog;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.helpers.UIHelper;
 import org.csploit.android.gui.dialogs.SpinnerDialog.SpinnerDialogListener;
@@ -283,7 +282,7 @@ public class MainFragment extends Fragment {
         mIsDaemonBeating = System.isCoreInitialized();
         
         // Log core status for debugging
-        Logger.debug("Core installation status:\n" + System.getCoreInstallStatus());
+        LoggingHelper.debug("Core installation status:\n" + System.getCoreInstallStatus());
 
         // check minimum requirements for system initialization
 
@@ -291,7 +290,7 @@ public class MainFragment extends Fragment {
             EMPTY_LIST_MESSAGE = mIsConnectivityAvailable ?
                     getString(R.string.missing_core_update) :
                     getString(R.string.no_connectivity);
-            Logger.warning("Core not installed. Status: " + System.getCoreInstallStatus());
+            LoggingHelper.warning("Core not installed. Status: " + System.getCoreInstallStatus());
             return;
         } else if (!mIsDaemonBeating) {
             try {
@@ -299,7 +298,7 @@ public class MainFragment extends Fragment {
                 mIsDaemonBeating = true;
 
                 if (Client.hadCrashed()) {
-                    Logger.warning("Client has previously crashed, building a crash report.");
+                    LoggingHelper.warning("Client has previously crashed, building a crash report.");
                     CrashReporter.notifyNativeLibraryCrash();
                     onInitializationError(getString(R.string.JNI_crash_detected));
                     return;
@@ -308,11 +307,11 @@ public class MainFragment extends Fragment {
                 onInitializationError("hi developer, you missed to build JNI stuff, thanks for playing with me :)");
                 return;
             } catch (System.SuException e) {
-                Logger.error("Root access denied. Make sure:\n1. Device is rooted\n2. Root manager (Magisk/SuperSU) is working\n3. cSploit has root permission granted");
+                LoggingHelper.error("Root access denied. Make sure:\n1. Device is rooted\n2. Root manager (Magisk/SuperSU) is working\n3. cSploit has root permission granted");
                 onInitializationError(getString(R.string.only_4_root));
                 return;
             } catch (System.DaemonException e) {
-                Logger.error("Daemon exception: " + e.getMessage());
+                LoggingHelper.error("Daemon exception: " + e.getMessage());
                 onInitializationError(e.getMessage());
                 return;
             }
@@ -1362,7 +1361,7 @@ public class MainFragment extends Fragment {
 
                         String current = System.getIfname();
 
-                        Logger.debug(String.format("current='%s', ifaces=[%s], haveInterface=%s, isAnyNetInterfaceAvailable=%s",
+                        LoggingHelper.debug(String.format("current='%s', ifaces=[%s], haveInterface=%s, isAnyNetInterfaceAvailable=%s",
                                 current != null ? current : "(null)",
                                 ifacesToString(), haveInterface(current), isAnyNetInterfaceAvailable));
 
