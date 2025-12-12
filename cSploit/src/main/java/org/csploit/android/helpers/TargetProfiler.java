@@ -444,7 +444,12 @@ public final class TargetProfiler {
             // Check for X-Powered-By
             String poweredBy = conn.getHeaderField("X-Powered-By");
             if (poweredBy != null) {
-                service.banner += " [" + poweredBy + "]";
+                StringBuilder bannerBuilder = new StringBuilder();
+                if (service.banner != null) {
+                    bannerBuilder.append(service.banner);
+                }
+                bannerBuilder.append(" [").append(poweredBy).append("]");
+                service.banner = bannerBuilder.toString();
             }
 
         } catch (Exception e) {
