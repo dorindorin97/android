@@ -142,21 +142,37 @@ public class MainFragment extends Fragment {
     }
 
     private void onInitializationError(final String message) {
-        getActivity().runOnUiThread(new Runnable() {
+        android.app.Activity activity = getActivity();
+        if (activity == null || !isAdded()) {
+            LoggingHelper.error("Cannot show initialization error - fragment not attached: " + message);
+            return;
+        }
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                android.app.Activity currentActivity = getActivity();
+                if (currentActivity == null || !isAdded()) {
+                    return;
+                }
                 new FatalDialog(getString(R.string.initialization_error),
                         message, message.contains(">"),
-                        getActivity());
+                        currentActivity);
             }
         });
     }
 
     private void onCoreUpdated() {
         System.onCoreInstalled();
-        getActivity().runOnUiThread(new Runnable() {
+        android.app.Activity activity = getActivity();
+        if (activity == null || !isAdded()) {
+            return;
+        }
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (getActivity() == null || !isAdded()) {
+                    return;
+                }
                 init();
                 startAllServices();
                 notifyMenuChanged();
@@ -421,12 +437,17 @@ public class MainFragment extends Fragment {
         isAnyNetInterfaceAvailable = mIfaces.length > 0;
 
         if (menuChanged) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    notifyMenuChanged();
-                }
-            });
+            android.app.Activity activity = getActivity();
+            if (activity != null && isAdded()) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getActivity() != null && isAdded()) {
+                            notifyMenuChanged();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -460,11 +481,19 @@ public class MainFragment extends Fragment {
 
         final String msg = toastMessage;
 
-        getActivity().runOnUiThread(new Runnable() {
+        android.app.Activity activity = getActivity();
+        if (activity == null || !isAdded()) {
+            return;
+        }
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                android.app.Activity currentActivity = getActivity();
+                if (currentActivity == null || !isAdded()) {
+                    return;
+                }
                 if (msg != null) {
-                    ToastHelper.status(getActivity(), msg);
+                    ToastHelper.status(currentActivity, msg);
                 }
                 notifyMenuChanged();
             }
@@ -480,11 +509,19 @@ public class MainFragment extends Fragment {
         stopNetworkRadar();
         System.markNetworkAsDisconnected();
 
-        getActivity().runOnUiThread(new Runnable() {
+        android.app.Activity activity = getActivity();
+        if (activity == null || !isAdded()) {
+            return;
+        }
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                android.app.Activity currentActivity = getActivity();
+                if (currentActivity == null || !isAdded()) {
+                    return;
+                }
                 new ConfirmDialog(getString(R.string.connection_lost),
-                        getString(R.string.connection_lost_prompt), getActivity(),
+                        getString(R.string.connection_lost_prompt), currentActivity,
                         new ConfirmDialogListener() {
                             @Override
                             public void onConfirm() {
@@ -1075,18 +1112,22 @@ public class MainFragment extends Fragment {
         @Override
         public void update(Observable observable, Object data) {
             final Target target = (Target) data;
+            android.app.Activity activity = getActivity();
+            if (activity == null || !isAdded()) {
+                return;
+            }
 
             if (target == null) {
                 // update the whole list
-                getActivity().runOnUiThread(this);
+                activity.runOnUiThread(this);
                 return;
             }
 
             // update only a row, if it's displayed
-            getActivity().runOnUiThread(new Runnable() {
+            activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (lv == null)
+                    if (lv == null || getActivity() == null || !isAdded())
                         return;
                     synchronized (this) {
                         int start = lv.getFirstVisiblePosition();
@@ -1187,19 +1228,31 @@ public class MainFragment extends Fragment {
         }
 
         private void onUpdateAvailable(final Update update, final boolean mandatory) {
-            getActivity().runOnUiThread(new Runnable() {
+            android.app.Activity activity = getActivity();
+            if (activity == null || !isAdded()) {
+                return;
+            }
+            activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    android.app.Activity currentActivity = getActivity();
+                    if (currentActivity == null || !isAdded()) {
+                        return;
+                    }
                     new ConfirmDialog(getString(R.string.update_available),
-                            update.prompt, getActivity(), new ConfirmDialogListener() {
+                            update.prompt, currentActivity, new ConfirmDialogListener() {
                         @Override
                         public void onConfirm() {
+                            android.app.Activity activity = getActivity();
+                            if (activity == null || !isAdded()) {
+                                return;
+                            }
                             stopRPCServer();
-                            Intent i = new Intent(getActivity(), UpdateService.class);
+                            Intent i = new Intent(activity, UpdateService.class);
                             i.setAction(UpdateService.START);
                             i.putExtra(UpdateService.UPDATE, update);
 
-                            getActivity().startService(i);
+                            activity.startService(i);
                             mIsUpdateDownloading = true;
                         }
 
@@ -1249,13 +1302,19 @@ public class MainFragment extends Fragment {
                 return;
             }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    UIHelper.error(getActivity(), getString(R.string.error),
-                            getString(message));
-                }
-            });
+            android.app.Activity activity = getActivity();
+            if (activity != null && isAdded()) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        android.app.Activity currentActivity = getActivity();
+                        if (currentActivity != null && isAdded()) {
+                            UIHelper.error(currentActivity, getString(R.string.error),
+                                    getString(message));
+                        }
+                    }
+                });
+            }
 
             System.reloadTools();
         }
@@ -1328,7 +1387,11 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            synchronized (getActivity()) {
+            android.app.Activity activity = getActivity();
+            if (activity == null || !isAdded()) {
+                return;
+            }
+            synchronized (ConnectivityReceiver.this) {
                 if (mTask != null) {
                     mTask.cancel();
                 }
@@ -1345,18 +1408,26 @@ public class MainFragment extends Fragment {
         @Override
         public void unregister() {
             super.unregister();
-            synchronized (getActivity()) {
+            synchronized (ConnectivityReceiver.this) {
                 if (mTask != null) {
                     mTask.cancel();
+                    mTask = null;
                 }
             }
         }
 
         private void check() {
-            synchronized (getActivity()) {
-                getActivity().runOnUiThread(new Runnable() {
+            android.app.Activity activity = getActivity();
+            if (activity == null || !isAdded()) {
+                return;
+            }
+            synchronized (ConnectivityReceiver.this) {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (getActivity() == null || !isAdded()) {
+                            return;
+                        }
                         loadInterfaces();
 
                         String current = System.getIfname();
