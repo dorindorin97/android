@@ -372,6 +372,232 @@ public class JsonHelper {
         return result;
     }
     
+    /**
+     * Get nested value from JSONObject using dot notation (e.g., "user.profile.name").
+     *
+     * @param json JSONObject to query
+     * @param path Dot-separated path to the value
+     * @return Value at path or null if not found
+     */
+    @Nullable
+    public static Object getNestedValue(@Nullable JSONObject json, @NonNull String path) {
+        if (json == null || path == null || path.isEmpty()) {
+            return null;
+        }
+
+        String[] parts = path.split("\\.");
+        Object current = json;
+
+        for (String part : parts) {
+            if (current instanceof JSONObject) {
+                try {
+                    current = ((JSONObject) current).get(part);
+                } catch (JSONException e) {
+                    return null;
+                }
+            } else if (current instanceof JSONArray) {
+                try {
+                    int index = Integer.parseInt(part);
+                    current = ((JSONArray) current).get(index);
+                } catch (NumberFormatException | JSONException e) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+
+        return current == JSONObject.NULL ? null : current;
+    }
+
+    /**
+     * Get nested string from JSONObject using dot notation.
+     *
+     * @param json JSONObject to query
+     * @param path Dot-separated path to the value
+     * @param defaultValue Default value if not found
+     * @return String value at path or default
+     */
+    @NonNull
+    public static String getNestedString(@Nullable JSONObject json, @NonNull String path,
+                                         @NonNull String defaultValue) {
+        Object value = getNestedValue(json, path);
+        return value != null ? value.toString() : defaultValue;
+    }
+
+    /**
+     * Safely get double from JSONObject.
+     *
+     * @param json JSONObject
+     * @param key Key to retrieve
+     * @param defaultValue Default value if key doesn't exist
+     * @return double value or default
+     */
+    public static double getDouble(@NonNull JSONObject json, @NonNull String key, double defaultValue) {
+        try {
+            return json.has(key) ? json.getDouble(key) : defaultValue;
+        } catch (JSONException e) {
+            LoggingHelper.w(TAG, "Failed to get double for key: " + key, e);
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Safely get JSONObject from JSONObject.
+     *
+     * @param json Parent JSONObject
+     * @param key Key to retrieve
+     * @return Child JSONObject or null
+     */
+    @Nullable
+    public static JSONObject getObject(@NonNull JSONObject json, @NonNull String key) {
+        try {
+            return json.has(key) ? json.getJSONObject(key) : null;
+        } catch (JSONException e) {
+            LoggingHelper.w(TAG, "Failed to get object for key: " + key, e);
+            return null;
+        }
+    }
+
+    /**
+     * Safely get JSONArray from JSONObject.
+     *
+     * @param json Parent JSONObject
+     * @param key Key to retrieve
+     * @return JSONArray or null
+     */
+    @Nullable
+    public static JSONArray getArray(@NonNull JSONObject json, @NonNull String key) {
+        try {
+            return json.has(key) ? json.getJSONArray(key) : null;
+        } catch (JSONException e) {
+            LoggingHelper.w(TAG, "Failed to get array for key: " + key, e);
+            return null;
+        }
+    }
+
+    /**
+     * Convert JSONArray to List of Strings.
+     *
+     * @param array JSONArray to convert
+     * @return List of strings
+     */
+    @NonNull
+    public static List<String> toStringList(@Nullable JSONArray array) {
+        List<String> list = new ArrayList<>();
+        if (array == null) {
+            return list;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                list.add(array.getString(i));
+            } catch (JSONException e) {
+                // Skip invalid entries
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Convert JSONArray to List of Integers.
+     *
+     * @param array JSONArray to convert
+     * @return List of integers
+     */
+    @NonNull
+    public static List<Integer> toIntList(@Nullable JSONArray array) {
+        List<Integer> list = new ArrayList<>();
+        if (array == null) {
+            return list;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                list.add(array.getInt(i));
+            } catch (JSONException e) {
+                // Skip invalid entries
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Check if JSON object has non-null, non-empty value for key.
+     *
+     * @param json JSONObject to check
+     * @param key Key to check
+     * @return true if key exists and has a non-null, non-empty value
+     */
+    public static boolean hasValue(@Nullable JSONObject json, @NonNull String key) {
+        if (json == null || !json.has(key)) {
+            return false;
+        }
+        try {
+            Object value = json.get(key);
+            if (value == JSONObject.NULL) {
+                return false;
+            }
+            if (value instanceof String) {
+                return !((String) value).isEmpty();
+            }
+            return true;
+        } catch (JSONException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Safely put value into JSONObject, handling null values.
+     *
+     * @param json JSONObject to modify
+     * @param key Key to set
+     * @param value Value to set (null will be converted to JSONObject.NULL)
+     */
+    public static void put(@NonNull JSONObject json, @NonNull String key, @Nullable Object value) {
+        try {
+            json.put(key, value != null ? value : JSONObject.NULL);
+        } catch (JSONException e) {
+            LoggingHelper.e(TAG, "Failed to put value into JSON for key: " + key, e);
+        }
+    }
+
+    /**
+     * Create a copy of a JSONObject.
+     *
+     * @param json JSONObject to copy
+     * @return New JSONObject with same content or empty JSONObject if null
+     */
+    @NonNull
+    public static JSONObject copy(@Nullable JSONObject json) {
+        if (json == null) {
+            return new JSONObject();
+        }
+        try {
+            return new JSONObject(json.toString());
+        } catch (JSONException e) {
+            LoggingHelper.e(TAG, "Failed to copy JSON object", e);
+            return new JSONObject();
+        }
+    }
+
+    /**
+     * Create a copy of a JSONArray.
+     *
+     * @param array JSONArray to copy
+     * @return New JSONArray with same content or empty JSONArray if null
+     */
+    @NonNull
+    public static JSONArray copy(@Nullable JSONArray array) {
+        if (array == null) {
+            return new JSONArray();
+        }
+        try {
+            return new JSONArray(array.toString());
+        } catch (JSONException e) {
+            LoggingHelper.e(TAG, "Failed to copy JSON array", e);
+            return new JSONArray();
+        }
+    }
+
     private JsonHelper() {
         // Prevent instantiation
     }
