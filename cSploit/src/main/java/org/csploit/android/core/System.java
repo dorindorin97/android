@@ -182,10 +182,10 @@ public class System {
         PowerManager powerManager = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
 
         if (mWakeLock == null)
-          mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "wakeLock");
+          mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cSploit:wakeLock");
 
         if (!mWakeLock.isHeld())
-          mWakeLock.acquire();
+          mWakeLock.acquire(10 * 60 * 1000L); // 10 minutes max to prevent battery drain
       }
 
       // set ports
