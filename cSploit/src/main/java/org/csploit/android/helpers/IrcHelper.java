@@ -707,7 +707,9 @@ public final class IrcHelper {
                         if (!msg.getParams().isEmpty()) {
                             try {
                                 statsBuilder.setOperators(Integer.parseInt(msg.getParams().get(msg.getParams().size() - 1)));
-                            } catch (NumberFormatException ignored) {}
+                            } catch (NumberFormatException e) {
+                                LoggingHelper.d(TAG, "Failed to parse operator count", e);
+                            }
                         }
                         break;
 
@@ -715,7 +717,9 @@ public final class IrcHelper {
                         if (!msg.getParams().isEmpty()) {
                             try {
                                 statsBuilder.setChannels(Integer.parseInt(msg.getParams().get(msg.getParams().size() - 1)));
-                            } catch (NumberFormatException ignored) {}
+                            } catch (NumberFormatException e) {
+                                LoggingHelper.d(TAG, "Failed to parse channel count", e);
+                            }
                         }
                         break;
 
@@ -723,7 +727,9 @@ public final class IrcHelper {
                         if (!msg.getParams().isEmpty()) {
                             try {
                                 statsBuilder.setUnknownConnections(Integer.parseInt(msg.getParams().get(msg.getParams().size() - 1)));
-                            } catch (NumberFormatException ignored) {}
+                            } catch (NumberFormatException e) {
+                                LoggingHelper.d(TAG, "Failed to parse unknown connections count", e);
+                            }
                         }
                         break;
 
