@@ -87,8 +87,9 @@ public class WirelessMatcher
   }
 
   public Keygen getKeygen(String ssid, String mac, int level, String enc){
-    if(enc.equals(""))
+    if(enc == null || enc.isEmpty()) {
       enc = Keygen.OPEN;
+    }
 
     if(ssid.matches("Discus--?[0-9a-fA-F]{6}"))
       return new DiscusKeygen(ssid, mac, level, enc);

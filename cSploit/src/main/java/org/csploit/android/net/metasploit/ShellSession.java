@@ -102,8 +102,9 @@ public class ShellSession extends Session {
 
   public void addCommand(String command, RpcShellReceiver receiver) {
     synchronized (mCommands) {
-      if (command.trim().equals(""))
+      if (command == null || command.trim().isEmpty()) {
         return;
+      }
       mCommands.push(new CmdAndReceiver(command, receiver));
       mCommands.notify();
     }

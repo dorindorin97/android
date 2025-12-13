@@ -53,8 +53,9 @@ public class VerizonKeygen extends Keygen{
     String ssidKey = Integer.toHexString(result).toUpperCase();
     while(ssidKey.length() < 6)
       ssidKey = "0" + ssidKey;
-    if(!getMacAddress().equals("")){
-      addPassword(getMacAddress().substring(3, 5) + getMacAddress().substring(6, 8) +
+    String mac = getMacAddress();
+    if(mac != null && !mac.isEmpty()){
+      addPassword(mac.substring(3, 5) + mac.substring(6, 8) +
         ssidKey);
     } else{
       addPassword("1801" + ssidKey);

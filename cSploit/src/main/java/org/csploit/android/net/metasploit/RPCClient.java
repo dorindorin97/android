@@ -26,6 +26,7 @@ import org.msgpack.unpacker.Converter;
 
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.net.Target;
 
 /**
  * Metasploit RPC Client for remote interaction with Metasploit Framework.
@@ -218,16 +219,28 @@ public class RPCClient
 
       for(Integer id : ids) {
         try {
-          String type = (String)openSessions.get(id).get("type");
+          Map<String, Object> sessionData = openSessions.get(id);
+          if (sessionData == null) {
+            LoggingHelper.w(TAG, "Session data is null for id: " + id);
+            continue;
+          }
+
+          String type = (String) sessionData.get("type");
           Session s;
           if("shell".equals(type)) {
-            s = new ShellSession(id,openSessions.get(id));
+            s = new ShellSession(id, sessionData);
           } else if("meterpreter".equals(type)) {
-            s = new MeterpreterSession(id, openSessions.get(id));
+            s = new MeterpreterSession(id, sessionData);
           } else {
-            s = new Session(id,openSessions.get(id));
+            s = new Session(id, sessionData);
           }
-          org.csploit.android.core.System.getCurrentTarget().addSession(s);
+
+          Target currentTarget = org.csploit.android.core.System.getCurrentTarget();
+          if (currentTarget != null) {
+            currentTarget.addSession(s);
+          } else {
+            LoggingHelper.w(TAG, "Current target is null, cannot add session");
+          }
         } catch ( UnknownHostException e) {
           LoggingHelper.info(e.getMessage());
         }
