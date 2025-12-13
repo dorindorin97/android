@@ -33,11 +33,11 @@ public class Wlan6Keygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    if(getMacAddress().equals("")){
+    String macStr = getMacAddress();
+    if(macStr == null || macStr.isEmpty()){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }
-    String macStr = getMacAddress();
     char[] ssidSubPart = {'1', '2', '3', '4', '5', '6'};/*These values are not revelant.*/
     char[] bssidLastByte = {'6', '6'};
     ssidSubPart[0] = ssidIdentifier.charAt(0);

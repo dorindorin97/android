@@ -194,7 +194,8 @@ public class TelseyKeygen extends Keygen{
   @Override
   public List<String> getKeys(){
     JenkinsHash hash = new JenkinsHash();
-    if(getMacAddress().equals("")){
+    String macAddress = getMacAddress();
+    if(macAddress == null || macAddress.isEmpty()){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }

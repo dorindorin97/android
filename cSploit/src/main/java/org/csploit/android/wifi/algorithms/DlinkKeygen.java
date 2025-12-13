@@ -39,12 +39,12 @@ public class DlinkKeygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    if(getMacAddress().equals("")){
+    final String mac = getMacAddress();
+    if(mac == null || mac.isEmpty()){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }
     final char[] key = new char[20];
-    final String mac = getMacAddress();
     key[0] = mac.charAt(11);
     key[1] = mac.charAt(0);
 
