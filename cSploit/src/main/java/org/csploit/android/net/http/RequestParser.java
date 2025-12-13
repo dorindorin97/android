@@ -472,11 +472,11 @@ public class RequestParser
   public static ArrayList<HttpCookie> getCookiesFromHeaders(ArrayList<String> headers){
     ArrayList<String> values = getHeaderValues("Cookie", headers);
 
-    if(values != null && values.size() > 0){
+    if(values != null && !values.isEmpty()){
       ArrayList<HttpCookie> cookies = new ArrayList<HttpCookie>();
       for(String value : values){
         ArrayList<HttpCookie> lineCookies = parseRawCookie(value);
-        if(lineCookies != null && lineCookies.size() > 0){
+        if(lineCookies != null && !lineCookies.isEmpty()){
           cookies.addAll(lineCookies);
         }
       }
@@ -489,7 +489,7 @@ public class RequestParser
           it.remove();
       }
 
-      return cookies.size() > 0 ? cookies : null;
+      return !cookies.isEmpty() ? cookies : null;
     }
 
     return null;

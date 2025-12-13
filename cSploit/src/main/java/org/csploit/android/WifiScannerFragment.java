@@ -306,7 +306,7 @@ public class WifiScannerFragment extends ListFragment
     }
 
     private void nextConnectionAttempt(){
-        if(mKeyList.size() > 0){
+        if(!mKeyList.isEmpty()){
             mCurrentKey = mKeyList.get(0);
 
             mKeyList.remove(0);
@@ -336,7 +336,7 @@ public class WifiScannerFragment extends ListFragment
             try{
                 List<String> keys = keygen.getKeys();
 
-                if(keys == null || keys.size() == 0){
+                if(keys == null || keys.isEmpty()){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -359,7 +359,7 @@ public class Hijacker extends AppCompatActivity {
 					.getCookiesFromHeaders(headers);
 
 			// got any cookie ?
-			if (cookies != null && cookies.size() > 0) {
+			if (cookies != null && !cookies.isEmpty()) {
 				String domain = cookies.get(0).getDomain();
 
 				if (domain == null || domain.isEmpty()) {
@@ -571,7 +571,7 @@ public class Hijacker extends AppCompatActivity {
 			final ArrayList<String> sessions = System
 					.getAvailableHijackerSessionFiles();
 
-			if (sessions != null && sessions.size() > 0) {
+			if (sessions != null && !sessions.isEmpty()) {
 				new SpinnerDialog(getString(R.string.select_session),
 						getString(R.string.select_session_file),
 						sessions.toArray(new String[sessions.size()]),

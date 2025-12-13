@@ -153,7 +153,7 @@ public class WirelessMatcher
 
       final List<AliceMagicInfo> supported = supportedAlices.get(ssid
         .substring(0, 9));
-      if(supported != null && supported.size() > 0){
+      if(supported != null && !supported.isEmpty()){
         if(mac.length() < 6)
           mac = supported.get(0).getMac();
         return new AliceKeygen(ssid, mac, level, enc, supported);
