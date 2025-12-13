@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 
 import org.csploit.android.R;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.PendingIntentHelper;
 import org.csploit.android.net.Network;
 import org.csploit.android.net.Target;
 import org.csploit.android.net.datasource.Search;
@@ -228,9 +229,9 @@ public class MultiAttackService extends IntentService {
     mContentIntent = null;
     // register our receiver
     registerReceiver(mReceiver,new IntentFilter(NOTIFICATION_CANCELLED));
-    // set common notification actions
-    mBuilder.setDeleteIntent(PendingIntent.getBroadcast(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED), 0));
-    mBuilder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(), 0));
+    // set common notification actions - use PendingIntentHelper for Android 12+ compatibility
+    mBuilder.setDeleteIntent(PendingIntentHelper.getBroadcastImmutable(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED)));
+    mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, 0, new Intent()));
   }
 
   /**
@@ -243,10 +244,10 @@ public class MultiAttackService extends IntentService {
       mNotificationManager.cancel(NOTIFICATION_ID);
     } else {
       Logger.debug("assign '"+mContentIntent.toString()+"'to notification");
-      mBuilder.setContentIntent(PendingIntent.getActivity(this, CLICK_CODE, mContentIntent, 0))
+      mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, CLICK_CODE, mContentIntent))
               .setProgress(0,0,false)
               .setAutoCancel(true)
-              .setDeleteIntent(PendingIntent.getActivity(this, 0, new Intent(), 0))
+              .setDeleteIntent(PendingIntentHelper.getActivityImmutable(this, 0, new Intent()))
               .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
       mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }

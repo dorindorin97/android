@@ -627,7 +627,7 @@ public class MainFragment extends Fragment {
                             commonPlugins.remove(p);
                         }
                     }
-                    if (commonPlugins.size() > 0) {
+                    if (!commonPlugins.isEmpty()) {
                         final int[] actions = new int[commonPlugins.size()];
                         for (int i = 0; i < actions.length; i++)
                             actions[i] = commonPlugins.get(i).getName();
@@ -826,7 +826,7 @@ public class MainFragment extends Fragment {
             final ArrayList<String> sessions = System
                     .getAvailableSessionFiles();
 
-            if (sessions != null && sessions.size() > 0) {
+            if (sessions != null && !sessions.isEmpty()) {
                 new SpinnerDialog(getString(R.string.select_session),
                         getString(R.string.select_session_file),
                         sessions.toArray(new String[sessions.size()]),

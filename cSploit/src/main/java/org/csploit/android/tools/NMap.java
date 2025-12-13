@@ -182,11 +182,11 @@ public class NMap extends Tool {
         }
       }
       cmd = "-T4 -sV -O --privileged --send-ip --system-dns -Pn -oX - ";
-      if(tcp.size() + udp.size() > 0) {
+      if(!tcp.isEmpty() || !udp.isEmpty()) {
         cmd+= "-p ";
-        if(tcp.size()>0)
+        if(!tcp.isEmpty())
           cmd+= "T:" + TextUtils.join(",",tcp);
-        if(udp.size()>0)
+        if(!udp.isEmpty())
           cmd+= "U:" + TextUtils.join(",", udp);
         cmd+= " ";
       }

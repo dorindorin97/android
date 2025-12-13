@@ -41,6 +41,7 @@ import org.csploit.android.R;
 import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.PendingIntentHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.update.CoreUpdate;
 import org.csploit.android.update.MsfUpdate;
@@ -85,8 +86,8 @@ public class UpdateService extends IntentService
           mRunning                    = false;
   private Update
           mCurrentTask                = null;
-  final private StringBuffer
-          mErrorOutput                = new StringBuffer();
+  final private StringBuilder
+          mErrorOutput                = new StringBuilder();
   private Raw.RawReceiver
           mErrorReceiver              = null;
 
@@ -263,9 +264,9 @@ public class UpdateService extends IntentService
     };
     // register our receiver
     registerReceiver(mReceiver,new IntentFilter(NOTIFICATION_CANCELLED));
-    // set common notification actions
-    mBuilder.setDeleteIntent(PendingIntent.getBroadcast(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED), 0));
-    mBuilder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(), 0));
+    // set common notification actions - use PendingIntentHelper for Android 12+ compatibility
+    mBuilder.setDeleteIntent(PendingIntentHelper.getBroadcastImmutable(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED)));
+    mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, 0, new Intent()));
   }
 
   /**
@@ -286,7 +287,7 @@ public class UpdateService extends IntentService
     } else {
       LoggingHelper.debug("assign '"+contentIntent.toString()+"' to notification");
      if(mBuilder!=null&&mNotificationManager!=null) {
-       mBuilder.setContentIntent(PendingIntent.getActivity(this, DOWNLOAD_COMPLETE_CODE, contentIntent, 0))
+       mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, DOWNLOAD_COMPLETE_CODE, contentIntent))
                .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
      }
@@ -661,7 +662,7 @@ public class UpdateService extends IntentService
     File[] list;
     String name;
     String envPath;
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     int mode;
     int count;
     long total;

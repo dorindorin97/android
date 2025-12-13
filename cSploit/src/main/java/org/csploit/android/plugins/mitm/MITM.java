@@ -281,7 +281,7 @@ public class MITM extends Plugin
       } else{
         try{
 
-          StringBuffer buffer = new StringBuffer();
+          StringBuilder buffer = new StringBuilder();
           char[] buf = new char[1024];
           int read = 0;
           String js = "";

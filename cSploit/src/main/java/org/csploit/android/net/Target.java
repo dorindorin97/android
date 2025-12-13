@@ -860,7 +860,7 @@ public class Target implements Comparable<Target>
   }
 
   public boolean hasExploits() {
-    return exploits.size()>0;
+    return !exploits.isEmpty();
   }
 
   public boolean hasMsfExploits() {

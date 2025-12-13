@@ -88,7 +88,7 @@ public class RemoteReader implements Runnable {
     @Override
     public Object get() throws InterruptedException, ExecutionException {
       synchronized (taskQueue) {
-        while(taskQueue.size() > 0)
+        while(!taskQueue.isEmpty())
           taskQueue.wait();
       }
 

@@ -218,22 +218,22 @@ public class MsfPreferences extends PreferenceActivity {
       }
     }
 
-    if(required.size()>0) {
+    if(!required.isEmpty()) {
       root.addPreference(cat_required);
       for(Preference i : required)
         cat_required.addPreference(i);
     }
-    if(general.size()>0) {
+    if(!general.isEmpty()) {
       root.addPreference(cat_general);
       for(Preference i : general)
         cat_general.addPreference(i);
     }
-    if(advanced.size()>0) {
+    if(!advanced.isEmpty()) {
       root.addPreference(cat_advanced);
       for(Preference i : advanced)
         cat_advanced.addPreference(i);
     }
-    if(evasion.size()>0) {
+    if(!evasion.isEmpty()) {
       root.addPreference(cat_evasion);
       for(Preference i : evasion)
         cat_evasion.addPreference(i);
