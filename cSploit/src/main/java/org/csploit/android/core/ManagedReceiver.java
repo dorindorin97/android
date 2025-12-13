@@ -50,8 +50,19 @@ public abstract class ManagedReceiver extends BroadcastReceiver{
 
   public abstract IntentFilter getFilter();
 
-  protected void finalize() throws Throwable{
-    unregister();
-    super.finalize();
+  /**
+   * Cleanup method called during garbage collection.
+   *
+   * Note: finalize() is deprecated in Java 9+. This exists as a safety net
+   * to unregister the receiver. Prefer explicitly calling unregister() when done.
+   */
+  @SuppressWarnings("deprecation")
+  @Override
+  protected void finalize() throws Throwable {
+    try {
+      unregister();
+    } finally {
+      super.finalize();
+    }
   }
 }

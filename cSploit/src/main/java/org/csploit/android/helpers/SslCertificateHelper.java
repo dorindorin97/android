@@ -174,7 +174,9 @@ public final class SslCertificateHelper {
             LoggingHelper.w(TAG, "Failed to get certificate for " + host + ":" + port, e);
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e) {
+                    LoggingHelper.d(TAG, "Error closing SSL socket: " + e.getMessage());
+                }
             }
         }
 
@@ -323,7 +325,9 @@ public final class SslCertificateHelper {
             return false;
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e2) {
+                    LoggingHelper.d(TAG, "Error closing SSL socket: " + e2.getMessage());
+                }
             }
         }
     }
@@ -350,7 +354,9 @@ public final class SslCertificateHelper {
             LoggingHelper.w(TAG, "Failed to enumerate cipher suites", e);
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e2) {
+                    LoggingHelper.d(TAG, "Error closing SSL socket: " + e2.getMessage());
+                }
             }
         }
         return supported;
@@ -372,7 +378,9 @@ public final class SslCertificateHelper {
             return false;
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e2) {
+                    LoggingHelper.d(TAG, "Error closing SSL socket: " + e2.getMessage());
+                }
             }
         }
     }

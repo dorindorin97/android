@@ -30,9 +30,19 @@ public abstract class SettingReceiver {
    */
   public abstract void onSettingChanged(String key);
 
+  /**
+   * Cleanup method called during garbage collection.
+   *
+   * Note: finalize() is deprecated in Java 9+. This exists as a safety net
+   * to unregister the listener. Prefer explicitly unregistering when done.
+   */
+  @SuppressWarnings("deprecation")
   @Override
   protected void finalize() throws Throwable {
-    System.unregisterSettingListener(this);
-    super.finalize();
+    try {
+      System.unregisterSettingListener(this);
+    } finally {
+      super.finalize();
+    }
   }
 }

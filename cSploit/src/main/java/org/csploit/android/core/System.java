@@ -326,7 +326,9 @@ public class System {
       if (log.exists() && log.canRead()) {
         try {
           logContent = " Log: " + readFirstLine(log.getAbsolutePath());
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+          LoggingHelper.debug("Failed to read daemon log: " + e.getMessage());
+        }
       }
       DaemonException daemonException = new DaemonException("core daemon returned " + ret + logContent);
       throw daemonException;
@@ -371,8 +373,11 @@ public class System {
         for (int i = 0; i < maxRetries && !connected; i++) {
           try {
             Thread.sleep(retryDelayMs);
-          } catch (InterruptedException ignored) {}
-          
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LoggingHelper.debug("Thread interrupted while waiting for daemon");
+          }
+
           connected = Client.Connect(socket_path);
           if (!connected) {
             LoggingHelper.debug("Waiting for daemon... attempt " + (i + 1) + "/" + maxRetries);

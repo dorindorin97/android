@@ -243,7 +243,9 @@ public final class TargetProfiler {
             return false;
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e) {
+                    LoggingHelper.d(TAG, "Error closing socket: " + e.getMessage());
+                }
             }
         }
     }
@@ -316,7 +318,9 @@ public final class TargetProfiler {
             return null;
         } finally {
             if (socket != null) {
-                try { socket.close(); } catch (Exception e) { /* ignore */ }
+                try { socket.close(); } catch (Exception e) {
+                    LoggingHelper.d(TAG, "Error closing socket: " + e.getMessage());
+                }
             }
         }
     }

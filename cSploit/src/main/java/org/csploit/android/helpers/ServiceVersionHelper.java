@@ -270,7 +270,9 @@ public final class ServiceVersionHelper {
                 if (matcher.find()) {
                     return matcher.group(1);
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                LoggingHelper.d(TAG, "Pattern matching failed: " + e.getMessage());
+            }
         }
 
         return null;
