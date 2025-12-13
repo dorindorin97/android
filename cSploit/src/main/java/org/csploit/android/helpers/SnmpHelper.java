@@ -688,14 +688,18 @@ public final class SnmpHelper {
             if (descr.isSuccess() && !descr.getVarBinds().isEmpty()) {
                 builder.setDescription(descr.getVarBinds().get(0).getValueString());
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "Failed to get SNMP description: " + e.getMessage());
+        }
 
         try {
             SnmpResponse name = get(host, community, OID_SYS_NAME);
             if (name.isSuccess() && !name.getVarBinds().isEmpty()) {
                 builder.setName(name.getVarBinds().get(0).getValueString());
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "Failed to get SNMP name: " + e.getMessage());
+        }
 
         try {
             SnmpResponse uptime = get(host, community, OID_SYS_UPTIME);
@@ -705,21 +709,27 @@ public final class SnmpHelper {
                     builder.setUptime((Long) value);
                 }
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "Failed to get SNMP uptime: " + e.getMessage());
+        }
 
         try {
             SnmpResponse location = get(host, community, OID_SYS_LOCATION);
             if (location.isSuccess() && !location.getVarBinds().isEmpty()) {
                 builder.setLocation(location.getVarBinds().get(0).getValueString());
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "Failed to get SNMP location: " + e.getMessage());
+        }
 
         try {
             SnmpResponse contact = get(host, community, OID_SYS_CONTACT);
             if (contact.isSuccess() && !contact.getVarBinds().isEmpty()) {
                 builder.setContact(contact.getVarBinds().get(0).getValueString());
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "Failed to get SNMP contact: " + e.getMessage());
+        }
 
         return builder.build();
     }

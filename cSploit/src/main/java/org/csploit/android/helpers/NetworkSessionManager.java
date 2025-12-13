@@ -557,25 +557,41 @@ public final class NetworkSessionManager {
     // Notification helpers
     private void notifySessionStarted(Session session) {
         for (SessionListener l : listeners) {
-            try { l.onSessionStarted(session); } catch (Exception e) { /* ignore */ }
+            try {
+                l.onSessionStarted(session);
+            } catch (Exception e) {
+                LoggingHelper.w(TAG, "Listener exception on session started: " + e.getMessage());
+            }
         }
     }
 
     private void notifySessionUpdated(Session session) {
         for (SessionListener l : listeners) {
-            try { l.onSessionUpdated(session); } catch (Exception e) { /* ignore */ }
+            try {
+                l.onSessionUpdated(session);
+            } catch (Exception e) {
+                LoggingHelper.w(TAG, "Listener exception on session updated: " + e.getMessage());
+            }
         }
     }
 
     private void notifySessionEnded(Session session) {
         for (SessionListener l : listeners) {
-            try { l.onSessionEnded(session); } catch (Exception e) { /* ignore */ }
+            try {
+                l.onSessionEnded(session);
+            } catch (Exception e) {
+                LoggingHelper.w(TAG, "Listener exception on session ended: " + e.getMessage());
+            }
         }
     }
 
     private void notifyTargetDiscovered(Session session, TargetInfo target) {
         for (SessionListener l : listeners) {
-            try { l.onTargetDiscovered(session, target); } catch (Exception e) { /* ignore */ }
+            try {
+                l.onTargetDiscovered(session, target);
+            } catch (Exception e) {
+                LoggingHelper.w(TAG, "Listener exception on target discovered: " + e.getMessage());
+            }
         }
     }
 

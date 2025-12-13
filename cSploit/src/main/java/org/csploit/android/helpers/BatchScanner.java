@@ -422,7 +422,9 @@ public final class BatchScanner {
             if (address.isReachable(config.connectTimeoutMs)) {
                 return true;
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            LoggingHelper.d(TAG, "ICMP reachability check failed: " + e.getMessage());
+        }
 
         // Try common ports
         for (int port : new int[]{80, 443, 22, 445}) {
@@ -509,7 +511,9 @@ public final class BatchScanner {
                 if (entry.getValue().get(timeoutMs * 2, TimeUnit.MILLISECONDS)) {
                     openPorts.add(entry.getKey());
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                LoggingHelper.d(TAG, "Port scan future failed for port " + entry.getKey() + ": " + e.getMessage());
+            }
         }
 
         executor.shutdown();
@@ -542,7 +546,9 @@ public final class BatchScanner {
                 if (entry.getValue().get(5, TimeUnit.SECONDS)) {
                     liveHosts.add(entry.getKey());
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                LoggingHelper.d(TAG, "Host discovery future failed for " + entry.getKey() + ": " + e.getMessage());
+            }
         }
 
         executor.shutdown();

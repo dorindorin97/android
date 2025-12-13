@@ -282,9 +282,20 @@ public class ExecChecker {
     }
   }
 
+  /**
+   * Cleanup method called during garbage collection.
+   *
+   * Note: finalize() is deprecated in Java 9+. This implementation exists
+   * for backwards compatibility and as a safety net. Prefer explicitly
+   * calling clear() when you're done with this ExecChecker instance.
+   */
+  @SuppressWarnings("deprecation")
   @Override
   protected void finalize() throws Throwable {
-    clear();
-    super.finalize();
+    try {
+      clear();
+    } finally {
+      super.finalize();
+    }
   }
 }
