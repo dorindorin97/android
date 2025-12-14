@@ -201,4 +201,228 @@ public final class ValidationHelper {
 
         return str.matches("[a-zA-Z0-9]+");
     }
+
+    /**
+     * Validate IPv6 address format
+     */
+    public static boolean isValidIPv6(@Nullable String ip) {
+        if (isEmpty(ip)) {
+            return false;
+        }
+
+        // Basic IPv6 pattern (simplified)
+        String ipv6Pattern = "([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|" +
+                "([0-9a-fA-F]{1,4}:){1,7}:|" +
+                "([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|" +
+                "::([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}|" +
+                "::|" +
+                "fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+";
+
+        return ip.matches(ipv6Pattern);
+    }
+
+    /**
+     * Validate IP address (both IPv4 and IPv6)
+     */
+    public static boolean isValidIP(@Nullable String ip) {
+        return isValidIPv4(ip) || isValidIPv6(ip);
+    }
+
+    /**
+     * Validate CIDR notation (e.g., "192.168.1.0/24")
+     */
+    public static boolean isValidCIDR(@Nullable String cidr) {
+        if (isEmpty(cidr)) {
+            return false;
+        }
+
+        String[] parts = cidr.split("/");
+        if (parts.length != 2) {
+            return false;
+        }
+
+        if (!isValidIPv4(parts[0])) {
+            return false;
+        }
+
+        try {
+            int prefix = Integer.parseInt(parts[1]);
+            return prefix >= 0 && prefix <= 32;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Validate port range (e.g., "1-1024" or "80,443,8080")
+     */
+    public static boolean isValidPortRange(@Nullable String portRange) {
+        if (isEmpty(portRange)) {
+            return false;
+        }
+
+        // Check for range format (1-1024)
+        if (portRange.contains("-")) {
+            String[] parts = portRange.split("-");
+            if (parts.length != 2) {
+                return false;
+            }
+            try {
+                int start = Integer.parseInt(parts[0].trim());
+                int end = Integer.parseInt(parts[1].trim());
+                return isValidPort(start) && isValidPort(end) && start <= end;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+
+        // Check for comma-separated list (80,443,8080)
+        if (portRange.contains(",")) {
+            String[] ports = portRange.split(",");
+            for (String port : ports) {
+                if (!isValidPort(port.trim())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Single port
+        return isValidPort(portRange);
+    }
+
+    /**
+     * Check if a number is in a given range
+     */
+    public static boolean isInRange(int value, int min, int max) {
+        return value >= min && value <= max;
+    }
+
+    /**
+     * Check if a long value is in a given range
+     */
+    public static boolean isInRange(long value, long min, long max) {
+        return value >= min && value <= max;
+    }
+
+    /**
+     * Check if a string length is in a given range
+     */
+    public static boolean isLengthInRange(@Nullable String str, int minLength, int maxLength) {
+        if (str == null) {
+            return minLength == 0;
+        }
+        int length = str.length();
+        return length >= minLength && length <= maxLength;
+    }
+
+    /**
+     * Validate that string contains only hexadecimal characters
+     */
+    public static boolean isHexadecimal(@Nullable String str) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return str.matches("[0-9a-fA-F]+");
+    }
+
+    /**
+     * Check if string is a valid integer
+     */
+    public static boolean isInteger(@Nullable String str) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if string is a valid long
+     */
+    public static boolean isLong(@Nullable String str) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if string is a valid double/float
+     */
+    public static boolean isDecimal(@Nullable String str) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if a byte array is null or empty
+     */
+    public static boolean isEmpty(@Nullable byte[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * Check if a map is null or empty
+     */
+    public static boolean isEmpty(@Nullable java.util.Map<?, ?> map) {
+        return map == null || map.isEmpty();
+    }
+
+    /**
+     * Validate that all required fields in a map are present
+     */
+    public static boolean hasRequiredFields(@Nullable java.util.Map<String, ?> map, @NonNull String... requiredKeys) {
+        if (map == null) {
+            return false;
+        }
+        for (String key : requiredKeys) {
+            if (!map.containsKey(key) || map.get(key) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Require non-null value or throw IllegalArgumentException
+     */
+    @NonNull
+    public static <T> T requireNonNull(@Nullable T value, @NonNull String message) {
+        if (value == null) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    /**
+     * Require non-empty string or throw IllegalArgumentException
+     */
+    @NonNull
+    public static String requireNonEmpty(@Nullable String value, @NonNull String message) {
+        if (isEmpty(value)) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private ValidationHelper() {
+        // Prevent instantiation
+    }
 }

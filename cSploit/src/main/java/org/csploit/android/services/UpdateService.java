@@ -535,55 +535,47 @@ public class UpdateService extends IntentService
     if(mCurrentTask.url==null||mCurrentTask.path==null)
       return;
 
-    File file = null;
-    FileOutputStream writer = null;
-    InputStream reader = null;
-    HttpURLConnection connection = null;
+    File file = new File(mCurrentTask.path);
     boolean exitForError = true;
+    HttpURLConnection connection = null;
 
-    try
-    {
+    try {
       MessageDigest md5, sha1;
-      URL url;
       byte[] buffer;
       int read;
-      short percentage,previous_percentage;
-      long downloaded,total;
+      short percentage, previous_percentage;
+      long downloaded, total;
 
       mBuilder.setContentTitle(getString(R.string.downloading_update))
               .setContentText(getString(R.string.connecting))
               .setSmallIcon(android.R.drawable.stat_sys_download)
               .setProgress(100, 0, true)
               .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
-      mNotificationManager.notify(NOTIFICATION_ID,mBuilder.build());
+      mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
-      md5 = (mCurrentTask.md5!=null  ? MessageDigest.getInstance("MD5") : null);
-      sha1= (mCurrentTask.sha1!=null ? MessageDigest.getInstance("SHA-1") : null);
+      md5 = (mCurrentTask.md5 != null ? MessageDigest.getInstance("MD5") : null);
+      sha1 = (mCurrentTask.sha1 != null ? MessageDigest.getInstance("SHA-1") : null);
       buffer = new byte[4096];
-      file = new File(mCurrentTask.path);
 
-      if(file.exists()&&file.isFile())
+      if (file.exists() && file.isFile()) {
         //noinspection ResultOfMethodCallIgnored
         file.delete();
+      }
 
       HttpURLConnection.setFollowRedirects(true);
-      url = new URL(mCurrentTask.url);
+      URL url = new URL(mCurrentTask.url);
       connection = (HttpURLConnection) url.openConnection();
-
       connection.connect();
 
-      writer = new FileOutputStream(file);
-      reader = connection.getInputStream();
+      int responseCode = connection.getResponseCode();
+      if (responseCode != 200) {
+        throw new IOException(String.format("cannot download '%s': responseCode: %d",
+                mCurrentTask.url, responseCode));
+      }
 
       total = connection.getContentLength();
-      read = connection.getResponseCode();
-
-      if(read!=200)
-        throw new IOException(String.format("cannot download '%s': responseCode: %d",
-                mCurrentTask.url, read));
-
-      downloaded=0;
-      previous_percentage=-1;
+      downloaded = 0;
+      previous_percentage = -1;
 
       mBuilder.setContentText(file.getName())
               .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
@@ -591,57 +583,58 @@ public class UpdateService extends IntentService
 
       LoggingHelper.info(String.format("downloading '%s' to '%s'", mCurrentTask.url, mCurrentTask.path));
 
-      while( mRunning && (read = reader.read(buffer)) != -1 ) {
-        writer.write(buffer, 0, read);
-        if(md5!=null)
-          md5.update(buffer, 0, read);
-        if(sha1!=null)
-          sha1.update(buffer, 0, read);
+      // Use try-with-resources for proper stream management
+      try (InputStream reader = connection.getInputStream();
+           FileOutputStream writer = new FileOutputStream(file)) {
 
-        if(total>=0) {
-          downloaded += read;
+        while (mRunning && (read = reader.read(buffer)) != -1) {
+          writer.write(buffer, 0, read);
+          if (md5 != null) {
+            md5.update(buffer, 0, read);
+          }
+          if (sha1 != null) {
+            sha1.update(buffer, 0, read);
+          }
 
-          percentage = (short) (((double) downloaded / total) * 100);
+          if (total >= 0) {
+            downloaded += read;
+            percentage = (short) (((double) downloaded / total) * 100);
 
-          if (percentage != previous_percentage) {
-            mBuilder.setProgress(100, percentage, false)
-                    .setContentInfo(percentage + "%")
-                    .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-            previous_percentage = percentage;
+            if (percentage != previous_percentage) {
+              mBuilder.setProgress(100, percentage, false)
+                      .setContentInfo(percentage + "%")
+                      .setChannelId(getBaseContext().getString(R.string.csploitChannelId));
+              mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+              previous_percentage = percentage;
+            }
           }
         }
       }
 
-      if(!mRunning)
+      if (!mRunning) {
         throw new CancellationException("download cancelled");
+      }
 
       LoggingHelper.info("download finished successfully");
 
-      if( md5 != null || sha1 != null ) {
+      if (md5 != null || sha1 != null) {
         if (md5 != null && !mCurrentTask.md5.equals(digest2string(md5.digest()))) {
           throw new KeyException("wrong MD5");
         } else if (sha1 != null && !mCurrentTask.sha1.equals(digest2string(sha1.digest()))) {
           throw new KeyException("wrong SHA-1");
         }
-      } else if(mCurrentTask.archiver != null) {
+      } else if (mCurrentTask.archiver != null) {
         verifyArchiveIntegrity();
       }
 
-      exitForError=false;
+      exitForError = false;
 
     } finally {
-      if(exitForError&&file!=null&&file.exists()&&!file.delete())
-          LoggingHelper.error(String.format("cannot delete file '%s'", mCurrentTask.path));
-      try {
-        if(writer!=null)
-          writer.close();
-        if(reader!=null)
-          reader.close();
-        if(connection!=null)
-          connection.disconnect();
-      } catch (IOException e) {
-        LoggingHelper.e(TAG, "Failed to close connection", e);
+      if (exitForError && file.exists() && !file.delete()) {
+        LoggingHelper.error(String.format("cannot delete file '%s'", mCurrentTask.path));
+      }
+      if (connection != null) {
+        connection.disconnect();
       }
     }
   }
@@ -916,31 +909,21 @@ public class UpdateService extends IntentService
   }
 
   private void createVersionFile() throws IOException {
-    File f;
-    FileOutputStream fos = null;
-
-    if(mCurrentTask.outputDir==null)
+    if (mCurrentTask.outputDir == null) {
       return;
+    }
 
-    if(mCurrentTask.version == null || mCurrentTask.version.isEmpty()) {
+    if (mCurrentTask.version == null || mCurrentTask.version.isEmpty()) {
       LoggingHelper.warning("version string not found");
       return;
     }
 
-    try {
-        f = new File(mCurrentTask.outputDir, "VERSION");
-        fos = new FileOutputStream(f);
-        fos.write(mCurrentTask.version.getBytes());
-    } catch (Exception e) {
+    File versionFile = new File(mCurrentTask.outputDir, "VERSION");
+    try (FileOutputStream fos = new FileOutputStream(versionFile)) {
+      fos.write(mCurrentTask.version.getBytes());
+    } catch (IOException e) {
       LoggingHelper.e(TAG, "Failed to create VERSION file", e);
-      throw new IOException("cannot create VERSION file");
-    } finally {
-      if(fos!=null) {
-        try { fos.close(); }
-        catch (Exception e) {
-          // ignored
-        }
-      }
+      throw new IOException("cannot create VERSION file", e);
     }
   }
 
