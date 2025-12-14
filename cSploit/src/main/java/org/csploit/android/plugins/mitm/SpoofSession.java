@@ -23,6 +23,7 @@ import org.csploit.android.core.Child;
 import org.csploit.android.core.ChildManager;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.Target;
 import org.csploit.android.tools.ArpSpoof;
 import org.csploit.android.tools.Ettercap.OnAccountListener;
@@ -70,10 +71,10 @@ public class SpoofSession
           listener.onError( null, R.string.error_mitm_https_redirector );
           return;
         }
-        new Thread(System.getHttpsRedirector()).start();
+        ThreadHelper.executeBackground(System.getHttpsRedirector());
       }
 
-      new Thread(System.getProxy()).start();
+      ThreadHelper.executeBackground(System.getProxy());
     }
 
     if(mWithServer){
@@ -84,7 +85,7 @@ public class SpoofSession
         }
 
         System.getServer().setResource(mServerFileName, mServerMimeType);
-        new Thread(System.getServer()).start();
+        ThreadHelper.executeBackground(System.getServer());
       } catch(Exception e){
         LoggingHelper.e(TAG, "Failed to setup spoof server", e);
         mWithServer = false;

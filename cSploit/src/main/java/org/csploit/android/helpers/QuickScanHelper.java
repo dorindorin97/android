@@ -287,7 +287,7 @@ public final class QuickScanHelper {
     public static void scanPortsAsync(@NonNull String host, @NonNull int[] ports,
                                       int timeoutMs, int threadCount,
                                       @NonNull ScanCallback callback) {
-        new Thread(() -> {
+        ThreadHelper.executeBackground(() -> {
             List<PortScanResult> results = new CopyOnWriteArrayList<>();
             ExecutorService executor = Executors.newFixedThreadPool(threadCount);
             AtomicInteger completed = new AtomicInteger(0);
@@ -318,7 +318,7 @@ public final class QuickScanHelper {
 
             executor.shutdown();
             callback.onComplete(new ArrayList<>(results));
-        }).start();
+        });
     }
 
     /**
@@ -428,7 +428,7 @@ public final class QuickScanHelper {
     public static void scanSubnetAsync(@NonNull String baseIp, int startHost, int endHost,
                                        int timeoutMs, int threadCount,
                                        @NonNull HostScanCallback callback) {
-        new Thread(() -> {
+        ThreadHelper.executeBackground(() -> {
             List<HostScanResult> results = new CopyOnWriteArrayList<>();
             ExecutorService executor = Executors.newFixedThreadPool(threadCount);
             AtomicInteger completed = new AtomicInteger(0);
@@ -473,7 +473,7 @@ public final class QuickScanHelper {
 
             executor.shutdown();
             callback.onComplete(new ArrayList<>(results));
-        }).start();
+        });
     }
 
     /**
