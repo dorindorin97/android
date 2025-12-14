@@ -127,7 +127,7 @@ public class ScheduledScanService extends Service {
     private PowerManager.WakeLock mWakeLock;
     private NotificationManager mNotificationManager;
     private final AtomicBoolean mScanning = new AtomicBoolean(false);
-    private Thread mScanThread;
+    private volatile boolean mScanRunning = false;
     private BroadcastReceiver mCancelReceiver;
 
     @Override
@@ -204,21 +204,13 @@ public class ScheduledScanService extends Service {
         ScanType scanType = ScanType.valueOf(prefs.getString(PREF_SCAN_TYPE, ScanType.DISCOVERY.name()));
         boolean autoExport = prefs.getBoolean(PREF_AUTO_EXPORT, true);
 
-        mScanThread = new Thread(() -> performScan(scanType, autoExport), "ScheduledScanThread");
-        mScanThread.start();
+        // Use ThreadHelper for managed thread execution
+        ThreadHelper.executeBackground(() -> performScan(scanType, autoExport));
     }
 
     private void stopScan() {
         mScanning.set(false);
-
-        if (mScanThread != null && mScanThread.isAlive()) {
-            mScanThread.interrupt();
-            try {
-                mScanThread.join(5000);
-            } catch (InterruptedException e) {
-                // Ignore
-            }
-        }
+        mScanRunning = false;
 
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
