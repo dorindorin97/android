@@ -33,26 +33,33 @@ import java.util.regex.Pattern;
 
 /**
  * InterfaceHelper - Network interface management utilities.
- * 
+ *
+ * @deprecated Use {@link NetworkInterfaceHelper} instead, which provides better
+ * integration with ShellHelper and more robust error handling. This class
+ * remains for backwards compatibility but will be removed in a future release.
+ *
  * Provides:
  * - Interface enumeration
  * - Interface configuration
  * - Statistics collection
  * - Wireless interface detection
  * - Interface state management
- * 
+ *
  * Usage:
  * {@code
  * // List interfaces
  * List<InterfaceInfo> interfaces = InterfaceHelper.listInterfaces();
- * 
+ *
  * // Get interface details
  * InterfaceInfo eth0 = InterfaceHelper.getInterface("eth0");
- * 
+ *
  * // Get wireless interfaces
  * List<InterfaceInfo> wifi = InterfaceHelper.getWirelessInterfaces();
  * }
+ *
+ * @see NetworkInterfaceHelper
  */
+@Deprecated
 public final class InterfaceHelper {
     
     private static final String TAG = "InterfaceHelper";

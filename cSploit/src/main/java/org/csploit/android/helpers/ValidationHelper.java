@@ -6,6 +6,10 @@ import androidx.annotation.Nullable;
 /**
  * Validation and input checking utilities for common operations.
  * Provides methods for validating network data, strings, and collections.
+ *
+ * Note: For specialized network validation (IPv4, IPv6, MAC), this class
+ * delegates to IpAddressHelper, IPv6Helper, and MacAddressHelper respectively.
+ * Those helpers provide additional protocol-specific operations beyond validation.
  */
 public final class ValidationHelper {
 
@@ -24,52 +28,21 @@ public final class ValidationHelper {
     }
 
     /**
-     * Validate IP address format (IPv4)
+     * Validate IP address format (IPv4).
+     * Delegates to IpAddressHelper for implementation.
+     * @see IpAddressHelper#isValidIpv4(String)
      */
     public static boolean isValidIPv4(@Nullable String ip) {
-        if (isEmpty(ip)) {
-            return false;
-        }
-
-        String[] parts = ip.split("\\.");
-        if (parts.length != 4) {
-            return false;
-        }
-
-        try {
-            for (String part : parts) {
-                int num = Integer.parseInt(part);
-                if (num < 0 || num > 255) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return IpAddressHelper.isValidIpv4(ip);
     }
 
     /**
-     * Validate MAC address format
+     * Validate MAC address format.
+     * Delegates to MacAddressHelper for implementation.
+     * @see MacAddressHelper#isValidMac(String)
      */
     public static boolean isValidMacAddress(@Nullable String mac) {
-        if (isEmpty(mac)) {
-            return false;
-        }
-
-        // Support both formats: AA:BB:CC:DD:EE:FF and AABBCCDDEEFF
-        String cleanMac = mac.replaceAll(":", "").replaceAll("-", "");
-        
-        if (cleanMac.length() != 12) {
-            return false;
-        }
-
-        try {
-            Long.parseLong(cleanMac, 16);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return MacAddressHelper.isValidMac(mac);
     }
 
     /**
@@ -203,29 +176,19 @@ public final class ValidationHelper {
     }
 
     /**
-     * Validate IPv6 address format
+     * Validate IPv6 address format.
+     * Delegates to IPv6Helper for implementation.
+     * @see IPv6Helper#isValidIPv6(String)
      */
     public static boolean isValidIPv6(@Nullable String ip) {
-        if (isEmpty(ip)) {
-            return false;
-        }
-
-        // Basic IPv6 pattern (simplified)
-        String ipv6Pattern = "([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|" +
-                "([0-9a-fA-F]{1,4}:){1,7}:|" +
-                "([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|" +
-                "::([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}|" +
-                "::|" +
-                "fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+";
-
-        return ip.matches(ipv6Pattern);
+        return IPv6Helper.isValidIPv6(ip);
     }
 
     /**
      * Validate IP address (both IPv4 and IPv6)
      */
     public static boolean isValidIP(@Nullable String ip) {
-        return isValidIPv4(ip) || isValidIPv6(ip);
+        return IpAddressHelper.isValidIpv4(ip) || IPv6Helper.isValidIPv6(ip);
     }
 
     /**
