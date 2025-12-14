@@ -23,6 +23,7 @@ import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
 import org.csploit.android.helpers.ConcurrencyHelper;
+import org.csploit.android.helpers.EncryptedStorageHelper;
 import org.csploit.android.net.http.RequestParser;
 
 import java.io.BufferedOutputStream;
@@ -36,9 +37,10 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
+import java.util.Base64;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -52,7 +54,7 @@ public class HTTPSRedirector implements Runnable
   private static final int BACKLOG = 255;
 
   private static final String KEYSTORE_FILE = "csploit.p12";
-  private static final String KEYSTORE_PASS = "1234";
+  private static final String KEYSTORE_PASS_KEY = "https_keystore_password";
 
   private Context mContext = null;
   private InetAddress mAddress = null;
@@ -68,11 +70,13 @@ public class HTTPSRedirector implements Runnable
   }
 
   private SSLServerSocket getSSLSocket() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyManagementException{
+    char[] keystorePassword = getOrCreateKeystorePassword();
+
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
-    keyStore.load(mContext.getAssets().open(KEYSTORE_FILE), KEYSTORE_PASS.toCharArray());
+    keyStore.load(mContext.getAssets().open(KEYSTORE_FILE), keystorePassword);
 
     KeyManagerFactory keyMan = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-    keyMan.init(keyStore, KEYSTORE_PASS.toCharArray());
+    keyMan.init(keyStore, keystorePassword);
 
     SSLContext sslContext = SSLContext.getInstance("TLS");
     sslContext.init(keyMan.getKeyManagers(), null, null);
@@ -80,6 +84,26 @@ public class HTTPSRedirector implements Runnable
     SSLServerSocketFactory sslFactory = sslContext.getServerSocketFactory();
 
     return (SSLServerSocket) sslFactory.createServerSocket(mPort, BACKLOG, mAddress);
+  }
+
+  /**
+   * Get or create a secure keystore password using encrypted storage.
+   * If no password exists, generates a cryptographically secure random password.
+   */
+  private char[] getOrCreateKeystorePassword() {
+    EncryptedStorageHelper storage = EncryptedStorageHelper.getInstance(mContext);
+    String password = storage.getString(KEYSTORE_PASS_KEY, null);
+
+    if (password == null) {
+      // Generate a new secure random password
+      byte[] randomBytes = new byte[32];
+      new SecureRandom().nextBytes(randomBytes);
+      password = Base64.getEncoder().encodeToString(randomBytes);
+      storage.putString(KEYSTORE_PASS_KEY, password);
+      LoggingHelper.debug("Generated new secure keystore password");
+    }
+
+    return password.toCharArray();
   }
 
   public void stop(){
