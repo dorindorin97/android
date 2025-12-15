@@ -28,9 +28,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -81,7 +82,8 @@ public final class SessionLogger {
     private final Map<String, Session> activeSessions = new HashMap<>();
     private final ConcurrentLinkedQueue<LogEntry> recentEntries = new ConcurrentLinkedQueue<>();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
     
     private boolean persistenceEnabled = true;
     private LogListener listener;
@@ -497,9 +499,9 @@ public final class SessionLogger {
             writer.write("=== Session Export ===\n");
             writer.write("Session ID: " + session.id + "\n");
             writer.write("Name: " + session.name + "\n");
-            writer.write("Start: " + dateFormat.format(new Date(session.startTime)) + "\n");
+            writer.write("Start: " + Instant.ofEpochMilli(session.startTime).atZone(ZoneId.systemDefault()).format(DATE_FORMATTER) + "\n");
             if (session.endTime > 0) {
-                writer.write("End: " + dateFormat.format(new Date(session.endTime)) + "\n");
+                writer.write("End: " + Instant.ofEpochMilli(session.endTime).atZone(ZoneId.systemDefault()).format(DATE_FORMATTER) + "\n");
             }
             writer.write("Status: " + session.status + "\n");
             writer.write("Duration: " + session.getDuration() + "ms\n");

@@ -7,8 +7,8 @@ import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -34,8 +34,9 @@ public final class LoggingHelper {
 
     private static final String TAG = "cSploit";
     private static final String CLASS_NAME = LoggingHelper.class.getName();
-    private static final SimpleDateFormat dateFormat =
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMATTER =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
 
     // Enable/disable debug logging globally
     private static volatile boolean sDebugEnabled = true;
@@ -281,7 +282,7 @@ public final class LoggingHelper {
      */
     @NonNull
     private static String getTimestamp() {
-        return dateFormat.format(new Date());
+        return LocalDateTime.now().format(DATE_FORMATTER);
     }
 
     /**
