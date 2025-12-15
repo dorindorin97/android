@@ -40,8 +40,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -69,11 +69,12 @@ import java.util.zip.ZipOutputStream;
  * }
  */
 public final class ExportHelper {
-    
+
     public static final String TAG = "ExportHelper";
-    
-    private static final SimpleDateFormat TIMESTAMP_FORMAT = 
-            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter TIMESTAMP_FORMAT =
+            DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss", Locale.US);
     
     /**
      * Export format types.
@@ -131,7 +132,7 @@ public final class ExportHelper {
      */
     @NonNull
     public static String generateFilename(@NonNull String baseName, @NonNull ExportFormat format) {
-        String timestamp = TIMESTAMP_FORMAT.format(new Date());
+        String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         return String.format("%s_%s.%s", baseName, timestamp, format.extension);
     }
     

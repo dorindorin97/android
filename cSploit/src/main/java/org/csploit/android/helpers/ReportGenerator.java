@@ -31,8 +31,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,10 +62,11 @@ import java.util.Locale;
 public final class ReportGenerator {
 
     private static final String TAG = "ReportGenerator";
-    private static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-    private static final SimpleDateFormat FILE_DATE_FORMAT =
-            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
+    private static final DateTimeFormatter FILE_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss", Locale.US);
 
     private final Context context;
     private final File reportsDir;
@@ -192,7 +193,7 @@ public final class ReportGenerator {
                                            @Nullable List<VulnerabilityScanner.ScanResult> scanResults,
                                            @NonNull ReportConfig config) {
         long startTime = System.currentTimeMillis();
-        String filename = "report_" + FILE_DATE_FORMAT.format(new Date()) + Format.HTML.extension;
+        String filename = "report_" + LocalDateTime.now().format(FILE_DATE_FORMAT) + Format.HTML.extension;
         File outputFile = new File(reportsDir, filename);
 
         try {
@@ -219,13 +220,13 @@ public final class ReportGenerator {
                                            @Nullable List<VulnerabilityScanner.ScanResult> scanResults,
                                            @NonNull ReportConfig config) {
         long startTime = System.currentTimeMillis();
-        String filename = "report_" + FILE_DATE_FORMAT.format(new Date()) + Format.JSON.extension;
+        String filename = "report_" + LocalDateTime.now().format(FILE_DATE_FORMAT) + Format.JSON.extension;
         File outputFile = new File(reportsDir, filename);
 
         try {
             JSONObject report = new JSONObject();
             report.put("reportTitle", config.reportTitle);
-            report.put("generatedAt", DATE_FORMAT.format(new Date()));
+            report.put("generatedAt", LocalDateTime.now().format(DATE_FORMAT));
             report.put("organizationName", config.organizationName);
             report.put("auditorName", config.auditorName);
 
@@ -272,7 +273,7 @@ public final class ReportGenerator {
                                            @Nullable List<VulnerabilityScanner.ScanResult> scanResults,
                                            @NonNull ReportConfig config) {
         long startTime = System.currentTimeMillis();
-        String filename = "report_" + FILE_DATE_FORMAT.format(new Date()) + Format.TEXT.extension;
+        String filename = "report_" + LocalDateTime.now().format(FILE_DATE_FORMAT) + Format.TEXT.extension;
         File outputFile = new File(reportsDir, filename);
 
         try {
@@ -298,7 +299,7 @@ public final class ReportGenerator {
     public ReportResult generateCsvReport(@NonNull List<Target> targets,
                                           @Nullable List<VulnerabilityScanner.ScanResult> scanResults) {
         long startTime = System.currentTimeMillis();
-        String filename = "report_" + FILE_DATE_FORMAT.format(new Date()) + Format.CSV.extension;
+        String filename = "report_" + LocalDateTime.now().format(FILE_DATE_FORMAT) + Format.CSV.extension;
         File outputFile = new File(reportsDir, filename);
 
         try {
@@ -414,7 +415,7 @@ public final class ReportGenerator {
 
         // Title
         html.append("<h1>").append(escapeHtml(config.reportTitle)).append("</h1>\n");
-        html.append("<p>Generated: ").append(DATE_FORMAT.format(new Date())).append("</p>\n");
+        html.append("<p>Generated: ").append(LocalDateTime.now().format(DATE_FORMAT)).append("</p>\n");
 
         if (!config.organizationName.isEmpty()) {
             html.append("<p>Organization: ").append(escapeHtml(config.organizationName)).append("</p>\n");
@@ -500,7 +501,7 @@ public final class ReportGenerator {
         text.append("=".repeat(60)).append("\n");
         text.append(config.reportTitle).append("\n");
         text.append("=".repeat(60)).append("\n\n");
-        text.append("Generated: ").append(DATE_FORMAT.format(new Date())).append("\n");
+        text.append("Generated: ").append(LocalDateTime.now().format(DATE_FORMAT)).append("\n");
         if (!config.organizationName.isEmpty()) {
             text.append("Organization: ").append(config.organizationName).append("\n");
         }

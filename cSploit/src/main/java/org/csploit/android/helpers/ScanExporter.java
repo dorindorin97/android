@@ -29,9 +29,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,10 +49,11 @@ import java.util.Map;
 public final class ScanExporter {
 
     private static final String TAG = "ScanExporter";
-    private static final SimpleDateFormat DATE_FORMAT =
-        new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
-    private static final SimpleDateFormat READABLE_DATE =
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMAT =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss", Locale.US);
+    private static final DateTimeFormatter READABLE_DATE =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public enum ExportFormat {
         JSON(".json", "application/json"),
@@ -103,7 +104,7 @@ public final class ScanExporter {
      * @return ExportResult with file path or error
      */
     public static ExportResult export(List<Target> targets, ExportFormat format, File outputDir) {
-        String filename = "csploit_scan_" + DATE_FORMAT.format(new Date()) + format.extension;
+        String filename = "csploit_scan_" + LocalDateTime.now().format(DATE_FORMAT) + format.extension;
         File outputFile = new File(outputDir, filename);
 
         try {
@@ -155,7 +156,7 @@ public final class ScanExporter {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append("  \"scan_info\": {\n");
-        sb.append("    \"timestamp\": \"").append(READABLE_DATE.format(new Date())).append("\",\n");
+        sb.append("    \"timestamp\": \"").append(LocalDateTime.now().format(READABLE_DATE)).append("\",\n");
         sb.append("    \"total_targets\": ").append(targets.size()).append(",\n");
         sb.append("    \"app_version\": \"").append(AppHelper.getVersionName(null)).append("\"\n");
         sb.append("  },\n");
@@ -249,7 +250,7 @@ public final class ScanExporter {
      */
     public static String exportToHtml(List<Target> targets) {
         StringBuilder sb = new StringBuilder();
-        String timestamp = READABLE_DATE.format(new Date());
+        String timestamp = LocalDateTime.now().format(READABLE_DATE);
 
         sb.append("<!DOCTYPE html>\n");
         sb.append("<html lang=\"en\">\n");
@@ -364,7 +365,7 @@ public final class ScanExporter {
      */
     public static String exportToText(List<Target> targets) {
         StringBuilder sb = new StringBuilder();
-        String timestamp = READABLE_DATE.format(new Date());
+        String timestamp = LocalDateTime.now().format(READABLE_DATE);
 
         sb.append("cSploit Network Scan Report\n");
         sb.append("===========================\n");
@@ -418,7 +419,7 @@ public final class ScanExporter {
      */
     public static String exportToXml(List<Target> targets) {
         StringBuilder sb = new StringBuilder();
-        String timestamp = READABLE_DATE.format(new Date());
+        String timestamp = LocalDateTime.now().format(READABLE_DATE);
 
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<csploit_scan>\n");

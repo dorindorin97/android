@@ -27,7 +27,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,8 +57,9 @@ public class SessionManager {
     private static final String SESSION_EXT = ".dss";
     private static final String HIJACKER_SESSION_EXT = ".dhs";
     private static final String BACKUP_EXT = ".bak";
-    private static final SimpleDateFormat DATE_FORMAT =
-        new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
+    // Thread-safe DateTimeFormatter (immutable and thread-safe unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMAT =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss", Locale.US);
 
     private String mSessionName;
     private String mStoragePath;
@@ -318,7 +320,7 @@ public class SessionManager {
             sourcePath += SESSION_EXT;
         }
 
-        String backupPath = sourcePath + "." + DATE_FORMAT.format(new Date()) + BACKUP_EXT;
+        String backupPath = sourcePath + "." + LocalDateTime.now().format(DATE_FORMAT) + BACKUP_EXT;
 
         try {
             File source = new File(sourcePath);
@@ -418,7 +420,7 @@ public class SessionManager {
             StringBuilder json = new StringBuilder();
             json.append("{\n");
             json.append("  \"sessionName\": \"").append(escapeJson(sessionName)).append("\",\n");
-            json.append("  \"exportDate\": \"").append(DATE_FORMAT.format(new Date())).append("\",\n");
+            json.append("  \"exportDate\": \"").append(LocalDateTime.now().format(DATE_FORMAT)).append("\",\n");
             json.append("  \"version\": \"").append(SESSION_VERSION).append("\",\n");
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -472,7 +474,7 @@ public class SessionManager {
      */
     @NonNull
     public String generateSessionName() {
-        return "csploit-session-" + DATE_FORMAT.format(new Date());
+        return "csploit-session-" + LocalDateTime.now().format(DATE_FORMAT);
     }
 
     /**
@@ -514,7 +516,9 @@ public class SessionManager {
         }
 
         public String getFormattedDate() {
-            return DATE_FORMAT.format(new Date(lastModified));
+            return java.time.Instant.ofEpochMilli(lastModified)
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .format(DATE_FORMAT);
         }
 
         public String getFormattedSize() {
