@@ -303,17 +303,190 @@ public final class ExceptionHelper {
         }
     }
 
+    // ==================== Retry Utilities ====================
+
     /**
-     * Rethrow if the exception is unchecked (RuntimeException or Error).
+     * Interface for retryable operations.
      *
-     * @param throwable The throwable to check
+     * @param <T> Return type of the operation
      */
-    public static void rethrowIfUnchecked(@NonNull Throwable throwable) {
-        if (throwable instanceof RuntimeException) {
-            throw (RuntimeException) throwable;
+    public interface RetryableOperation<T> {
+        T execute() throws Exception;
+    }
+
+    /**
+     * Interface for retryable void operations.
+     */
+    public interface RetryableVoidOperation {
+        void execute() throws Exception;
+    }
+
+    /**
+     * Execute an operation with retry logic.
+     *
+     * @param operation the operation to execute
+     * @param maxRetries maximum number of retries (0 = no retry)
+     * @param delayMs delay between retries in milliseconds
+     * @param <T> return type
+     * @return the operation result
+     * @throws Exception if all retries fail
+     */
+    public static <T> T executeWithRetry(
+            @NonNull RetryableOperation<T> operation,
+            int maxRetries,
+            long delayMs) throws Exception {
+
+        Exception lastException = null;
+
+        for (int attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                return operation.execute();
+            } catch (Exception e) {
+                lastException = e;
+
+                if (!isRetryable(e) || attempt >= maxRetries) {
+                    throw e;
+                }
+
+                LoggingHelper.d(TAG, String.format("Retry %d/%d after error: %s",
+                    attempt + 1, maxRetries, getRootCauseMessage(e)));
+
+                try {
+                    Thread.sleep(delayMs);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw e;
+                }
+            }
         }
-        if (throwable instanceof Error) {
-            throw (Error) throwable;
+
+        throw lastException != null ? lastException : new Exception("Operation failed");
+    }
+
+    /**
+     * Execute a void operation with retry logic.
+     *
+     * @param operation the operation to execute
+     * @param maxRetries maximum number of retries
+     * @param delayMs delay between retries
+     * @throws Exception if all retries fail
+     */
+    public static void executeWithRetry(
+            @NonNull RetryableVoidOperation operation,
+            int maxRetries,
+            long delayMs) throws Exception {
+
+        executeWithRetry(() -> {
+            operation.execute();
+            return null;
+        }, maxRetries, delayMs);
+    }
+
+    /**
+     * Execute an operation with exponential backoff retry.
+     *
+     * @param operation the operation to execute
+     * @param maxRetries maximum number of retries
+     * @param initialDelayMs initial delay in milliseconds
+     * @param maxDelayMs maximum delay between retries
+     * @param <T> return type
+     * @return the operation result
+     * @throws Exception if all retries fail
+     */
+    public static <T> T executeWithExponentialBackoff(
+            @NonNull RetryableOperation<T> operation,
+            int maxRetries,
+            long initialDelayMs,
+            long maxDelayMs) throws Exception {
+
+        Exception lastException = null;
+        long delay = initialDelayMs;
+
+        for (int attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                return operation.execute();
+            } catch (Exception e) {
+                lastException = e;
+
+                if (!isRetryable(e) || attempt >= maxRetries) {
+                    throw e;
+                }
+
+                LoggingHelper.d(TAG, String.format("Retry %d/%d (backoff: %dms) after: %s",
+                    attempt + 1, maxRetries, delay, getRootCauseMessage(e)));
+
+                try {
+                    Thread.sleep(delay);
+                    delay = Math.min(delay * 2, maxDelayMs);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw e;
+                }
+            }
         }
+
+        throw lastException != null ? lastException : new Exception("Operation failed");
+    }
+
+    /**
+     * Get an error code string for an exception (useful for analytics/logging).
+     *
+     * @param throwable The exception
+     * @return Short error code
+     */
+    @NonNull
+    public static String getErrorCode(@Nullable Throwable throwable) {
+        if (throwable == null) {
+            return "ERR_UNKNOWN";
+        }
+
+        ExceptionCategory category = categorize(throwable);
+        Throwable root = getRootCause(throwable);
+
+        switch (category) {
+            case NETWORK:
+                if (root instanceof UnknownHostException) return "ERR_DNS";
+                if (root instanceof ConnectException) return "ERR_CONNECT";
+                return "ERR_NETWORK";
+            case TIMEOUT:
+                return "ERR_TIMEOUT";
+            case SECURITY:
+                return "ERR_SECURITY";
+            case IO:
+                return "ERR_IO";
+            case INTERRUPTED:
+                return "ERR_INTERRUPTED";
+            case VALIDATION:
+                if (root instanceof NullPointerException) return "ERR_NULL";
+                if (root instanceof IllegalArgumentException) return "ERR_ARG";
+                return "ERR_VALIDATION";
+            case RUNTIME:
+                return "ERR_RUNTIME";
+            default:
+                return "ERR_" + root.getClass().getSimpleName().toUpperCase();
+        }
+    }
+
+    /**
+     * Check if exception chain contains a specific exception type.
+     *
+     * @param throwable The exception chain to check
+     * @param type The exception type to look for
+     * @return true if the type is found in the chain
+     */
+    public static boolean containsType(
+            @Nullable Throwable throwable,
+            @NonNull Class<? extends Throwable> type) {
+        Throwable current = throwable;
+        while (current != null) {
+            if (type.isInstance(current)) {
+                return true;
+            }
+            if (current.getCause() == current) {
+                break;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 }
