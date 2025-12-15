@@ -122,7 +122,7 @@ public class PortScanner extends Plugin {
     SharedPreferences.Editor edit = mPreferences.edit();
     edit.putBoolean(CUSTOM_PARAMETERS, mShowCustomParameters);
     edit.putString(CUSTOM_PARAMETERS_TEXT, mTextParameters.getText().toString());
-    edit.commit();
+    edit.apply();
   }
 
   private void setStoppedState() {
