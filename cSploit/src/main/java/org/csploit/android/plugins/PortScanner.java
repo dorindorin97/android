@@ -299,17 +299,17 @@ public class PortScanner extends Plugin {
                       for (String port : ports) {
                         try {
                           if (port.isEmpty())
-                            throw new Exception(
+                            throw new IllegalArgumentException(
                                     getString(R.string.invalid_port_)
                                             + port + "'.");
 
                           else {
                             int iport = Integer.parseInt(port);
                             if (iport <= 0 || iport > 65535)
-                              throw new Exception(
+                              throw new IllegalArgumentException(
                                       getString(R.string.port_must_be_greater));
                           }
-                        } catch (Exception e) {
+                        } catch (IllegalArgumentException | NumberFormatException e) {
                           UIHelper.error(PortScanner.this, "Error", e.toString());
                           return;
                         }

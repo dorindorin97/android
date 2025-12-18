@@ -891,7 +891,7 @@ public class System {
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))))) {
         String line = reader.readLine();
         if (line == null || !line.equals(SESSION_MAGIC))
-          throw new Exception("Not a cSploit session file.");
+          throw new IOException("Not a cSploit session file.");
 
         reset();
 
@@ -912,7 +912,7 @@ public class System {
         notifyTargetListChanged();
       }
     } else
-      throw new Exception(filename + " does not exists or is empty.");
+      throw new IOException(filename + " does not exists or is empty.");
   }
 
   public synchronized static ToolBox getTools() {

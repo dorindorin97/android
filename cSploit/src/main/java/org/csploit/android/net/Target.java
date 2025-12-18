@@ -67,7 +67,7 @@ public class Target implements Comparable<Target>
           return Type.REMOTE;
       }
 
-      throw new Exception("Could not deserialize target type from string.");
+      throw new IllegalArgumentException("Could not deserialize target type from string.");
     }
   }
 
@@ -331,7 +331,11 @@ public class Target implements Comparable<Target>
     return result.get();
   }
 
-  public static Target getFromString(String string){
+  @Nullable
+  public static Target getFromString(@Nullable String string){
+    if (string == null || string.isEmpty()) {
+      return null;
+    }
     final Pattern PARSE_PATTERN = Pattern.compile("^(([a-z]+)://)?([0-9a-z\\-\\.]+)(:([\\d]+))?[0-9a-z\\-\\./]*$", Pattern.CASE_INSENSITIVE);
     final Pattern IP_PATTERN = Pattern.compile("^[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}$");
 
@@ -538,6 +542,7 @@ public class Target implements Comparable<Target>
     return mUuid;
   }
 
+  @Nullable
   public InetAddress getAddress(){
     if(mType == Type.ENDPOINT)
       return mEndpoint.getAddress();

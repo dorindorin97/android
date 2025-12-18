@@ -127,7 +127,7 @@ public class SessionManager {
                     new GZIPInputStream(new FileInputStream(file))))) {
                 String line = reader.readLine();
                 if (line == null || !line.equals(SESSION_MAGIC))
-                    throw new Exception("Not a cSploit session file.");
+                    throw new IOException("Not a cSploit session file.");
 
                 // Read targets
                 int targets = Integer.parseInt(reader.readLine());
@@ -145,7 +145,7 @@ public class SessionManager {
                 throw e;
             }
         } else {
-            throw new Exception(filename + " does not exist or is empty.");
+            throw new IOException(filename + " does not exist or is empty.");
         }
     }
 
