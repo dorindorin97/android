@@ -100,7 +100,7 @@ public class Session
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))))) {
         String line = reader.readLine();
         if(line == null || !line.equals(System.SESSION_MAGIC))
-          throw new Exception("Not a cSploit hijacker session file.");
+          throw new IOException("Not a cSploit hijacker session file.");
 
         Session session = new Session();
 
@@ -121,6 +121,6 @@ public class Session
       }
     }
     else
-      throw new Exception(filename + " does not exists or is empty.");
+      throw new IOException(filename + " does not exists or is empty.");
   }
 }

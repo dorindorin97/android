@@ -647,7 +647,7 @@ public class MITM extends Plugin
                     int iport = Integer.parseInt(port);
 
                     if(iport <= 0 || iport > 65535)
-                      throw new Exception(getString(R.string.error_port_outofrange));
+                      throw new IllegalArgumentException(getString(R.string.error_port_outofrange));
 
                     address = address.startsWith("http") ? address : "http://" + address;
 
