@@ -503,9 +503,9 @@ public class RequestParser
    */
   public static String getCharsetFromHeaders(String contentType){
     if (contentType != null && contentType.toLowerCase().trim().contains("charset=")){
-      String[] parts = contentType.toLowerCase().trim().split("=");
-      if (parts.length > 0)
-        return parts[1];
+      String[] parts = contentType.toLowerCase().trim().split("charset=", 2);
+      if (parts.length > 1 && !parts[1].isEmpty())
+        return parts[1].split("[;,\\s]")[0].trim();
     }
 
     return null;
