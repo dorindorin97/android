@@ -1127,7 +1127,8 @@ public class MainFragment extends Fragment {
                     if (lv == null || getActivity() == null || !isAdded())
                         return;
                     int start = lv.getFirstVisiblePosition();
-                    int end = Math.min(lv.getLastVisiblePosition(), list.size());
+                    // list.size() - 1: avoid IOOBE when end == list.size()
+                    int end = Math.min(lv.getLastVisiblePosition(), list.size() - 1);
                     for (int i = start; i <= end; i++)
                         if (changedTarget == list.get(i)) {
                             View view = lv.getChildAt(i - start);
