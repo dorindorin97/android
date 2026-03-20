@@ -32,7 +32,7 @@ public class VerizonKeygen extends Keygen{
   @Override
   public List<String> getKeys(){
     if(getSsidName().length() != 5){
-      setErrorMessage("Invalid ESSID! It must have 6 characters.");
+      setErrorMessage("Invalid ESSID! It must have 5 characters.");
       return null;
     }
     char[] inverse = new char[5];

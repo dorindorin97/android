@@ -60,7 +60,8 @@ public class ActionFragment extends Fragment {
 
         if (mTarget != null) {
             getActivity().setTitle("cSploit > " + mTarget);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            androidx.appcompat.app.ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
             theList = (ListView) getActivity().findViewById(R.id.android_list);
             mAvailable = System.getPluginsForTarget();
             ActionsAdapter mActionsAdapter = new ActionsAdapter();
@@ -112,8 +113,13 @@ public class ActionFragment extends Fragment {
     }
 
     public class ActionsAdapter extends ArrayAdapter<Plugin> {
+        private final Context mContext;
+        private final boolean mIsDark;
+
         public ActionsAdapter() {
-            super(getActivity(), R.layout.actions_list_item, mAvailable);
+            super(requireContext(), R.layout.actions_list_item, mAvailable);
+            mContext = requireContext();
+            mIsDark = mContext.getSharedPreferences("THEME", 0).getBoolean("isDark", false);
         }
 
         @SuppressLint("NewApi")
@@ -123,9 +129,9 @@ public class ActionFragment extends Fragment {
             ActionHolder holder;
 
             if (row == null) {
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.actions_list_item, parent, false);
-                if (getActivity().getSharedPreferences("THEME", 0).getBoolean("isDark", false))
+                if (mIsDark)
                     row.setBackgroundResource(R.drawable.card_background_dark);
                 holder = new ActionHolder();
 

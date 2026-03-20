@@ -86,7 +86,7 @@ public class Console extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.console_layout);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mInput = (EditText) findViewById(R.id.input);
         mOutput = (TextView) findViewById(R.id.output);

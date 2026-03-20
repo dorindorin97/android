@@ -90,11 +90,10 @@ public class ThomsonKeygen extends Keygen{
   }
 
   private boolean internetCalc(){
-    try{
+    try (ZipInputStream fis = new ZipInputStream(webdic)) {
       DataInputStream onlineFile = null;
       int lenght = 0;
       URL url;
-      ZipInputStream fis = new ZipInputStream(webdic);
       fis.getNextEntry();
       int check = 0, ret = 0;
       while(check != 1024)/* ZipInputStream doens't seems to block. */{
@@ -171,15 +170,13 @@ public class ThomsonKeygen extends Keygen{
       url = new URL("http://www.dsploit.net/files/RKDictionary.dic");
       URLConnection con = url.openConnection();
       con.setRequestProperty("Range", "bytes=" + totalOffset + "-");
-      onlineFile = new DataInputStream(con.getInputStream());
-      len = 0;
-      this.entry = new byte[lenght];
-      if((len = onlineFile.read(this.entry, 0, lenght)) != -1){
-        lenght = len;
+      try (DataInputStream onlineFileStream = new DataInputStream(con.getInputStream())) {
+        len = 0;
+        this.entry = new byte[lenght];
+        if ((len = onlineFileStream.read(this.entry, 0, lenght)) != -1) {
+          lenght = len;
+        }
       }
-
-      onlineFile.close();
-      fis.close();
       return thirdDic();
     } catch(IOException e){
       setErrorMessage("Error while processing online keys.");
