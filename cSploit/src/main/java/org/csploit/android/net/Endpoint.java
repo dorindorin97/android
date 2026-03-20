@@ -142,6 +142,10 @@ public class Endpoint implements Comparable<Endpoint>
   }
 
   public void setHardware(byte[] hardware){
+    if (hardware == null) {
+      this.mHardware = null;
+      return;
+    }
     this.mHardware = Arrays.copyOf(hardware, hardware.length);
   }
 

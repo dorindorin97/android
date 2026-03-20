@@ -128,7 +128,7 @@ public class IP4Address implements Comparable<IP4Address>
 
   @Override
   public int compareTo(IP4Address another) {
-    return mInteger - another.mInteger;
+    return Integer.compare(mInteger, another.mInteger);
   }
 
   public int getPrefixLength(){

@@ -122,7 +122,11 @@ public class ExecChecker {
     if(file==null)
       return null;
 
-    if(mFuseBinds.size()==0)
+    boolean needsUpdate;
+    synchronized (mFuseBinds) {
+      needsUpdate = mFuseBinds.isEmpty();
+    }
+    if (needsUpdate)
       updateFuseBinds();
 
     synchronized (mFuseBinds) {
