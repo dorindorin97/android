@@ -25,8 +25,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -44,7 +46,11 @@ public final class ThreadHelper {
 
     private static final String TAG = "ThreadHelper";
 
-    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    private static final ExecutorService EXECUTOR = new ThreadPoolExecutor(
+        4, 16, 60L, TimeUnit.SECONDS,
+        new LinkedBlockingQueue<>(200),
+        new ThreadPoolExecutor.CallerRunsPolicy()
+    );
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR =
         Executors.newScheduledThreadPool(4);
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());

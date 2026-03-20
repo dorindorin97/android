@@ -97,8 +97,6 @@ import java.io.IOException;
 import java.net.NoRouteToHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -979,7 +977,7 @@ public class MainFragment extends Fragment {
         super.onDestroy();
     }
 
-    public class TargetAdapter extends BaseAdapter implements Runnable, Observer {
+    public class TargetAdapter extends BaseAdapter implements Runnable, System.TargetListListener {
 
         private List<Target> list = System.getTargets();
         private boolean isDark = getActivity().getSharedPreferences("THEME", 0).getBoolean("isDark", false);
@@ -1110,14 +1108,13 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        public void update(Observable observable, Object data) {
-            final Target target = (Target) data;
+        public void onTargetsChanged(final Target changedTarget) {
             android.app.Activity activity = getActivity();
             if (activity == null || !isAdded()) {
                 return;
             }
 
-            if (target == null) {
+            if (changedTarget == null) {
                 // update the whole list
                 activity.runOnUiThread(this);
                 return;
@@ -1129,19 +1126,16 @@ public class MainFragment extends Fragment {
                 public void run() {
                     if (lv == null || getActivity() == null || !isAdded())
                         return;
-                    synchronized (this) {
-                        int start = lv.getFirstVisiblePosition();
-                        int end = Math.min(lv.getLastVisiblePosition(), list.size());
-                        for (int i = start; i <= end; i++)
-                            if (target == list.get(i)) {
-                                View view = lv.getChildAt(i - start);
-                                getView(i, view, lv);
-                                break;
-                            }
-                    }
+                    int start = lv.getFirstVisiblePosition();
+                    int end = Math.min(lv.getLastVisiblePosition(), list.size());
+                    for (int i = start; i <= end; i++)
+                        if (changedTarget == list.get(i)) {
+                            View view = lv.getChildAt(i - start);
+                            getView(i, view, lv);
+                            break;
+                        }
                 }
             });
-
         }
 
         @Override

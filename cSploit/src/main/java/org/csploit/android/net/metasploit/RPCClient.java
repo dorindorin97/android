@@ -70,7 +70,8 @@ public class RPCClient
     huc.setDoInput(true);
     huc.setUseCaches(false);
     huc.setRequestProperty("Content-Type", "binary/message-pack");
-    huc.setReadTimeout(0);
+    huc.setConnectTimeout(10_000);
+    huc.setReadTimeout(30_000);
     OutputStream os = huc.getOutputStream();
     Packer pk = msgpack.createPacker(os);
     pk.writeArrayBegin(args.length+1);
