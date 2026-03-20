@@ -61,6 +61,11 @@ public class Search {
       }
     }
 
+    if (job == null) {
+      // No ports with known services — notify immediately so callers can update UI
+      receiver.onEnd();
+    }
+
     return job;
   }
 }
