@@ -424,6 +424,10 @@ public class RemoteReader implements Runnable {
       } catch (IOException e) {
         if (connection instanceof HttpURLConnection) {
           stream = ((HttpURLConnection) connection).getErrorStream();
+          if (stream == null) {
+            // getErrorStream() returns null when no error body is available
+            notifier = new Notifier(task, e.getMessage().getBytes(), true);
+          }
           isError = true;
         } else {
           notifier = new Notifier(task, e.getMessage().getBytes(), true);

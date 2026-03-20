@@ -69,8 +69,12 @@ public class RPCClient
   {
     u = new URL("http" + (ssl ? "s" : ""), host, port, "/api/");
 
-    if(msgpack==null)
-      msgpack = new MessagePack();
+    if(msgpack == null) {
+      synchronized(RPCClient.class) {
+        if(msgpack == null)
+          msgpack = new MessagePack();
+      }
+    }
 
     login(username, password);
 
