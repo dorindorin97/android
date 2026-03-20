@@ -47,12 +47,13 @@ public class ChildManager {
     synchronized (children) {
       while (c.running)
         children.wait();
+      // Read signal/exitValue inside the lock: they are written under this same
+      // lock before c.running is set to false, so reading here is safe.
+      if(c.signal >= 0) {
+        throw new ChildDiedException(c.signal);
+      }
+      return c.exitValue;
     }
-
-    if(c.signal >= 0) {
-      throw new ChildDiedException(c.signal);
-    }
-    return c.exitValue;
   }
 
   /**
