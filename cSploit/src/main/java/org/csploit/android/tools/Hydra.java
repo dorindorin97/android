@@ -68,7 +68,27 @@ public class Hydra extends Tool
     }
   }
 
+  private static void validatePort(int port) throws ChildManager.ChildNotStartedException {
+    if (port < 1 || port > 65535)
+      throw new ChildManager.ChildNotStartedException("Invalid port: " + port);
+  }
+
+  private static void validateFilePath(String path) throws ChildManager.ChildNotStartedException {
+    if (path != null && path.matches(".*[;&|`$<>(){}\\n\\r].*"))
+      throw new ChildManager.ChildNotStartedException("File path contains unsafe characters: " + path);
+  }
+
+  private static void validateServiceName(String service) throws ChildManager.ChildNotStartedException {
+    if (service == null || !service.matches("[a-zA-Z0-9\\-_]+"))
+      throw new ChildManager.ChildNotStartedException("Invalid service name: " + service);
+  }
+
   public Child crack(Target target, int port, String service, String charset, int minlength, int maxlength, String username, String userWordlist, String passWordlist, AttemptReceiver receiver) throws ChildManager.ChildNotStartedException {
+    validatePort(port);
+    validateServiceName(service);
+    validateFilePath(userWordlist);
+    validateFilePath(passWordlist);
+
     StringBuilder command = new StringBuilder("-F ");
 
     if(userWordlist != null)

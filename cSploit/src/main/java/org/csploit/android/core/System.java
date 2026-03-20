@@ -44,6 +44,7 @@ import org.csploit.android.WifiScannerFragment;
 import org.csploit.android.gui.dialogs.FatalDialog;
 import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.helpers.NetworkHelper;
+import org.csploit.android.helpers.SecureCredentialsHelper;
 import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.GitHubParser;
 import org.csploit.android.net.Network;
@@ -88,9 +89,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observer;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -114,7 +114,13 @@ public class System {
   private static volatile WifiLock mWifiLock = null;
   private static volatile WakeLock mWakeLock = null;
   private static Network mNetwork = null;
-  private static final SortedSet<Target> mTargets = new TreeSet<>();
+  private static final ConcurrentSkipListSet<Target> mTargets = new ConcurrentSkipListSet<>();
+
+  /** Listener for target list changes. Replaces deprecated java.util.Observer. */
+  public interface TargetListListener {
+    /** Called when the target list changes. {@code changedTarget} is null for a full refresh. */
+    void onTargetsChanged(@Nullable Target changedTarget);
+  }
   private static Target mCurrentTarget = null;
   private static Map<String, String> mServices = null;
   private static Map<String, String> mPorts = null;
@@ -148,7 +154,7 @@ public class System {
 
   private static KnownIssues mKnownIssues = null;
 
-  private static Observer targetListObserver = null;
+  private static volatile TargetListListener targetListObserver = null;
 
   private final static LinkedList<SettingReceiver> mSettingReceivers = new LinkedList<SettingReceiver>();
 
@@ -265,7 +271,7 @@ public class System {
     LoggingHelper.debug("Starting core daemon with su...");
     
     try {
-      Process shell = Runtime.getRuntime().exec("su");
+      Process shell = new ProcessBuilder("su").start();
       writer = new DataOutputStream(shell.getOutputStream());
       String cmd;
 
@@ -344,7 +350,10 @@ public class System {
     if (!Client.isConnected() && !Client.Connect(getCorePath() + "/cSploitd.sock")) {
       return; // daemon is not running
     }
-    if (!Client.isAuthenticated() && !Client.Login("android", "DEADBEEF")) {
+    Context shutdownCtx = getContextSafe();
+    String shutdownToken = shutdownCtx != null
+        ? SecureCredentialsHelper.getOrCreateDaemonToken(shutdownCtx) : "";
+    if (!Client.isAuthenticated() && !Client.Login("android", shutdownToken)) {
       LoggingHelper.error("cannot login to daemon");
     }
     Client.Shutdown();
@@ -390,7 +399,10 @@ public class System {
       }
     }
 
-    if (!Client.isAuthenticated() && !Client.Login("android", "DEADBEEF")) {
+    Context loginCtx = getContextSafe();
+    String daemonToken = loginCtx != null
+        ? SecureCredentialsHelper.getOrCreateDaemonToken(loginCtx) : "";
+    if (!Client.isAuthenticated() && !Client.Login("android", daemonToken)) {
       throw new DaemonException("cannot login to core daemon");
     }
 
@@ -454,25 +466,20 @@ public class System {
     return true;
   }
 
-  public synchronized static void setTargetListObserver(Observer targetListObserver) {
-    System.targetListObserver = targetListObserver;
+  public static void setTargetListObserver(TargetListListener listener) {
+    targetListObserver = listener;
   }
 
   /**
    * notify that a specific target of the list has been changed
    *
-   * @param target the changed target
+   * @param target the changed target, or null for a full list refresh
    */
   public static void notifyTargetListChanged(Target target) {
-    Observer o;
-    synchronized (System.class) {
-      o = targetListObserver;
+    TargetListListener l = targetListObserver;
+    if (l != null) {
+      l.onTargetsChanged(target);
     }
-
-    if (o == null)
-      return;
-
-    o.update(null, target);
   }
 
   /**
@@ -721,25 +728,16 @@ public class System {
    * @return the first line of the file or {@code null} if an error occurs
    */
   private static String readFirstLine(String filePath) {
-    BufferedReader reader = null;
-
     if (filePath == null)
       return null;
 
-    try {
-      reader = new BufferedReader(new FileReader(filePath));
-      return reader.readLine().trim();
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+      String line = reader.readLine();
+      return line != null ? line.trim() : null;
     } catch (IOException e) {
       LoggingHelper.debug(e.getMessage());
-    } finally {
-      try {
-        if (reader != null)
-          reader.close();
-      } catch (IOException e) {
-        //ignored
-      }
+      return null;
     }
-    return null;
   }
 
   /**
@@ -1176,9 +1174,7 @@ public class System {
    * @return a copy of the target list
    */
   public static List<Target> getTargets() {
-    synchronized (mTargets) {
-      return new ArrayList<>(mTargets);
-    }
+    return new ArrayList<>(mTargets);
   }
 
   /**
@@ -1191,11 +1187,9 @@ public class System {
    */
   public static Target getTargetByUuid(String uuid) {
     if (uuid == null) return null;
-    synchronized (mTargets) {
-      for (Target target : mTargets) {
-        if (uuid.equals(target.getUuid())) {
-          return target;
-        }
+    for (Target target : mTargets) {
+      if (uuid.equals(target.getUuid())) {
+        return target;
       }
     }
     return null;
@@ -1211,22 +1205,16 @@ public class System {
     if (target == null)
       return false;
 
-    boolean changed;
-
-    synchronized (mTargets) {
-      changed = mTargets.add(target);
-      if(changed) {
-        Services.getNetworkRadar().onNewTargetFound(target);
-        notifyTargetListChanged();
-      }
+    boolean changed = mTargets.add(target);
+    if (changed) {
+      Services.getNetworkRadar().onNewTargetFound(target);
+      notifyTargetListChanged();
     }
     return changed;
   }
 
   public static boolean hasTarget(Target target) {
-    synchronized (mTargets) {
-      return mTargets.contains(target);
-    }
+    return mTargets.contains(target);
   }
 
   public static void setCurrentTarget(Target target) {
@@ -1247,14 +1235,11 @@ public class System {
   }
 
   public static Target getTargetByAddress(InetAddress address) {
-    synchronized (mTargets) {
-      for(Target t : mTargets) {
-        if (t != null && t.getAddress() != null && t.getAddress().equals(address)) {
-          return t;
-        }
+    for (Target t : mTargets) {
+      if (t != null && t.getAddress() != null && t.getAddress().equals(address)) {
+        return t;
       }
     }
-
     return null;
   }
 

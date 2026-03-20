@@ -103,6 +103,11 @@ public class Console extends AppCompatActivity {
 
         mReceiver = new ConsoleReceiver();
         mSession = (ShellSession) System.getCurrentSession();
+        if (mSession == null) {
+            new FatalDialog("Error", "No active session", Console.this).show();
+            finish();
+            return;
+        }
         mOutput.append(HtmlCompat.fromHtml("<font color=\"green\">Enter Command:&gt;</font>\n\n", HtmlCompat.FROM_HTML_MODE_LEGACY));
         mInput.setImeActionLabel(getResources().getString(R.string.run), KeyEvent.KEYCODE_ENTER);
         runButton.setOnClickListener(new View.OnClickListener() {

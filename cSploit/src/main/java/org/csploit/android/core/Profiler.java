@@ -23,9 +23,12 @@ public class Profiler{
   private static volatile Profiler mInstance = null;
 
   public static Profiler instance(){
-    if(mInstance == null)
-      mInstance = new Profiler();
-
+    if(mInstance == null) {
+      synchronized(Profiler.class) {
+        if(mInstance == null)
+          mInstance = new Profiler();
+      }
+    }
     return mInstance;
   }
 

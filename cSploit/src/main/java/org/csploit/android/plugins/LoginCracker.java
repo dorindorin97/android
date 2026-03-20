@@ -334,7 +334,7 @@ public class LoginCracker extends Plugin {
     mWordlistPicker.setType("text/*");
     mWordlistPicker.setAction(Intent.ACTION_GET_CONTENT);
 
-    if(Build.VERSION.SDK_INT >= 11)
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
       mWordlistPicker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
   }
 

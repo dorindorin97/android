@@ -39,7 +39,11 @@ public class Logcat extends Raw {
         if(!line.contains("*** *** ***")) {
           return;
         }
-        libcFingerprint = line.substring(0, line.indexOf(':') + 1);
+        int colonIdx = line.indexOf(':');
+        if (colonIdx <= 0) {
+          return; // malformed line — no colon means empty fingerprint would match everything
+        }
+        libcFingerprint = line.substring(0, colonIdx + 1);
       } else if (!line.startsWith(libcFingerprint)) {
         return;
       }

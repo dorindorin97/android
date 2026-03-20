@@ -74,7 +74,7 @@ public class DNSCache
     }
   }
 
-  private InetAddress getAddress(String server) throws IOException{
+  private synchronized InetAddress getAddress(String server) throws IOException{
     InetAddress address = mCache.get(server);
 
     if(address == null){
@@ -84,7 +84,7 @@ public class DNSCache
       LoggingHelper.debug(server + " resolved to " + address.getHostAddress());
     }
     else
-      LoggingHelper.debug("Returning a cached DSN result for " + server + " : " + address.getHostAddress());
+      LoggingHelper.debug("Returning a cached DNS result for " + server + " : " + address.getHostAddress());
 
     return address;
   }

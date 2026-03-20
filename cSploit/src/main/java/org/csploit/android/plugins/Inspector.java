@@ -108,16 +108,12 @@ public class Inspector extends Plugin {
   }
 
   private void updateView() {
-    if(ThreadHelper.isOnMainThread()) {
-      write_services();
-    } else {
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          write_services();
-        }
-      });
-    }
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        write_services();
+      }
+    });
   }
 
   private void setStartedState(){

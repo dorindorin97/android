@@ -1,10 +1,14 @@
 package org.csploit.android.core;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.csploit.android.core.Child.EventReceiver;
 import org.csploit.android.events.ChildDied;
@@ -12,6 +16,7 @@ import org.csploit.android.events.ChildEnd;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Newline;
 import org.csploit.android.events.StderrNewline;
+import org.csploit.android.helpers.SecureCredentialsHelper;
 
 /**
  * a class that manage spawned commands
@@ -25,7 +30,11 @@ public class ChildManager {
 
   public static List<String> handlers = null;
 
-  private static Executor eventExecutor = Executors.newCachedThreadPool();
+  private static final Executor eventExecutor = new ThreadPoolExecutor(
+      2, 8, 30L, TimeUnit.SECONDS,
+      new LinkedBlockingQueue<>(100),
+      new ThreadPoolExecutor.CallerRunsPolicy()
+  );
 
   /**
    * wait for a child termination
@@ -97,7 +106,9 @@ public class ChildManager {
     // Check if authenticated
     if (!Client.isAuthenticated()) {
       Logger.warning("Client not authenticated, attempting to login...");
-      if (!Client.Login("android", "DEADBEEF")) {
+      Context ctx = System.getContext();
+      String token = ctx != null ? SecureCredentialsHelper.getOrCreateDaemonToken(ctx) : "";
+      if (!Client.Login("android", token)) {
         throw new ChildNotStartedException("Failed to authenticate with daemon");
       }
     }

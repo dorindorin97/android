@@ -127,6 +127,7 @@ public class ByteBuffer{
   }
 
   public byte[] getData(){
+    if (mBuffer == null) return null;
     return Arrays.copyOf(mBuffer, mBuffer.length);
   }
 

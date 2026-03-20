@@ -68,7 +68,10 @@ public class ShellSession extends Session {
     timeout = java.lang.System.currentTimeMillis() + TIMEOUT;
     do
     {
-      String data = (((Map<String, String>)client.call("session.shell_read",mJobId )).get("data") + "");
+      Object readResult = client.call("session.shell_read", mJobId);
+      if (!(readResult instanceof Map)) throw new IOException("Unexpected RPC response for shell_read");
+      @SuppressWarnings("unchecked")
+      String data = (((Map<String, String>) readResult).get("data") + "");
 
       newline = data.indexOf('\n');
       while(newline>=0) {

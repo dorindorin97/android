@@ -186,8 +186,7 @@ public final class ConfigurationConstants {
     /** Default daemon username */
     public static final String DAEMON_USERNAME = "android";
 
-    /** Default daemon password (placeholder) */
-    public static final String DAEMON_PASSWORD = "DEADBEEF";
+    // DAEMON_PASSWORD removed — use SecureCredentialsHelper.getOrCreateDaemonToken(context) instead.
 
     // ==================== MIME Types ====================
 

@@ -18,10 +18,10 @@
  */
 package org.csploit.android.net.http.proxy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.csploit.android.net.http.RequestParser;
 
@@ -101,7 +101,7 @@ public class CookieCleaner{
 
   public void addCleaned(String client, String hostname){
     String domain = RequestParser.getBaseDomain(hostname);
-    mMap.computeIfAbsent(client, k -> new ArrayList<>()).add(domain);
+    mMap.computeIfAbsent(client, k -> new CopyOnWriteArrayList<>()).add(domain);
   }
 
   public void clear(){

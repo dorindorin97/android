@@ -19,7 +19,7 @@ public class PluginManager {
     private static final String TAG = "PluginManager";
 
     private final List<Plugin> registeredPlugins;
-    private Plugin currentPlugin;
+    private volatile Plugin currentPlugin;
 
     public PluginManager() {
         this.registeredPlugins = new CopyOnWriteArrayList<>();

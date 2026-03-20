@@ -37,8 +37,6 @@ import org.csploit.android.net.Target;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * TargetListAdapter - Adapter for displaying network targets in ListView
@@ -61,7 +59,7 @@ import java.util.Observer;
  * @author cSploit Team
  * @version 1.0
  */
-public class TargetListAdapter extends BaseAdapter implements Runnable, Observer {
+public class TargetListAdapter extends BaseAdapter implements Runnable, System.TargetListListener {
 
     private static final String TAG = "TargetListAdapter";
 
@@ -271,11 +269,9 @@ public class TargetListAdapter extends BaseAdapter implements Runnable, Observer
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        final Target target = (Target) data;
-
-        if (target == null) {
-            // Update entire list if null (full refresh)
+    public void onTargetsChanged(final Target changedTarget) {
+        if (changedTarget == null) {
+            // Full list refresh
             if (context instanceof android.app.Activity) {
                 ((android.app.Activity) context).runOnUiThread(this);
             } else {
@@ -284,25 +280,19 @@ public class TargetListAdapter extends BaseAdapter implements Runnable, Observer
             return;
         }
 
-        // Update only visible row containing this target
+        // Update only the visible row containing this target
         if (context instanceof android.app.Activity) {
             ((android.app.Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (listView == null) {
-                        return;
-                    }
-
-                    synchronized (this) {
-                        int start = listView.getFirstVisiblePosition();
-                        int end = Math.min(listView.getLastVisiblePosition(), targetList.size());
-
-                        for (int i = start; i <= end; i++) {
-                            if (i >= 0 && i < targetList.size() && target == targetList.get(i)) {
-                                View view = listView.getChildAt(i - start);
-                                getView(i, view, listView);
-                                break;
-                            }
+                    if (listView == null) return;
+                    int start = listView.getFirstVisiblePosition();
+                    int end = Math.min(listView.getLastVisiblePosition(), targetList.size());
+                    for (int i = start; i <= end; i++) {
+                        if (i >= 0 && i < targetList.size() && changedTarget == targetList.get(i)) {
+                            View view = listView.getChildAt(i - start);
+                            getView(i, view, listView);
+                            break;
                         }
                     }
                 }

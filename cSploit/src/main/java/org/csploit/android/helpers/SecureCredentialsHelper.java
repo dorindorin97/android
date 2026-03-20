@@ -6,6 +6,8 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 import android.util.Log;
 
+import java.security.SecureRandom;
+
 /**
  * Helper for securely storing and retrieving sensitive credentials.
  * Uses Android's EncryptedSharedPreferences (part of androidx.security:security-crypto)
@@ -14,6 +16,27 @@ import android.util.Log;
 public class SecureCredentialsHelper {
     private static final String TAG = "SecureCredentialsHelper";
     private static final String ENCRYPTED_PREFS_NAME = "csploit_secure_prefs";
+    private static final String DAEMON_TOKEN_KEY = "daemon_token";
+
+    /**
+     * Returns the daemon auth token, generating and persisting a random one on first call.
+     * Replaces the hardcoded "DEADBEEF" token.
+     */
+    public static String getOrCreateDaemonToken(Context context) {
+        SecureCredentialsHelper helper = new SecureCredentialsHelper(context);
+        String token = helper.retrieveCredential(DAEMON_TOKEN_KEY, null);
+        if (token == null) {
+            byte[] bytes = new byte[16];
+            new SecureRandom().nextBytes(bytes);
+            StringBuilder sb = new StringBuilder(32);
+            for (byte b : bytes) {
+                sb.append(String.format("%02X", b));
+            }
+            token = sb.toString();
+            helper.storeCredential(DAEMON_TOKEN_KEY, token);
+        }
+        return token;
+    }
 
     private final SharedPreferences encryptedPreferences;
 

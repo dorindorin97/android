@@ -12,11 +12,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -226,11 +230,23 @@ public class RemoteReader implements Runnable {
     }
   }
 
-  private boolean running;
+  private static final int CONNECT_TIMEOUT_MS = 10_000;
+  private static final int READ_TIMEOUT_MS    = 30_000;
+
+  private volatile boolean running;
   private final String host;
-  private static final LinkedList<RemoteReader> readers = new LinkedList<RemoteReader>();
-  private static final ExecutorService _readers = Executors.newCachedThreadPool();
-  private static final ExecutorService notifiers = Executors.newCachedThreadPool();
+  // HashMap for O(1) host lookup (guarded by its own monitor)
+  private static final Map<String, RemoteReader> readerMap = new HashMap<>();
+  private static final ExecutorService _readers = new ThreadPoolExecutor(
+      2, 8, 60L, TimeUnit.SECONDS,
+      new LinkedBlockingQueue<>(50),
+      new ThreadPoolExecutor.CallerRunsPolicy()
+  );
+  private static final ExecutorService notifiers = new ThreadPoolExecutor(
+      2, 8, 60L, TimeUnit.SECONDS,
+      new LinkedBlockingQueue<>(100),
+      new ThreadPoolExecutor.CallerRunsPolicy()
+  );
   private final Queue<Task> tasks = new LinkedList<Task>();
 
   static {
@@ -246,16 +262,15 @@ public class RemoteReader implements Runnable {
   }
 
   public static RemoteReader fromHost(String host) {
-    synchronized (readers) {
-      for (RemoteReader reader : readers) {
-        if (reader.getHost().equals(host)) {
-          return reader;
-        }
+    String key = host.toLowerCase(Locale.US);
+    synchronized (readerMap) {
+      RemoteReader existing = readerMap.get(key);
+      if (existing != null && existing.running) {
+        return existing;
       }
-
       RemoteReader r = new RemoteReader(host);
       _readers.submit(r);
-      readers.add(r);
+      readerMap.put(key, r);
       return r;
     }
   }
@@ -325,10 +340,11 @@ public class RemoteReader implements Runnable {
   }
 
   public static void terminateAll() {
-    synchronized (readers) {
-      for(RemoteReader r : readers) {
+    synchronized (readerMap) {
+      for (RemoteReader r : readerMap.values()) {
         r.terminate();
       }
+      readerMap.clear();
     }
   }
 
@@ -392,7 +408,7 @@ public class RemoteReader implements Runnable {
         continue;
       }
 
-      if(!url.getHost().equals(host)) {
+      if(!url.getHost().equalsIgnoreCase(host)) {
         LoggingHelper.error(String.format("RemoteReader[%s]: URL '%s' does not belong to me", host, task.getUrl()));
         notifiers.execute(new Notifier(task, "Host mismatch".getBytes(), true));
         continue;
@@ -402,9 +418,11 @@ public class RemoteReader implements Runnable {
 
       try {
         connection = url.openConnection();
+        connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(READ_TIMEOUT_MS);
         stream = connection.getInputStream();
       } catch (IOException e) {
-        if (connection != null && connection instanceof HttpURLConnection) {
+        if (connection instanceof HttpURLConnection) {
           stream = ((HttpURLConnection) connection).getErrorStream();
           isError = true;
         } else {
@@ -414,12 +432,19 @@ public class RemoteReader implements Runnable {
 
       if (notifier == null) {
         try {
+          // Always close the stream; close connection after reading
           notifier = new Notifier(task, IOUtils.toByteArray(stream), isError);
-          stream.close();
         } catch (IOException e) {
           notifier = new Notifier(task, e.getMessage().getBytes(), true);
         } catch (IllegalStateException e) {
           notifier = new Notifier(task, e.getMessage().getBytes(), true);
+        } finally {
+          if (stream != null) {
+            try { stream.close(); } catch (IOException ignored) {}
+          }
+          if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).disconnect();
+          }
         }
       }
 
@@ -430,8 +455,8 @@ public class RemoteReader implements Runnable {
 
     running = false;
 
-    synchronized (readers) {
-      readers.remove(this);
+    synchronized (readerMap) {
+      readerMap.remove(host.toLowerCase(Locale.US), this);
     }
   }
 
