@@ -184,6 +184,11 @@ public class MultiAttackService extends IntentService {
         }
       });
 
+      if (future == null) {
+        // No ports with known services; Search already called receiver.onEnd()
+        return;
+      }
+
       try {
         future.get();
       } catch (ExecutionException e) {

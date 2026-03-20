@@ -115,20 +115,6 @@ public class Option {
     return Arrays.copyOf(enums, enums.length);
   }
 
-  // TODO: ENHANCEMENT - Make more setValue methods with corresponding types
-  // PROBLEM: Current implementation only has setValue(String), requiring all callers to
-  // convert values to strings first. This is error-prone and loses type safety.
-  // CURRENT WORKAROUND: Single string-based setValue with type conversion inside.
-  // SOLUTION: Add type-specific setValue overloads:
-  // - setValue(int) for PORT, INTEGER types
-  // - setValue(InetAddress) for ADDRESS type
-  // - setValue(boolean) for BOOLEAN type
-  // - setValue(Path) for PATH type
-  // BENEFITS:
-  // - Type safety at compile time
-  // - Clearer caller intent
-  // - Reduced string parsing/conversion
-  // IMPACT: Low - Enhancement for better API design
   public void setValue(String value) throws NumberFormatException {
     switch (mType) {
       case STRING:
@@ -141,27 +127,24 @@ public class Option {
           throw new NumberFormatException("invalid IP address: " + value);
         }
         break;
+      case INTEGER:
+        Integer.parseInt(value); // validate it's a valid integer
+        mValue = value;
+        break;
       case PORT:
         int i = Integer.parseInt(value);
-        if(i<0 || i > 65535)
+        if(i < 0 || i > 65535)
           throw new NumberFormatException("port must be between 0 and 65535");
+        mValue = value;
         break;
       case BOOLEAN:
-        value=value.toLowerCase();
+        value = value.toLowerCase();
         if(value.equals("true") || value.equals("false"))
-          mValue=value;
+          mValue = value;
         else
           throw new NumberFormatException("boolean must be true or false");
         break;
       case ENUM:
-        // TODO: ENHANCEMENT - Handle integer enums in addition to string enums
-        // PROBLEM: ENUM validation assumes all enum values are strings, but Metasploit
-        // may send options with integer enum values (exit codes, flags, etc.)
-        // CURRENT WORKAROUND: String comparison only; integer enums cause validation failure
-        // SOLUTION: Support both string and integer enum validation:
-        // - Get enums from mAttributes (may contain mixed types)
-        // - Check if provided value matches as string OR as integer
-        // - Log better error messages showing both types
         ArrayList valid = ((ArrayList)mAttributes.get("enums"));
         boolean found = false;
         for(Object v : valid) {
@@ -184,11 +167,36 @@ public class Option {
         mValue = value;
         break;
       case PATH:
-        // PATH values are accepted as-is without further validation
-        // Validation occurs when the path is actually used
         mValue = value;
         break;
     }
+  }
+
+  public void setValue(int value) throws NumberFormatException {
+    switch (mType) {
+      case INTEGER:
+        mValue = String.valueOf(value);
+        break;
+      case PORT:
+        if(value < 0 || value > 65535)
+          throw new NumberFormatException("port must be between 0 and 65535");
+        mValue = String.valueOf(value);
+        break;
+      default:
+        setValue(String.valueOf(value));
+    }
+  }
+
+  public void setValue(boolean value) throws NumberFormatException {
+    if(mType != types.BOOLEAN)
+      throw new NumberFormatException("cannot set boolean on type " + mType);
+    mValue = String.valueOf(value);
+  }
+
+  public void setValue(InetAddress value) throws NumberFormatException {
+    if(mType != types.ADDRESS)
+      throw new NumberFormatException("cannot set InetAddress on type " + mType);
+    mValue = value.getHostAddress();
   }
 
   public String getValue() {
