@@ -75,9 +75,9 @@ public class BandwidthMonitor {
     private final AtomicBoolean running;
     
     private ScheduledFuture<?> monitoringTask;
-    private long lastRxBytes;
-    private long lastTxBytes;
-    private long lastTimestamp;
+    private volatile long lastRxBytes;
+    private volatile long lastTxBytes;
+    private volatile long lastTimestamp;
     private long peakDownloadSpeed;
     private long peakUploadSpeed;
     private long sessionStartRx;

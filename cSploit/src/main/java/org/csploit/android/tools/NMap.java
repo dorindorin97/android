@@ -121,6 +121,17 @@ public class NMap extends Tool {
     mCmdPrefix = null;
   }
 
+  private static void validatePortSpec(String spec) throws ChildManager.ChildNotStartedException {
+    // Allow digits, commas, hyphens, and T:/U: protocol prefixes only
+    if (spec != null && !spec.matches("[TU]?:?[0-9]+([-,][0-9]+)*([,][TU]?:?[0-9]+([-,][0-9]+)*)*"))
+      throw new ChildManager.ChildNotStartedException("Invalid port specification: " + spec);
+  }
+
+  private static void validateCustomFlags(String flags) throws ChildManager.ChildNotStartedException {
+    if (flags != null && flags.matches(".*[;&|`$(){}\n\r].*"))
+      throw new ChildManager.ChildNotStartedException("Custom flags contain unsafe characters");
+  }
+
   public Child trace( Target target, boolean resolve, TraceReceiver receiver ) throws ChildManager.ChildNotStartedException {
 
     String cmd = String.format("-sn --traceroute --privileged --send-ip --system-dns -%c %s",
@@ -130,6 +141,7 @@ public class NMap extends Tool {
   }
 
   public Child synScan( Target target, SynScanReceiver receiver, String custom ) throws ChildManager.ChildNotStartedException {
+    validatePortSpec(custom);
     StringBuilder command = new StringBuilder("-sS -P0 --privileged --send-ip --system-dns -vvv ");
 
     if( custom != null )
@@ -147,6 +159,7 @@ public class NMap extends Tool {
   }
 
   public Child customScan( Target target, SynScanReceiver receiver, String custom ) throws ChildManager.ChildNotStartedException {
+    validateCustomFlags(custom);
     StringBuilder command = new StringBuilder("-vvv ");
 
     if( custom != null )

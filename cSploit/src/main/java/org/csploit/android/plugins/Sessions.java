@@ -67,7 +67,8 @@ public class Sessions extends Plugin {
       if(s.haveShell())
         availableChoices.add(R.string.open_shell);
       if(s.isMeterpreter()) {
-        if(System.getCurrentTarget().getDeviceOS().toLowerCase().contains("windows"))
+        String deviceOS = System.getCurrentTarget().getDeviceOS();
+        if(deviceOS != null && deviceOS.toLowerCase().contains("windows"))
           availableChoices.add(R.string.clear_event_log);
       }
       availableChoices.add(R.string.delete);

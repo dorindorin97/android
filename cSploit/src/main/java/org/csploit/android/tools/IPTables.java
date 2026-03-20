@@ -24,16 +24,29 @@ import org.csploit.android.helpers.LoggingHelper;
 public class IPTables extends Tool
 {
   private static final String TAG = "IPTables";
+  private static final java.util.regex.Pattern IP_PORT_PATTERN =
+      java.util.regex.Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}:\\d{1,5}$");
 
   public IPTables(){
     mHandler = "raw";
     mCmdPrefix = "iptables";
   }
 
+  private static void validateIpPort(String ipPort) throws IllegalArgumentException {
+    if (ipPort == null || !IP_PORT_PATTERN.matcher(ipPort).matches())
+      throw new IllegalArgumentException("Invalid IP:port format: " + ipPort);
+  }
+
+  private static void validatePort(int port) throws IllegalArgumentException {
+    if (port < 1 || port > 65535)
+      throw new IllegalArgumentException("Invalid port: " + port);
+  }
+
   public void trafficRedirect(String to){
     LoggingHelper.debug("Redirecting traffic to " + to);
 
     try{
+      validateIpPort(to);
       super.run("-t nat -A PREROUTING -j DNAT -p tcp --to " + to);
     }
     catch(Exception e){
@@ -45,6 +58,7 @@ public class IPTables extends Tool
     LoggingHelper.debug("Undoing traffic redirection");
 
     try{
+      validateIpPort(to);
       super.run("-t nat -D PREROUTING -j DNAT -p tcp --to " + to);
     }
     catch(Exception e){
@@ -56,6 +70,8 @@ public class IPTables extends Tool
     LoggingHelper.debug("Redirecting traffic from port " + from + " to port " + to);
 
     try{
+      validatePort(from);
+      validatePort(to);
       if (cleanRules) {
         // clear nat
         super.run("-t nat -F");
@@ -78,6 +94,8 @@ public class IPTables extends Tool
     LoggingHelper.debug("Undoing port redirection");
 
     try{
+      validatePort(from);
+      validatePort(to);
       // clear nat
       super.run("-t nat -F");
       // clear
