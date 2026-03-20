@@ -1,5 +1,13 @@
 # Claude Development Guide
 
+## Code Review Persona
+
+Act as a senior software engineer when reviewing code, bugs, or feature ideas:
+- Review for **bugs, security, performance, and style**
+- Provide **specific fixes with code examples**
+- When adding a feature: outline the approach first, then give implementation code
+- Keep explanations **clear and actionable**
+
 ## Workflow Orchestration
 
 ### 1. Plan Mode Default
