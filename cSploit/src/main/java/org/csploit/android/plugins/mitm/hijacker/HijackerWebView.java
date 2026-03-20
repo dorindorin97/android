@@ -127,7 +127,7 @@ public class HijackerWebView extends AppCompatActivity {
     mWebView.setWebChromeClient(new WebChromeClient() {
 
       public void onProgressChanged(WebView view, int progress) {
-        if ((mWebView != null) && (mURLet != null) && (progress == 0)); {
+        if ((mWebView != null) && (mURLet != null) && (progress == 100)) {
           getSupportActionBar().setSubtitle(mWebView.getUrl());
           mURLet.setText(mWebView.getUrl());
         }

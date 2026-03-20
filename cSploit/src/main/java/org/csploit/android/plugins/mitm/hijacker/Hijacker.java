@@ -191,20 +191,12 @@ public class Hijacker extends AppCompatActivity {
 
 	private Bitmap loadImageFromUrl(String uri) {
 		try {
-			URL url = new URL(uri);
-			URLConnection conn = url.openConnection();
+			URLConnection conn = new URL(uri).openConnection();
 			conn.connect();
-
-			InputStream input = conn.getInputStream();
-			BufferedInputStream reader = new BufferedInputStream(input);
-
-			Bitmap image = Bitmap.createScaledBitmap(
-					BitmapFactory.decodeStream(reader), 48, 48, false);
-
-			reader.close();
-			input.close();
-			
-			return image;
+			try (BufferedInputStream reader = new BufferedInputStream(conn.getInputStream())) {
+				return Bitmap.createScaledBitmap(
+						BitmapFactory.decodeStream(reader), 48, 48, false);
+			}
 		} catch (IOException e) {
 			LoggingHelper.e(TAG, "Failed to load image from URL", e);
 			return null;
@@ -213,23 +205,17 @@ public class Hijacker extends AppCompatActivity {
 
 	private String loadUserNameFromUrl(String uri) {
 		try {
-			URL url = new URL(uri);
-			URLConnection conn = url.openConnection();
+			URLConnection conn = new URL(uri).openConnection();
 			conn.connect();
-
-			InputStream input = conn.getInputStream();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(input));
-			String line;
-			StringBuilder dataBuilder = new StringBuilder();
-			while ((line = reader.readLine()) != null)
-				dataBuilder.append(line);
-
-			reader.close();
-			input.close();
-
-			JSONObject response = new JSONObject(dataBuilder.toString());
-			return response.getString("name");
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(conn.getInputStream()))) {
+				StringBuilder dataBuilder = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null)
+					dataBuilder.append(line);
+				JSONObject response = new JSONObject(dataBuilder.toString());
+				return response.getString("name");
+			}
 		} catch (Exception e) {
 			LoggingHelper.e(TAG, "Failed to load user name from URL", e);
 			return null;
