@@ -44,15 +44,15 @@ public class MsfRpcdServiceReceiver extends ManagedReceiver {
     final MsfRpcdService.Status status = (MsfRpcdService.Status)
             intent.getSerializableExtra(MsfRpcdService.STATUS);
 
-    if(context instanceof Activity) {
-      ((Activity) context).runOnUiThread(new Runnable() {
+    if (status == null) return;
+
+    if(context instanceof AppCompatActivity) {
+      ((AppCompatActivity) context).runOnUiThread(new Runnable() {
         @Override
         public void run() {
           showToastForStatus(context, status);
         }
       });
-    } else {
-      showToastForStatus(context, status);
     }
 
     SharedPreferences myPrefs = System.getSettings();
@@ -63,8 +63,11 @@ public class MsfRpcdServiceReceiver extends ManagedReceiver {
   }
 
   private void showToastForStatus(Context context, MsfRpcdService.Status status) {
+    if (!(context instanceof AppCompatActivity)) return;
     Snackbar
-            .make(((AppCompatActivity) context).findViewById(android.R.id.content), status.getText(), status.isError() ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT)
+            .make(((AppCompatActivity) context).findViewById(android.R.id.content),
+                    status.getText(),
+                    status.isError() ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT)
     .show();
   }
 

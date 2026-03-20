@@ -401,6 +401,11 @@ public class UpdateService extends IntentService
       throw new KeyException("corrupted archive: "+e.getMessage());
     } finally {
       try {
+        if (is != null) is.close();
+      } catch (IOException e) {
+        LoggingHelper.d("UpdateService", "Archive stream close failed: " + e.getMessage());
+      }
+      try {
         counter.close();
       } catch (IOException e) {
         LoggingHelper.d("UpdateService", "Counter stream close failed: " + e.getMessage());
