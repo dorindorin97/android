@@ -23,8 +23,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -33,7 +33,9 @@ import java.util.Locale;
  */
 public class ErrorLogger {
     private static final String ERROR_LOG_FILE = "error_log.txt";
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    // DateTimeFormatter is immutable and thread-safe (unlike SimpleDateFormat)
+    private static final DateTimeFormatter DATE_FORMAT =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US);
     private static final int MAX_LOG_SIZE = 1024 * 1024; // 1 MB
 
     private String mLogsPath;
@@ -104,8 +106,7 @@ public class ErrorLogger {
      * @return Formatted exception string
      */
     private String formatException(Throwable throwable) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-        String timestamp = dateFormat.format(new Date());
+        String timestamp = LocalDateTime.now().format(DATE_FORMAT);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

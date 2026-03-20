@@ -61,12 +61,12 @@ public class SessionManager {
     private static final DateTimeFormatter DATE_FORMAT =
         DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss", Locale.US);
 
-    private String mSessionName;
-    private String mStoragePath;
-    private ArrayList<Target> mTargets;
-    private long mLastSaveTime = 0;
-    private boolean mAutoSaveEnabled = false;
-    private long mAutoSaveIntervalMs = 300000; // 5 minutes default
+    private volatile String mSessionName;
+    private final String mStoragePath;
+    private final ArrayList<Target> mTargets;
+    private volatile long mLastSaveTime = 0;
+    private volatile boolean mAutoSaveEnabled = false;
+    private volatile long mAutoSaveIntervalMs = 300_000; // 5 minutes default
 
     /**
      * Creates a SessionManager instance
@@ -489,6 +489,35 @@ public class SessionManager {
             path += SESSION_EXT;
         }
         return new File(path).exists();
+    }
+
+    /**
+     * Delete backup files older than {@code maxAgeMs} milliseconds.
+     * Prevents unbounded accumulation of .bak files over long sessions.
+     *
+     * @param maxAgeMs maximum age in milliseconds (e.g. 7 * 24 * 3600 * 1000L for 7 days)
+     * @return number of backup files deleted
+     */
+    public int cleanOldBackups(long maxAgeMs) {
+        if (mStoragePath == null) return 0;
+        File storage = new File(mStoragePath);
+        if (!storage.exists()) return 0;
+
+        String[] children = storage.list();
+        if (children == null) return 0;
+
+        long cutoff = java.lang.System.currentTimeMillis() - maxAgeMs;
+        int deleted = 0;
+
+        for (String name : children) {
+            if (!name.endsWith(BACKUP_EXT)) continue;
+            File f = new File(storage, name);
+            if (f.lastModified() < cutoff && f.delete()) {
+                LoggingHelper.d(TAG, "Deleted old backup: " + name);
+                deleted++;
+            }
+        }
+        return deleted;
     }
 
     private String escapeJson(String text) {

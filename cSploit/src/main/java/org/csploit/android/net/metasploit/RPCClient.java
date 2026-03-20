@@ -8,8 +8,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.locks.Lock;
@@ -44,8 +46,19 @@ public class RPCClient
   private URL u;
   private URLConnection huc;
   private String token;
+  private static final int CACHE_MAX_SIZE = 64;
+
   private static volatile MessagePack msgpack = null;
-  private final Map callCache = new HashMap();
+  // Thread-safe LRU cache: access-ordered LinkedHashMap wrapped in synchronizedMap
+  @SuppressWarnings("rawtypes")
+  private final Map callCache = Collections.synchronizedMap(
+      new LinkedHashMap(CACHE_MAX_SIZE, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry eldest) {
+          return size() > CACHE_MAX_SIZE;
+        }
+      }
+  );
   private final Lock lock = new ReentrantLock();
   private final boolean mRemote;
 

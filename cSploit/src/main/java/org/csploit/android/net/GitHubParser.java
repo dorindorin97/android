@@ -63,7 +63,7 @@ public class GitHubParser {
       msfRepo = new GitHubParser(customUsername, customProject);
     }
 
-    msfRepo.mTagFilter = ".*csploit.*";
+    msfRepo.mTagFilter = "(?i).*csploit.*";
 
     return msfRepo;
   }

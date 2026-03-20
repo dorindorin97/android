@@ -45,38 +45,26 @@ public class KnownIssues {
   public void fromFile(String file) {
     String line = null;
 
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new FileReader(file));
-
-      while((line = reader.readLine()) != null) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      while ((line = reader.readLine()) != null) {
         line = line.trim();
 
-        if(line.isEmpty() || line.startsWith("#"))
+        if (line.isEmpty() || line.startsWith("#"))
           continue;
 
         Integer issue = Integer.parseInt(line);
 
-        if(!foundIssues.contains(issue)) {
+        if (!foundIssues.contains(issue)) {
           foundIssues.add(issue);
           Logger.info(String.format("issue #%d loaded from file", issue));
         }
       }
-
     } catch (FileNotFoundException e) {
-      // ignored
+      // File absent is not an error — daemon may not have reported any issues
     } catch (IOException e) {
       Logger.warning(String.format("unable to read from '%s': %s", file, e.getMessage()));
     } catch (NumberFormatException e) {
       Logger.error(String.format("unable to parse '%s' as number.", line));
-    } finally {
-      if (reader != null) {
-        try {
-          reader.close();
-        } catch (IOException e) {
-          // Nothing else matters
-        }
-      }
     }
   }
 
