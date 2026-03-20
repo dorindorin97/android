@@ -641,6 +641,7 @@ public class WifiScannerFragment extends ListFragment
 
                     List<ScanResult> results = mWifiManager.getScanResults();
 
+                    if(results == null) results = java.util.Collections.emptyList();
                     for(ScanResult result : results){
                         mAdapter.addResult(result);
                     }
