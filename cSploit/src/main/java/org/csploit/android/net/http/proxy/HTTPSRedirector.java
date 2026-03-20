@@ -137,12 +137,11 @@ public class HTTPSRedirector implements Runnable
           final SSLSocket client = (SSLSocket) mSocket.accept();
 
           ConcurrencyHelper.submitAsync(() -> {
-            try{
-              String clientAddress = client.getInetAddress().getHostAddress();
+            try (SSLSocket autoCloseClient = client;
+                 InputStream reader = autoCloseClient.getInputStream()) {
+              String clientAddress = autoCloseClient.getInetAddress().getHostAddress();
 
               LoggingHelper.debug("Incoming connection from " + clientAddress);
-
-              InputStream reader = client.getInputStream();
 
               // Apache's default header limit is 8KB.
               byte[] buffer = new byte[8192];
@@ -172,18 +171,17 @@ public class HTTPSRedirector implements Runnable
                         if(header.equals("Host"))
                           serverName = value;
 
-                        if(header != null)
-                          line = header + ": " + value;
+                        line = header + ": " + value;
                       }
                     }
 
                     // build the patched request
-                    builder.append(line + "\n");
+                    builder.append(line).append("\n");
                   }
 
 
                   if(serverName != null){
-                    BufferedOutputStream writer = new BufferedOutputStream(client.getOutputStream());
+                    BufferedOutputStream writer = new BufferedOutputStream(autoCloseClient.getOutputStream());
 
                     String request = builder.toString(),
                       url = RequestParser.getUrlFromRequest(serverName, request),
@@ -202,10 +200,8 @@ public class HTTPSRedirector implements Runnable
                     writer.close();
                   }
                 }
-
-                reader.close();
-              }
-              catch(IOException e){
+            }
+            catch(IOException e){
                 LoggingHelper.e(TAG, "HTTPS redirector reader error", e);
               }
               return null;
