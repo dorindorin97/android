@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Expose the external storage path for APK installs -->
+    <external-path name="external_files" path="." />
+    <!-- Expose the files dir for downloads stored in app storage -->
+    <files-path name="app_files" path="." />
+</paths>
