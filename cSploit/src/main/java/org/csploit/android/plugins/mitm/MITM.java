@@ -196,6 +196,7 @@ public class MITM extends Plugin
 
     if(request == SELECT_PICTURE && result == RESULT_OK){
       try{
+        if(intent == null) return;
         Uri uri = intent.getData();
         String fileName = null,
           mimeType = null;

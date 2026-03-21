@@ -349,7 +349,9 @@ public class RPCClient
             String file,filename,func;
             int line;
             Matcher matcher;
-            for(String str : (ArrayList<String>)hout.get("error_backtrace"))
+            ArrayList<String> errorBacktrace = (ArrayList<String>)hout.get("error_backtrace");
+            if(errorBacktrace == null) errorBacktrace = new ArrayList<String>();
+            for(String str : errorBacktrace)
             {
               try
               {
