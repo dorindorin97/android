@@ -511,7 +511,9 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
    * Monitor a pcap file for changes, in order to let the user know that the capture is running.
    */
   private void startMonitoringPcapFile(){
-    final String str_address = (System.getCurrentTarget().getType() == Target.Type.NETWORK) ? System.getCurrentTarget().getDisplayAddress().split("/")[0] : System.getCurrentTarget().getDisplayAddress();
+    Target sniffTarget = System.getCurrentTarget();
+    if(sniffTarget == null) return;
+    final String str_address = (sniffTarget.getType() == Target.Type.NETWORK) ? sniffTarget.getDisplayAddress().split("/")[0] : sniffTarget.getDisplayAddress();
 
     final File pcapfile = new File(mPcapFileName);
     try{
