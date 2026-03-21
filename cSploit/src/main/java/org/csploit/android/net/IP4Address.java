@@ -32,7 +32,7 @@ public class IP4Address implements Comparable<IP4Address>
   private InetAddress mAddress = null;
 
   public static int ntohl(int n){
-    return ((n >> 24) & 0xFF) + ((n >> 16) & 0xFF) + ((n >> 8) & 0xFF) + (n & 0xFF);
+    return (((n >> 24) & 0xFF)) | (((n >> 16) & 0xFF) << 8) | (((n >> 8) & 0xFF) << 16) | ((n & 0xFF) << 24);
   }
 
   public static IP4Address next(IP4Address address) throws UnknownHostException{

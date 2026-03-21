@@ -505,6 +505,8 @@ public class Target implements Comparable<Target>
     if(mType == Type.NETWORK) {
       return mNetwork.compareTo(another.mNetwork);
     } else if(mType == Type.REMOTE){
+      if(mHostname == null) return another.mHostname == null ? 0 : -1;
+      if(another.mHostname == null) return 1;
       return mHostname.compareTo(another.mHostname);
     } else {
       try {

@@ -9,10 +9,10 @@ import org.csploit.android.events.Event;
  */
 public class Child {
   public int id;
-  public int exitValue;
-  public int signal;
+  public volatile int exitValue;
+  public volatile int signal;
   public EventReceiver receiver;
-  public boolean running;
+  public volatile boolean running;
 
   public Child() {
     this.id = -1;
