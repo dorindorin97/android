@@ -337,7 +337,7 @@ public class SettingsFragment extends Fragment {
                 int port;
 
                 try {
-                    port = Integer.parseInt(mProxyPort.getText());
+                    port = Integer.parseInt(sharedPreferences.getString(key, "0"));
                     if (port < 1024 || port > 65535) {
                         message = getString(R.string.pref_err_port_range);
                         port = 0;
