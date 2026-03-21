@@ -67,6 +67,7 @@ public class PortScanner extends Plugin {
   private ProgressBar mScanProgress = null;
   private boolean mRunning = false;
   private ArrayList<String> mPortList = new ArrayList<>();
+  private ArrayList<Integer> mPortNumbers = new ArrayList<>();
   private ArrayAdapter<String> mListAdapter = null;
   private Receiver mScanReceiver = null;
   private String mCustomPorts = null;
@@ -162,6 +163,7 @@ public class PortScanner extends Plugin {
 
   private void createPortList() {
     mPortList.clear();
+    mPortNumbers.clear();
 
     for (Port p : System.getCurrentTarget().getOpenPorts()) {
       int pNumber = p.getNumber();
@@ -173,8 +175,10 @@ public class PortScanner extends Plugin {
       else
         str = p.getProtocol().toString().toLowerCase() + " : " + pNumber;
 
-      if (!mPortList.contains(str))
+      if (!mPortList.contains(str)) {
         mPortList.add(str);
+        mPortNumbers.add(pNumber);
+      }
     }
 
   }
@@ -229,7 +233,8 @@ public class PortScanner extends Plugin {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view,
                                      int position, long id) {
-        int portNumber = target.getOpenPorts().get(position).getNumber();
+        if (position >= mPortNumbers.size()) return false;
+        int portNumber = mPortNumbers.get(position);
 
         if(!urlFormats.containsKey(portNumber)) {
           portNumber = 0;

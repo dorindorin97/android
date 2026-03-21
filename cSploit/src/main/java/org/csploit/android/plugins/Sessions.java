@@ -122,6 +122,7 @@ public class Sessions extends Plugin {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
       Session s = mAdapter.getItem(position);
+      if(s == null) return;
       if(s.haveShell()) {
         System.setCurrentSession(s);
         startActivity(new Intent(Sessions.this,Console.class));
