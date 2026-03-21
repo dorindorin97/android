@@ -186,7 +186,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 
 								mUdpSocket.receive(response);
 
-								final String text = new String(buffer);
+								final String text = new String(buffer, 0, response.getLength());
 								PacketForger.this
 										.runOnUiThread(new Runnable() {
 											public void run() {
