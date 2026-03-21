@@ -203,14 +203,17 @@ public class MITM extends Plugin
         if(uri != null){
           String[] columns = {MediaColumns.DATA};
           Cursor cursor = getContentResolver().query(uri, columns, null, null, null);
-          cursor.moveToFirst();
-
-          int index = cursor.getColumnIndex(MediaColumns.DATA);
-          if(index != -1){
-            fileName = cursor.getString(index);
+          if (cursor != null) {
+            try {
+              cursor.moveToFirst();
+              int index = cursor.getColumnIndex(MediaColumns.DATA);
+              if (index != -1) {
+                fileName = cursor.getString(index);
+              }
+            } finally {
+              cursor.close();
+            }
           }
-
-          cursor.close();
         }
 
         if(fileName == null){
