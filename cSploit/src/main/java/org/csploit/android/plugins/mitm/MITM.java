@@ -568,13 +568,14 @@ public class MITM extends Plugin
           if(activity.getVisibility() == View.INVISIBLE){
             if (System.getCurrentTarget().getType() != Target.Type.ENDPOINT) {
               UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.mitm_connection_kill_error));
-            } else if(!System.getNetwork().haveGateway() && !System.getNetwork().isTetheringEnabled()) {
+            } else if(System.getNetwork() == null || (!System.getNetwork().haveGateway() && !System.getNetwork().isTetheringEnabled())) {
               UIHelper.error(MITM.this, getString(R.string.error), "Connection killer requires a gateway or active Tethering");
             } else {
               setStoppedState();
 
               try {
-                if(System.getNetwork().haveGateway()) {
+                org.csploit.android.net.Network ckNetwork = System.getNetwork();
+                if(ckNetwork != null && ckNetwork.haveGateway()) {
                 mConnectionKillerProcess = System.getTools().arpSpoof.spoof(System.getCurrentTarget(), new ArpSpoof.ArpSpoofReceiver() {
 
                   @Override

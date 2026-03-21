@@ -315,7 +315,11 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
     mSortSpinner = (Spinner) findViewById(R.id.sortSpinner);
     mListView = (ListView) findViewById(R.id.listView);
     mAdapter = new StatListAdapter(R.layout.plugin_mitm_sniffer_list_item);
-    mSampleTime = (int)(Double.parseDouble(System.getSettings().getString("PREF_SNIFFER_SAMPLE_TIME", "1.0")) * 1000);
+    try {
+      mSampleTime = (int)(Double.parseDouble(System.getSettings().getString("PREF_SNIFFER_SAMPLE_TIME", "1.0")) * 1000);
+    } catch (NumberFormatException e) {
+      mSampleTime = 1000;
+    }
     mSpoofSession = new SpoofSession(false, false, null, null);
 
     mSortSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SORT));
