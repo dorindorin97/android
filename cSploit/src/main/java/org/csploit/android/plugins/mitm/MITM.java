@@ -614,7 +614,8 @@ public class MITM extends Plugin
               mConnectionKillerProcess = null;
             }
 
-            if(!System.getNetwork().haveGateway() && System.getNetwork().isTetheringEnabled()) {
+            org.csploit.android.net.Network net617 = System.getNetwork();
+            if(net617 != null && !net617.haveGateway() && net617.isTetheringEnabled()) {
               System.setForwarding(true);
             }
 
@@ -624,7 +625,8 @@ public class MITM extends Plugin
       }, new Action.ActionEnabler() {
       @Override
       public boolean isEnabled() {
-        return System.getNetwork().haveGateway() || System.getNetwork().isTetheringEnabled();
+        org.csploit.android.net.Network net = System.getNetwork();
+        return net != null && (net.haveGateway() || net.isTetheringEnabled());
       }
     }));
 
