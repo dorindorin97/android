@@ -162,7 +162,9 @@ public class Sessions extends Plugin {
     mListView.setOnItemLongClickListener(longClickListener);
 
     ConcurrencyHelper.submitAsync(() -> {
-      System.getMsfRpc().updateSessions();
+      RPCClient rpc = System.getMsfRpc();
+      if(rpc == null) return null;
+      rpc.updateSessions();
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
