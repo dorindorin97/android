@@ -165,6 +165,7 @@ public class PortScanner extends Plugin {
     mPortList.clear();
     mPortNumbers.clear();
 
+    if (System.getCurrentTarget() == null) return;
     for (Port p : System.getCurrentTarget().getOpenPorts()) {
       int pNumber = p.getNumber();
       String resolvedProtocol = System.getProtocolByPort(pNumber);
