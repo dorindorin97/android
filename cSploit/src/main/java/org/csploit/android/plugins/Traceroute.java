@@ -73,8 +73,10 @@ public class Traceroute extends Plugin {
 		mListAdapter.clear();
 		mTraceFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
 
+    org.csploit.android.net.Target traceTarget = System.getCurrentTarget();
+    if(traceTarget == null) return;
     try {
-      System.getTools().nmap.trace(System.getCurrentTarget(), resolveNames, mTraceReceiver);
+      System.getTools().nmap.trace(traceTarget, resolveNames, mTraceReceiver);
 
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
