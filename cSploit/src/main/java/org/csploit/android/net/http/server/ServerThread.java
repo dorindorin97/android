@@ -44,7 +44,7 @@ public class ServerThread extends Thread
     mSocket = socket;
     mWriter = new BufferedOutputStream(mSocket.getOutputStream());
     mReader = mSocket.getInputStream();
-    mData = Arrays.copyOf(data, data.length);
+    mData = (data != null) ? Arrays.copyOf(data, data.length) : new byte[0];
     mContentType = contentType;
   }
 

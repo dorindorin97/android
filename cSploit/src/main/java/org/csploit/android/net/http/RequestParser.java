@@ -395,8 +395,12 @@ public class RequestParser
             String paramValue = rawCookieParamNameAndValue[1].trim();
 
             if(paramName.equalsIgnoreCase("max-age")){
-              long maxAge = Long.parseLong(paramValue);
-              cookie.setMaxAge(maxAge);
+              try {
+                long maxAge = Long.parseLong(paramValue);
+                cookie.setMaxAge(maxAge);
+              } catch (NumberFormatException e) {
+                LoggingHelper.warning("Invalid cookie max-age value: " + paramValue);
+              }
             } else if(paramName.equalsIgnoreCase("domain"))
               cookie.setDomain(paramValue);
 

@@ -92,7 +92,8 @@ public class SpoofSession
       }
     }
 
-    if(System.getNetwork().haveGateway()) {
+    org.csploit.android.net.Network network = System.getNetwork();
+    if(network != null && network.haveGateway()) {
       mArpSpoofProcess = System.getTools().arpSpoof.spoof(target, new ArpSpoof.ArpSpoofReceiver() {
         @Override
         public void onError(String line) {
@@ -119,7 +120,8 @@ public class SpoofSession
 
     this.stop();
 
-    if(System.getNetwork().haveGateway()) {
+    org.csploit.android.net.Network network = System.getNetwork();
+    if(network != null && network.haveGateway()) {
       mArpSpoofProcess =
               System.getTools().arpSpoof.spoof(target, new ArpSpoof.ArpSpoofReceiver() {
                 @Override
@@ -144,7 +146,8 @@ public class SpoofSession
 
   public void start(final OnDNSSpoofedReceiver listener) throws ChildManager.ChildNotStartedException {
 
-    if(System.getNetwork().haveGateway()) {
+    org.csploit.android.net.Network network = System.getNetwork();
+    if(network != null && network.haveGateway()) {
       mArpSpoofProcess =
               System.getTools().arpSpoof.spoof(System.getCurrentTarget(), new ArpSpoof.ArpSpoofReceiver() {
                 @Override
