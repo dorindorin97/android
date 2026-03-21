@@ -117,6 +117,7 @@ public class RPCClient
     {
       if(unpk!=null)
         unpk.close();
+      is.close();
     }
   }
 
