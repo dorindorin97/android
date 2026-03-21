@@ -361,7 +361,9 @@ public class MultiAttackService extends IntentService {
 
     while(mRunning) {
       try {
-        executorService.awaitTermination(1, TimeUnit.SECONDS);
+        if(executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+          break; // all tasks completed normally
+        }
       } catch (InterruptedException e) {
         break;
       }

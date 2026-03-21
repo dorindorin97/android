@@ -416,7 +416,8 @@ public class System {
 
     mCoreInitialized = true;
     Services.getNetworkRadar().onAutoScanChanged();
-    getNetwork().onCoreAttached();
+    Network coreNetwork = getNetwork();
+    if (coreNetwork != null) coreNetwork.onCoreAttached();
   }
 
   public static void setIfname(String ifname) {
