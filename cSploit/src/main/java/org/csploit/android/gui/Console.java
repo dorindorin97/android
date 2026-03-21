@@ -166,11 +166,13 @@ public class Console extends AppCompatActivity {
         } else if (itemId == android.R.id.copy) {
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                 android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboard.setText(mOutput.getText().toString());
+                if (clipboard != null) clipboard.setText(mOutput.getText().toString());
             } else {
                 android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", mOutput.getText().toString());
-                clipboard.setPrimaryClip(clip);
+                if (clipboard != null) {
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", mOutput.getText().toString());
+                    clipboard.setPrimaryClip(clip);
+                }
             }
             return true;
         } else {

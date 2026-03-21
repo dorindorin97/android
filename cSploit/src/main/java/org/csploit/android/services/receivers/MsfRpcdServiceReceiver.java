@@ -83,6 +83,7 @@ public class MsfRpcdServiceReceiver extends ManagedReceiver {
 
     NotificationManager mNotificationManager =
             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    mNotificationManager.notify(MSF_NOTIFICATION, mBuilder.build());
+    if (mNotificationManager != null)
+      mNotificationManager.notify(MSF_NOTIFICATION, mBuilder.build());
   }
 }

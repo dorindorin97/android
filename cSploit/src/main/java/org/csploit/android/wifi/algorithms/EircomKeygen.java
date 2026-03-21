@@ -41,7 +41,12 @@ public class EircomKeygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    String mac = getMacAddress().substring(6);
+    final String rawMac = getMacAddress();
+    if(rawMac == null || rawMac.length() < 12){
+      setErrorMessage("This key cannot be generated without MAC address.");
+      return null;
+    }
+    String mac = rawMac.substring(6);
     try{
       md = MessageDigest.getInstance("SHA1");
     } catch(NoSuchAlgorithmException e1){
