@@ -273,7 +273,7 @@ public class ExecChecker {
     return false;
   }
 
-  public String getRoot() {
+  public synchronized String getRoot() {
     return resolvedDir;
   }
 

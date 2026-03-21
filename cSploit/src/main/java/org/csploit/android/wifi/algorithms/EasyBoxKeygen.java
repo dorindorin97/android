@@ -31,7 +31,7 @@ public class EasyBoxKeygen extends Keygen{
   @Override
   public List<String> getKeys(){
     final String mac = getMacAddress();
-    if(mac.length() != 12){
+    if(mac == null || mac.length() != 12){
       setErrorMessage("The MAC address is invalid.");
       return null;
     }

@@ -83,15 +83,19 @@ public class Proxy implements Runnable{
   public void stop(){
     LoggingHelper.d(TAG, "Stopping proxy ...");
 
+    mRunning = false;
+
+    ServerSocket socketToClose;
+    synchronized (this) {
+      socketToClose = mSocket;
+      mSocket = null;
+    }
     try{
-      if(mSocket != null)
-        mSocket.close();
+      if(socketToClose != null)
+        socketToClose.close();
     } catch(IOException e){
       LoggingHelper.w(TAG, "Error closing proxy socket during stop", e);
     }
-
-    mRunning = false;
-    mSocket = null;
   }
 
   public void run(){

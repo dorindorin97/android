@@ -40,7 +40,7 @@ public class DlinkKeygen extends Keygen{
   @Override
   public List<String> getKeys(){
     final String mac = getMacAddress();
-    if(mac == null || mac.isEmpty()){
+    if(mac == null || mac.length() < 12){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }
