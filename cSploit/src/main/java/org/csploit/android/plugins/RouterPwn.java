@@ -66,7 +66,8 @@ public class RouterPwn extends Plugin{
     }
     catch(ActivityNotFoundException e){
       LoggingHelper.e(TAG, "No browser found for RouterPwn", e);
-      UIHelper.error((FragmentActivity) context, getString(R.string.error), getString(R.string.no_activities_for_url));
+      if (context instanceof FragmentActivity)
+        UIHelper.error((FragmentActivity) context, getString(R.string.error), getString(R.string.no_activities_for_url));
     }
   }
 }
