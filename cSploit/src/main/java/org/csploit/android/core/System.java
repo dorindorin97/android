@@ -451,7 +451,7 @@ public class System {
   }
 
   public static boolean checkNetworking(final FragmentActivity current) {
-    if (!mNetwork.isConnected()) {
+    if (mNetwork == null || !mNetwork.isConnected()) {
 
       Intent intent = new Intent();
       intent.putExtra(WifiScannerFragment.CONNECTED, false);
