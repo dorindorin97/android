@@ -116,13 +116,16 @@ public class Server implements Runnable
       mRunning = true;
 
       while(mRunning){
+        Socket client = null;
         try{
-          Socket client = mSocket.accept();
-
+          client = mSocket.accept();
           new ServerThread(client, mResourceData, mResourceContentType).start();
         }
         catch(IOException e){
           LoggingHelper.e(TAG, "Server client accept error", e);
+          if(client != null) {
+            try { client.close(); } catch(IOException ignored) {}
+          }
         }
       }
 

@@ -56,8 +56,9 @@ public class ServerThread extends Thread
 
       // Read the request
       if(mReader.read(request, 0, MAX_REQUEST_SIZE) > 0){
+        String contentType = (mContentType != null) ? mContentType : "application/octet-stream";
         String header = "HTTP/1.1 200 OK\r\n" +
-          "Content-Type: " + mContentType + "\r\n" +
+          "Content-Type: " + contentType + "\r\n" +
           "Content-Length: " + mData.length + "\r\n\r\n";
 
         mWriter.write(header.getBytes());
