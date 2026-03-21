@@ -34,7 +34,7 @@ public class Wlan6Keygen extends Keygen{
   @Override
   public List<String> getKeys(){
     String macStr = getMacAddress();
-    if(macStr == null || macStr.isEmpty()){
+    if(macStr == null || macStr.length() < 17){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }

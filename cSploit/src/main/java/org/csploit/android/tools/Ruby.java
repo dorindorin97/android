@@ -75,10 +75,11 @@ public class Ruby extends Tool {
     mEnv = new String[3];
 
     rubyRoot = ExecChecker.ruby().getRoot();
+    if(rubyRoot == null) return;
     path = java.lang.System.getenv("PATH");
 
     mEnv[0] = String.format("RUBYLIB=" + rubyLib, rubyRoot + "/lib/ruby");
-    mEnv[1] = "PATH=" + path + ":" + rubyRoot + "/bin";
+    mEnv[1] = "PATH=" + (path != null ? path + ":" : "") + rubyRoot + "/bin";
     mEnv[2] = "HOME=" + rubyRoot + "/home/ruby";
   }
 }

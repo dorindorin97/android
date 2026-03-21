@@ -78,16 +78,21 @@ public class AliceKeygen extends Keygen{
       }
       serialStrBuilder.append(tmp);
 
+      final String macAddress = getMacAddress();
+      if(macAddress == null || macAddress.length() < 12){
+        setErrorMessage("This key cannot be generated without MAC address.");
+        return null;
+      }
       byte[] mac = new byte[6];
       String key = "";
       byte[] hash;
 
-      if(getMacAddress().length() == 12){
+      if(macAddress.length() == 12){
 
 
         for(int i = 0; i < 12; i += 2)
-          mac[i / 2] = (byte) ((Character.digit(getMacAddress().charAt(i), 16) << 4)
-            + Character.digit(getMacAddress().charAt(i + 1), 16));
+          mac[i / 2] = (byte) ((Character.digit(macAddress.charAt(i), 16) << 4)
+            + Character.digit(macAddress.charAt(i + 1), 16));
 
         md.reset();
         md.update(specialSeq);
@@ -107,7 +112,7 @@ public class AliceKeygen extends Keygen{
       }
 
 			/*For post AGPF 4.5.0sx*/
-      String macEth = getMacAddress().substring(0, 6);
+      String macEth = macAddress.substring(0, 6);
       int extraNumber = 0;
       while(extraNumber <= 9){
         String calc = Integer.toHexString(Integer.valueOf(
@@ -118,7 +123,7 @@ public class AliceKeygen extends Keygen{
         }
         extraNumber++;
       }
-      if(macEth.equals(getMacAddress().substring(0, 6))){
+      if(macEth.equals(macAddress.substring(0, 6))){
         return getResults();
       }
       for(int i = 0; i < 12; i += 2)

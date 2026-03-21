@@ -286,7 +286,8 @@ public class SettingsFragment extends Fragment {
                     if (oldPath != null && !oldPath.equals(path)) {
                         File current = new File(oldPath);
 
-                        if (current.exists() && current.isDirectory() && current.listFiles().length > 2) {
+                        File[] currentFiles = current.listFiles();
+                        if (current.exists() && current.isDirectory() && currentFiles != null && currentFiles.length > 2) {
                             wipe_prompt_older(current);
                         }
                     }
@@ -337,7 +338,7 @@ public class SettingsFragment extends Fragment {
 
                 try {
                     port = Integer.parseInt(mProxyPort.getText());
-                    if (port < 1024 || port > 65536) {
+                    if (port < 1024 || port > 65535) {
                         message = getString(R.string.pref_err_port_range);
                         port = 0;
                     } else if (!System.isPortAvailable(port)) {
@@ -387,7 +388,7 @@ public class SettingsFragment extends Fragment {
 
                 try {
                     passFileName = mPasswordFilename.getText();
-                    if (!passFileName.matches("[^/?*:;{}\\]+]")) {
+                    if (!passFileName.matches("[^/?*:;{}\\\\]+")) {
                         message = getString(R.string.invalid_filename);
                         passFileName = "csploit-password-sniff.log";
                     }

@@ -399,12 +399,14 @@ public class Target implements Comparable<Target>
   public Target(BufferedReader reader) throws Exception{
     mUuid = UUID.randomUUID().toString();
     mType = Type.fromString(reader.readLine());
+
+    // readLine() returns null on EOF; guard before calling .equals()
     mDeviceType = reader.readLine();
-    mDeviceType = mDeviceType.equals("null") ? null : mDeviceType;
+    mDeviceType = (mDeviceType == null || mDeviceType.equals("null")) ? null : mDeviceType;
     mDeviceOS = reader.readLine();
-    mDeviceOS = mDeviceOS.equals("null") ? null : mDeviceOS;
+    mDeviceOS = (mDeviceOS == null || mDeviceOS.equals("null")) ? null : mDeviceOS;
     mAlias = reader.readLine();
-    mAlias = mAlias.equals("null") ? null : mAlias;
+    mAlias = (mAlias == null || mAlias.equals("null")) ? null : mAlias;
 
     if(mType == Type.NETWORK){
       return;
@@ -414,7 +416,7 @@ public class Target implements Comparable<Target>
     }
     else if(mType == Type.REMOTE){
       mHostname = reader.readLine();
-      mHostname = mHostname.equals("null") ? null : mHostname;
+      mHostname = (mHostname == null || mHostname.equals("null")) ? null : mHostname;
       if(mHostname != null){
         // Use async DNS resolution to avoid NetworkOnMainThreadException
         mAddress = resolveHostnameAsync(mHostname);
@@ -425,6 +427,9 @@ public class Target implements Comparable<Target>
     for(int i = 0; i < ports; i++){
       String key = reader.readLine();
       String[] parts = key.split("\\|", 4);
+      // format is protocol|port|service|version; guard against truncated/corrupted entries
+      if(parts.length < 4)
+        throw new IOException("malformed port entry in session file: " + key);
       Port port = new Port
       (
         Integer.parseInt(parts[1]),
@@ -500,6 +505,8 @@ public class Target implements Comparable<Target>
     if(mType == Type.NETWORK) {
       return mNetwork.compareTo(another.mNetwork);
     } else if(mType == Type.REMOTE){
+      if(mHostname == null) return another.mHostname == null ? 0 : -1;
+      if(another.mHostname == null) return 1;
       return mHostname.compareTo(another.mHostname);
     } else {
       try {
@@ -881,11 +888,15 @@ public class Target implements Comparable<Target>
   }
 
   public ArrayList<Session> getSessions() {
-    return mSessions;
+    synchronized (mSessions) {
+      return new ArrayList<>(mSessions);
+    }
   }
 
   public void addSession(Session s) {
-    if(!mSessions.contains(s))
-      mSessions.add(s);
+    synchronized (mSessions) {
+      if(!mSessions.contains(s))
+        mSessions.add(s);
+    }
   }
 }

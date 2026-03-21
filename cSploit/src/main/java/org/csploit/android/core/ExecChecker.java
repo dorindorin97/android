@@ -192,7 +192,9 @@ public class ExecChecker {
       mountpoint = null;
 
       while((line = mounts.readLine()) != null) {
-        tmp = line.split(" ")[1];
+        String[] parts = line.split(" ");
+        if(parts.length < 2) continue;
+        tmp = parts[1];
         if( line.contains("noexec") &&
             dir.startsWith(tmp) &&
             (mountpoint == null || tmp.length() > mountpoint.length())) {
@@ -273,7 +275,7 @@ public class ExecChecker {
     return false;
   }
 
-  public String getRoot() {
+  public synchronized String getRoot() {
     return resolvedDir;
   }
 

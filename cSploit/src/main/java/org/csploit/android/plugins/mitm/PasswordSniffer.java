@@ -293,7 +293,7 @@ public class PasswordSniffer extends AppCompatActivity {
             public void run() {
               if (!mAdapter.hasChild(protocol, line)) {
                 try {
-                  mBufferedWriter.write(line + "\n");
+                  if (mBufferedWriter != null) mBufferedWriter.write(line + "\n");
                 } catch (IOException e) {
                   LoggingHelper.e(TAG, "Failed to write sniffer log", e);
                 }

@@ -71,7 +71,8 @@ public class WirelessMatcher
     } catch(Exception e){
       LoggingHelper.e(TAG, "Failed to parse Alice XML configuration", e);
     }
-    supportedAlices = aliceReader.getSupportedAlices();
+    Map<String, ArrayList<AliceMagicInfo>> parsed = aliceReader.getSupportedAlices();
+    supportedAlices = parsed != null ? parsed : new java.util.HashMap<>();
   }
 
   public Keygen getKeygen(ScanResult result){
@@ -97,8 +98,9 @@ public class WirelessMatcher
     if(ssid.matches("[eE]ircom[0-7]{4} ?[0-7]{4}")){
       if(mac.length() == 0){
         final String filteredSsid = ssid.replace(" ", "");
-        final String end = Integer
-          .toHexString(Integer.parseInt(filteredSsid
+        // Zero-pad to 6 hex digits: toHexString() strips leading zeros
+        final String end = String.format("%06x",
+          Integer.parseInt(filteredSsid
             .substring(filteredSsid.length() - 8), 8) ^ 0x000fcc);
         mac = "00:0F:CC" + ":" + end.substring(0, 2) + ":"
           + end.substring(2, 4) + ":" + end.substring(4, 6);

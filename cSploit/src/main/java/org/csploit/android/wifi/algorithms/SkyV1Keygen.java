@@ -46,7 +46,7 @@ public class SkyV1Keygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    if(getMacAddress().length() != 12){
+    if(getMacAddress() == null || getMacAddress().length() != 12){
       setErrorMessage("This key cannot be generated without MAC address.");
       return null;
     }

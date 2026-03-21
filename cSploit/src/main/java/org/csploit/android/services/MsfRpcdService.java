@@ -202,7 +202,8 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
   }
 
   private boolean isConnected() {
-    return System.getMsfRpc() != null && System.getMsfRpc().isConnected();
+    RPCClient client = System.getMsfRpc();
+    return client != null && client.isConnected();
   }
 
   @Override

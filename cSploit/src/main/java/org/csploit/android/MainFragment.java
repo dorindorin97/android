@@ -980,16 +980,26 @@ public class MainFragment extends Fragment {
     public class TargetAdapter extends BaseAdapter implements Runnable, System.TargetListListener {
 
         private List<Target> list = System.getTargets();
-        private boolean isDark = getActivity().getSharedPreferences("THEME", 0).getBoolean("isDark", false);
+        private boolean isDark;
+        private final Context mContext;
+
+        TargetAdapter() {
+            mContext = requireContext();
+            isDark = mContext.getSharedPreferences("THEME", 0).getBoolean("isDark", false);
+        }
 
         @Override
         public int getCount() {
-            return list.size();
+            synchronized (this) {
+                return list.size();
+            }
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);
+            synchronized (this) {
+                return list.get(position);
+            }
         }
 
         @Override
@@ -1003,7 +1013,7 @@ public class MainFragment extends Fragment {
             TargetHolder holder;
 
             if (row == null) {
-                LayoutInflater inflater = (LayoutInflater) getActivity()
+                LayoutInflater inflater = (LayoutInflater) mContext
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.target_list_item, parent, false);
 
@@ -1127,7 +1137,8 @@ public class MainFragment extends Fragment {
                     if (lv == null || getActivity() == null || !isAdded())
                         return;
                     int start = lv.getFirstVisiblePosition();
-                    int end = Math.min(lv.getLastVisiblePosition(), list.size());
+                    // list.size() - 1: avoid IOOBE when end == list.size()
+                    int end = Math.min(lv.getLastVisiblePosition(), list.size() - 1);
                     for (int i = start; i <= end; i++)
                         if (changedTarget == list.get(i)) {
                             View view = lv.getChildAt(i - start);

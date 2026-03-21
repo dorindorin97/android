@@ -93,7 +93,7 @@ public class HuaweiKeygen extends Keygen{
   final char[] ssid = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
   public List<String> getKeys(){
-    if(getMacAddress().length() != 12){
+    if(getMacAddress() == null || getMacAddress().length() != 12){
       setErrorMessage("The MAC address is invalid.");
       return null;
     }

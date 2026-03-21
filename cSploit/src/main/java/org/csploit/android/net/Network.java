@@ -118,6 +118,7 @@ public class Network implements Comparable<Network> {
     mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     mInfo = mWifiManager.getDhcpInfo();
+    if (mInfo == null) throw new SocketException("getDhcpInfo() returned null: device not connected to WiFi");
     mWifiInfo = mWifiManager.getConnectionInfo();
     mLocal = new IP4Address(mInfo.ipAddress);
     mGateway = new IP4Address(mInfo.gateway);

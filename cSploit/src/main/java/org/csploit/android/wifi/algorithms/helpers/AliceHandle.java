@@ -47,8 +47,11 @@ public class AliceHandle extends DefaultHandler{
     }
     serial = attributes.getValue("sn");
     mac = attributes.getValue("mac");
-    magic[0] = Integer.parseInt(attributes.getValue("q"));
-    magic[1] = Integer.parseInt(attributes.getValue("k"));
+    String qVal = attributes.getValue("q");
+    String kVal = attributes.getValue("k");
+    if(qVal == null || kVal == null) return;
+    magic[0] = Integer.parseInt(qVal);
+    magic[1] = Integer.parseInt(kVal);
     supported.add(new AliceMagicInfo(qName, magic, serial, mac));
 
   }

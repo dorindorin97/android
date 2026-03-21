@@ -46,6 +46,7 @@ public class WifiScannerActivity extends AppCompatActivity {
   }
 
   public void onBackPressed() {
-    f.onBackPressed();
+    if (f != null) f.onBackPressed();
+    else super.onBackPressed();
   }
 }

@@ -147,6 +147,7 @@ public class MeterpreterSession extends Session {
 
         while (java.lang.System.currentTimeMillis() < timeout) {
             Map<String, Object> response = (Map<String, Object>) client.call("session.meterpreter_read", mJobId);
+            if (response == null) break;
             String data = (String) response.get("data");
 
             if (data != null && !data.isEmpty()) {

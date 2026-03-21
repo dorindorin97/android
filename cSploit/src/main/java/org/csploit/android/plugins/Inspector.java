@@ -83,7 +83,9 @@ public class Inspector extends Plugin {
     String service;
     String version;
 
-    for (Port port : System.getCurrentTarget().getOpenPorts()) {
+    Target target = System.getCurrentTarget();
+    if (target == null) return;
+    for (Port port : target.getOpenPorts()) {
       service = port.getService();
       version = port.getVersion();
 

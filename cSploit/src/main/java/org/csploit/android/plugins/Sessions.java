@@ -49,7 +49,7 @@ public class Sessions extends Plugin {
 	private ListView mListView = null;
   private ArrayList<Session> mResults;
   private ArrayAdapter<Session> mAdapter = null;
-  private Sessions              UIThread = null;
+  private volatile Sessions     UIThread = null;
 
 	public Sessions() {
 		super(R.string.sessions, R.string.sessions_desc,
@@ -62,6 +62,7 @@ public class Sessions extends Plugin {
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
       final Session s = mAdapter.getItem(position);
+      if (s == null) return false;
       final ArrayList<Integer> availableChoices = new ArrayList<Integer>();
       availableChoices.add(R.string.show_full_description);
       if(s.haveShell())

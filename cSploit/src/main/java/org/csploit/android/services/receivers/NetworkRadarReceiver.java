@@ -46,6 +46,7 @@ public class NetworkRadarReceiver extends ManagedReceiver {
 
   private void notifyIntent(Context context, Intent intent) {
     String action = intent.getAction();
+    if (action == null) return;
 
     switch (action) {
       case NetworkRadar.NRDR_STARTED:

@@ -6,11 +6,11 @@ import android.content.Context;
  * Services provider
  */
 public final class Services {
-  private static Context context;
+  private static volatile Context context;
   private static NetworkRadar networkRadar;
   private static MsfRpcdService msfRpcdService;
 
-  public static void init(Context context) {
+  public synchronized static void init(Context context) {
     Services.context = context;
   }
 

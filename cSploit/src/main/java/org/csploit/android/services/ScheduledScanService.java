@@ -135,7 +135,7 @@ public class ScheduledScanService extends Service {
         super.onCreate();
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
+        if (mNotificationManager != null) createNotificationChannel();
 
         // Register cancel receiver
         mCancelReceiver = new BroadcastReceiver() {
@@ -151,7 +151,7 @@ public class ScheduledScanService extends Service {
 
         // Acquire wake lock
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cSploit:ScheduledScan");
+        if (pm != null) mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cSploit:ScheduledScan");
     }
 
     @Override
@@ -378,10 +378,11 @@ public class ScheduledScanService extends Service {
                 .setProgress(100, progress, false)
                 .build();
 
-        mNotificationManager.notify(FOREGROUND_NOTIFICATION_ID, notification);
+        if (mNotificationManager != null) mNotificationManager.notify(FOREGROUND_NOTIFICATION_ID, notification);
     }
 
     private void sendScanCompleteNotification(boolean success, int deviceCount, @Nullable String error) {
+        if (mNotificationManager == null) return;
         String title = success ? "Scan Complete" : "Scan Failed";
         String text = success ?
                 "Found " + deviceCount + " devices" :
@@ -418,6 +419,10 @@ public class ScheduledScanService extends Service {
 
         // Schedule alarm
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) {
+            LoggingHelper.e(TAG, "AlarmManager unavailable; cannot schedule scan", null);
+            return;
+        }
         Intent intent = new Intent(context, ScheduledScanService.class);
         intent.setAction(ACTION_START_SCAN);
 
@@ -447,6 +452,7 @@ public class ScheduledScanService extends Service {
         prefs.edit().putBoolean(PREF_SCAN_ENABLED, false).apply();
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) return;
         Intent intent = new Intent(context, ScheduledScanService.class);
         intent.setAction(ACTION_START_SCAN);
 

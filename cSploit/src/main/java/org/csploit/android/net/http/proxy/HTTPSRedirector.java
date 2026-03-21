@@ -184,8 +184,9 @@ public class HTTPSRedirector implements Runnable
                     BufferedOutputStream writer = new BufferedOutputStream(autoCloseClient.getOutputStream());
 
                     String request = builder.toString(),
-                      url = RequestParser.getUrlFromRequest(serverName, request),
-                      response = "HTTP/1.1 302 Found\n" +
+                      url = RequestParser.getUrlFromRequest(serverName, request);
+                    if(url == null) return null;
+                    String response = "HTTP/1.1 302 Found\n" +
                         "Location: " + url + "\n" +
                         "Connection: close\n\n";
 

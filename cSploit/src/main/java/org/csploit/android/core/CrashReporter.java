@@ -32,12 +32,15 @@ public class CrashReporter {
 
   public static void notifyChildCrashed(int childID, int signal) {
     ErrorReporter reporter = ACRA.getErrorReporter();
+    if (reporter == null) return;
 
     reporter.putCustomData("childID", Integer.toString(childID));
     notifyNativeError(reporter, new ChildManager.ChildDiedException(signal));
   }
 
   public static void notifyNativeLibraryCrash() {
-    notifyNativeError(ACRA.getErrorReporter(), new RuntimeException("JNI library crashed"));
+    ErrorReporter reporter = ACRA.getErrorReporter();
+    if (reporter == null) return;
+    notifyNativeError(reporter, new RuntimeException("JNI library crashed"));
   }
 }

@@ -35,8 +35,9 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
   public boolean start() {
     stop();
     try {
-      nativeProcess = System.getTools().networkRadar
-        .start(new Receiver());
+      org.csploit.android.tools.ToolBox tools = System.getTools();
+      if (tools == null) throw new ChildManager.ChildNotStartedException();
+      nativeProcess = tools.networkRadar.start(new Receiver());
       return true;
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.error(e.getMessage());
@@ -68,7 +69,8 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
   @Override
   public void buildMenuItem(MenuItem item) {
     item.setTitle(isRunning() ? R.string.stop_monitor : R.string.start_monitor);
-    item.setEnabled(System.getTools().networkRadar.isEnabled() && System.getNetwork() != null);
+    org.csploit.android.tools.ToolBox tb = System.getTools();
+    item.setEnabled(tb != null && tb.networkRadar != null && tb.networkRadar.isEnabled() && System.getNetwork() != null);
   }
 
   public void onAutoScanChanged() {

@@ -440,7 +440,9 @@ public class System {
   }
 
   private static void uncaughtReloadNetworkMapping() throws UnknownHostException, SocketException {
-    mNetwork = new Network(mContext.get(), mIfname);
+    Context ctx = getContextSafe();
+    if (ctx == null) throw new SocketException("context has been garbage collected");
+    mNetwork = new Network(ctx, mIfname);
     mIfname = mNetwork.getInterface().getName();
 
     reset();
@@ -718,7 +720,7 @@ public class System {
   public static String getAppVersionName() {
     if (mApkVersion != null)
       return mApkVersion;
-    return (mApkVersion = org.csploit.android.helpers.AppHelper.getVersionName(mContext.get()));
+    return (mApkVersion = org.csploit.android.helpers.AppHelper.getVersionName(getContextSafe()));
   }
 
   /**
@@ -957,8 +959,11 @@ public class System {
 
   public static HTTPSRedirector getHttpsRedirector() {
     try {
-      if (mRedirector == null)
-        mRedirector = new HTTPSRedirector(mContext.get(), getNetwork().getLocalAddress(), HTTPS_REDIR_PORT);
+      if (mRedirector == null) {
+        Context ctx = getContextSafe();
+        if (ctx == null) throw new IllegalStateException("context has been garbage collected");
+        mRedirector = new HTTPSRedirector(ctx, getNetwork().getLocalAddress(), HTTPS_REDIR_PORT);
+      }
     } catch (Exception e) {
       errorLogging(e);
     }

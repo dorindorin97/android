@@ -191,7 +191,7 @@ public class ProxyThread extends Thread
     if (response != null) {
       mWriter.write(response.getBytes());
       mWriter.flush();
-    } else {
+    } else if (mServer != null) {
       mServerReader = mServer.getInputStream();
       mServerWriter = mServer.getOutputStream();
 

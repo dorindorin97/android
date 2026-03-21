@@ -528,7 +528,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
           case FileObserver.MODIFY:
 
             AddressStats stats = mAdapter.getStats(str_address);
-            updateStats(stats, pcapfile.length());
+            if (stats != null) updateStats(stats, pcapfile.length());
             break;
           case FileObserver.OPEN:
             showMessage(getString(R.string.dumping_traffic_to) + mPcapFileName);
@@ -583,10 +583,11 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
               AddressStats stats = null;
               String stringAddress = null;
 
-              if (System.getNetwork().isInternal(src)) {
+              org.csploit.android.net.Network network = System.getNetwork();
+              if (network != null && network.isInternal(src)) {
                 stringAddress = src.getHostAddress();
                 stats = mAdapter.getStats(stringAddress);
-              } else if (System.getNetwork().isInternal(dst)) {
+              } else if (network != null && network.isInternal(dst)) {
                 stringAddress = dst.getHostAddress();
                 stats = mAdapter.getStats(stringAddress);
               }

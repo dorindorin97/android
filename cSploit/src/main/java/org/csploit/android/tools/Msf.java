@@ -45,6 +45,7 @@ public class Msf extends Ruby {
   public void setupEnvironment() {
     super.setupEnvironment();
 
-    mEnv[1] += ":" + ExecChecker.msf().getRoot();
+    String msfRoot = ExecChecker.msf().getRoot();
+    if(msfRoot != null) mEnv[1] += ":" + msfRoot;
   }
 }

@@ -29,6 +29,7 @@ public class NetworkManager
 {
   public static int getMaxPriority(WifiManager wifiManager){
     List<WifiConfiguration> configurations = wifiManager.getConfiguredNetworks();
+    if (configurations == null) return 0;
     int pri = 0;
     for(WifiConfiguration config : configurations){
       if(config.priority > pri){
@@ -51,6 +52,7 @@ public class NetworkManager
   public static int shiftPriorityAndSave(final WifiManager wifiMgr){
     final List<WifiConfiguration> configurations = wifiMgr
       .getConfiguredNetworks();
+    if (configurations == null) return 0;
     sortByPriority(configurations);
     final int size = configurations.size();
     for(int i = 0; i < size; i++){
@@ -83,6 +85,7 @@ public class NetworkManager
     }
 
     List<WifiConfiguration> configurations = wifiMgr.getConfiguredNetworks();
+    if (configurations == null) return null;
 
     for(WifiConfiguration config : configurations) {
       if(ssid.equals(config.SSID) && ( bssid == null || config.BSSID == null || bssid.equals(config.BSSID))) {

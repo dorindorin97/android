@@ -132,7 +132,8 @@ public class EventManager {
      * @return true if listeners exist, false otherwise
      */
     public boolean hasListeners(@NonNull Class<?> eventType) {
-        return listeners.containsKey(eventType) && !listeners.get(eventType).isEmpty();
+        List<EventListener<?>> list = listeners.get(eventType);
+        return list != null && !list.isEmpty();
     }
 
     /**
