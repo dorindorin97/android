@@ -83,7 +83,9 @@ public class IPTables extends Tool
         super.run("-P FORWARD ACCEPT");
       }
       // add rule
-      super.run("-t nat -A PREROUTING -j DNAT -p tcp --dport " + from + " --to " + System.getNetwork().getLocalAddressAsString() + ":" + to);
+      org.csploit.android.net.Network net = System.getNetwork();
+      if (net == null) throw new IllegalStateException("network not initialized");
+      super.run("-t nat -A PREROUTING -j DNAT -p tcp --dport " + from + " --to " + net.getLocalAddressAsString() + ":" + to);
     }
     catch(Exception e){
       LoggingHelper.e(TAG, "Failed to redirect port", e);
@@ -103,7 +105,9 @@ public class IPTables extends Tool
       // remove post route
       super.run("-t nat -D POSTROUTING -s 0/0 -j MASQUERADE");
       // remove rule
-      super.run("-t nat -D PREROUTING -j DNAT -p tcp --dport " + from + " --to " + System.getNetwork().getLocalAddressAsString() + ":" + to);
+      org.csploit.android.net.Network net = System.getNetwork();
+      if (net == null) throw new IllegalStateException("network not initialized");
+      super.run("-t nat -D PREROUTING -j DNAT -p tcp --dport " + from + " --to " + net.getLocalAddressAsString() + ":" + to);
     }
     catch(Exception e){
       LoggingHelper.e(TAG, "Failed to undo port redirection", e);
