@@ -47,6 +47,7 @@ public class ActionActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    f.onBackPressed();
+    if (f != null) f.onBackPressed();
+    else super.onBackPressed();
   }
 }
