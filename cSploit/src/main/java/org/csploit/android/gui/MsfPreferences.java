@@ -201,7 +201,7 @@ public class MsfPreferences extends PreferenceActivity {
           break;
       }
 
-      if(inputType!=0)
+      if(inputType!=0 && item instanceof EditTextPreference)
         ((EditTextPreference)item).getEditText().setInputType(inputType);
 
       if(opt.isAdvanced())
