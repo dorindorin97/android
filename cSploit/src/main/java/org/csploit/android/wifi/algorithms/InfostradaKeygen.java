@@ -35,7 +35,7 @@ public class InfostradaKeygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    if(getMacAddress().length() != 12){
+    if(getMacAddress() == null || getMacAddress().length() != 12){
       setErrorMessage("The MAC address is invalid.");
       return null;
     }

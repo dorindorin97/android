@@ -34,7 +34,12 @@ public class MegaredKeygen extends Keygen{
 
   @Override
   public List<String> getKeys(){
-    addPassword(getMacAddress().substring(2));
+    final String mac = getMacAddress();
+    if(mac == null || mac.length() < 2){
+      setErrorMessage("This key cannot be generated without MAC address.");
+      return null;
+    }
+    addPassword(mac.substring(2));
     return getResults();
   }
 }

@@ -91,8 +91,10 @@ public class CookieCleaner{
       }
     }
 
+    String redirectUrl = RequestParser.getUrlFromRequest(hostname, request);
+    if(redirectUrl == null) return null;
     responseBuilder.append("Location: ")
-            .append(RequestParser.getUrlFromRequest(hostname, request))
+            .append(redirectUrl)
             .append("\n")
             .append("Connection: close\n\n");
 
