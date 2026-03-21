@@ -46,7 +46,7 @@ public class RouterPwn extends Plugin{
 
   @Override
   public boolean isAllowedTarget(Target target){
-    return target.isRouter();
+    return target != null && target.isRouter();
   }
 
 
