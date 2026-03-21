@@ -1312,7 +1312,9 @@ public class System {
   }
 
   public static Collection<Exploit> getCurrentExploits() {
-    return getCurrentTarget().getExploits();
+    Target target = getCurrentTarget();
+    if(target == null) return new ArrayList<>();
+    return target.getExploits();
   }
 
   public static boolean isForwardingEnabled() {
