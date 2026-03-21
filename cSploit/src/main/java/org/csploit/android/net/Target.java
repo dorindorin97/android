@@ -367,7 +367,8 @@ public class Target implements Comparable<Target>
           // determine if the 'address' part is an ip address or a host name
           if(IP_PATTERN.matcher(address).find()){
             // internal ip address
-            if(System.getNetwork().isInternal(address)){
+            org.csploit.android.net.Network net = System.getNetwork();
+            if(net != null && net.isInternal(address)){
               target = new Target(new Endpoint(address, null));
               target.setPort(port);
             }
