@@ -56,11 +56,12 @@ public class NetworkRadar extends Tool {
   public Child start(HostReceiver receiver) throws ChildManager.ChildNotStartedException {
     String ifName;
 
-    if(System.getNetwork() == null) {
+    org.csploit.android.net.Network network = System.getNetwork();
+    if(network == null || network.getInterface() == null) {
       throw new ChildManager.ChildNotStartedException();
     }
 
-    ifName = System.getNetwork().getInterface().getDisplayName();
+    ifName = network.getInterface().getDisplayName();
 
     return async(ifName, receiver);
   }
