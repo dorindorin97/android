@@ -150,6 +150,10 @@ public class Sessions extends Plugin {
       return;
 		}
 
+    if(System.getCurrentTarget() == null) {
+      UIHelper.finish(Sessions.this, getString(R.string.error), getString(R.string.error));
+      return;
+    }
     mResults = System.getCurrentTarget().getSessions();
 
     mListView = (ListView) findViewById(android.R.id.list);

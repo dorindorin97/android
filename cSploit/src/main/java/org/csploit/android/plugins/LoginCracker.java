@@ -195,12 +195,13 @@ public class LoginCracker extends Plugin {
       setTheme(R.style.AppTheme);
     super.onCreate(savedInstanceState);
 
-    if (!System.getCurrentTarget().hasOpenPorts())
+    Target currentTarget = System.getCurrentTarget();
+    if (currentTarget == null || !currentTarget.hasOpenPorts())
       UIHelper.finish(this, getString(R.string.warning), getString(R.string.no_open_ports));
 
     final ArrayList<String> ports = new ArrayList<String>();
 
-    for (Port port : System.getCurrentTarget().getOpenPorts())
+    for (Port port : currentTarget != null ? currentTarget.getOpenPorts() : java.util.Collections.<Port>emptyList())
       ports.add(Integer.toString(port.getNumber()));
 
     mProtocolAdapter = new ProtocolAdapter();
