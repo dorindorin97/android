@@ -146,6 +146,11 @@ public class MsfRpcdService extends NativeService implements MenuControllableSer
       return false;
     }
 
+    if (System.getTools() == null) {
+      sendIntent(STATUS_ACTION, STATUS, Status.START_FAILED);
+      return false;
+    }
+
     try {
       nativeProcess = System.getTools().msfrpcd.async(user, password, port, ssl, new Receiver());
       return true;
