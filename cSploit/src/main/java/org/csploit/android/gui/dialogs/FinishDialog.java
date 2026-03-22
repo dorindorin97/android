@@ -18,22 +18,27 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
-public class FinishDialog extends AlertDialog{
-  public FinishDialog(String title, String message, final FragmentActivity activity){
-    super(activity);
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-    this.setTitle(title);
-    this.setMessage(message);
-    this.setCancelable(false);
-    this.setButton(BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-        activity.finish();
-      }
-    });
+public class FinishDialog {
+  private final AlertDialog dialog;
+
+  public FinishDialog(String title, String message, final FragmentActivity activity) {
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setMessage(message)
+        .setCancelable(false)
+        .setPositiveButton("Ok", (d, which) -> {
+          d.dismiss();
+          activity.finish();
+        })
+        .create();
+  }
+
+  public void show() {
+    dialog.show();
   }
 }

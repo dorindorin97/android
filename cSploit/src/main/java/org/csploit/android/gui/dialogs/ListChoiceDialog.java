@@ -18,110 +18,73 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.csploit.android.R;
 
-public class ListChoiceDialog extends AlertDialog {
+public class ListChoiceDialog {
+  private final AlertDialog dialog;
 
   /** create a list choice dialog from android resource ids
    * @param items String ids
    */
-  public ListChoiceDialog(Integer title, Integer[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener){
-    super(activity);
+  public ListChoiceDialog(Integer title, Integer[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener) {
+    String[] _items = new String[items.length];
 
-    ListView mList = new ListView(activity);
-    String[] _items;
-
-    _items = new String[items.length];
-
-    for(int i = 0; i <items.length;i++)
+    for (int i = 0; i < items.length; i++)
       _items[i] = activity.getString(items[i]);
 
-    mList.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,_items));
-
-    mList.setOnItemClickListener( new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        listener.onChoice(position);
-        ListChoiceDialog.this.dismiss();
-      }
-    });
-
-    setTitle(activity.getString(title));
-    setView(mList);
-
-    setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-      }
-    });
+    dialog = buildDialog(activity.getString(title), _items, activity, listener);
   }
 
   /** create a list choice dialog from a String array
    * @param items Strings to choose from
    */
-  public ListChoiceDialog(String title, String[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener){
-    super(activity);
-
-    ListView mList = new ListView(activity);
-
-    mList.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,items));
-
-    mList.setOnItemClickListener( new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        listener.onChoice(position);
-        ListChoiceDialog.this.dismiss();
-      }
-    });
-
-    this.setTitle(title);
-    this.setView(mList);
-
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-      }
-    });
+  public ListChoiceDialog(String title, String[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener) {
+    dialog = buildDialog(title, items, activity, listener);
   }
 
   /** create a list choice dialog from generic objects array ( call toString on every object )
    * @param items array containing objects to choices from
    */
   public ListChoiceDialog(String title, Object[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener) {
-    super(activity);
-
-    ListView mList = new ListView(activity);
-
     String[] _items = new String[items.length];
 
-    for(int i = 0; i < _items.length;i++)
+    for (int i = 0; i < _items.length; i++)
       _items[i] = items[i].toString();
 
-    mList.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,_items));
+    dialog = buildDialog(title, _items, activity, listener);
+  }
 
-    mList.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+  private AlertDialog buildDialog(String title, String[] items, FragmentActivity activity, final ChoiceDialog.ChoiceDialogListener listener) {
+    AlertDialog built = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setNegativeButton(activity.getString(R.string.cancel_dialog), (d, which) -> d.dismiss())
+        .create();
+
+    ListView mList = new ListView(activity);
+    mList.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, items));
+    mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         listener.onChoice(position);
-        ListChoiceDialog.this.dismiss();
+        built.dismiss();
       }
     });
 
-    this.setTitle(title);
-    this.setView(mList);
+    built.setView(mList);
+    return built;
+  }
 
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-      }
-    });
+  public void show() {
+    dialog.show();
   }
 }

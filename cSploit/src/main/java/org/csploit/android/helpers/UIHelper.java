@@ -19,7 +19,8 @@ package org.csploit.android.helpers;
 
 import android.app.Activity;
 import org.csploit.android.helpers.LoggingHelper;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -153,7 +154,7 @@ public final class UIHelper {
     public static void confirm(@NonNull Context context, @NonNull String title,
                               @NonNull String message, @Nullable Runnable onConfirm,
                               @Nullable Runnable onCancel) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
@@ -195,7 +196,7 @@ public final class UIHelper {
     public static void input(@NonNull Context context, @NonNull String title,
                             @NonNull String hint, @Nullable InputCallback onInput,
                             @Nullable InputValidator validator) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
 
         final EditText input = new EditText(context);
         input.setHint(hint);
@@ -230,7 +231,7 @@ public final class UIHelper {
      */
     public static void error(@NonNull Context context, @NonNull String title,
                             @NonNull String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title)
                 .setMessage(message)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -250,7 +251,7 @@ public final class UIHelper {
      */
     public static void info(@NonNull Context context, @NonNull String title,
                            @NonNull String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title)
                 .setMessage(message)
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -277,7 +278,7 @@ public final class UIHelper {
         textView.setTextSize(14);
         scrollView.addView(textView);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title)
                 .setView(scrollView)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
@@ -509,7 +510,7 @@ public final class UIHelper {
         }
         
         android.app.Activity activity = (android.app.Activity) context;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title)
                 .setMessage(message)
                 .setIcon(android.R.drawable.ic_dialog_alert)

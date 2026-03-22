@@ -18,38 +18,37 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.csploit.android.R;
 
-public class ConfirmDialog extends AlertDialog{
-  public interface ConfirmDialogListener{
+public class ConfirmDialog {
+  public interface ConfirmDialogListener {
     void onConfirm();
 
     void onCancel();
   }
 
-  public ConfirmDialog(String title, CharSequence message, FragmentActivity activity, ConfirmDialogListener confirmDialogListener){
-    super(activity);
+  private final AlertDialog dialog;
 
-    this.setTitle(title);
-    this.setMessage(message);
-
+  public ConfirmDialog(String title, CharSequence message, FragmentActivity activity, ConfirmDialogListener confirmDialogListener) {
     final ConfirmDialogListener listener = confirmDialogListener;
 
-    this.setButton(BUTTON_POSITIVE, activity.getString(R.string.yes), new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        listener.onConfirm();
-      }
-    });
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(activity.getString(R.string.yes), (d, which) -> listener.onConfirm())
+        .setNegativeButton(activity.getString(R.string.no), (d, which) -> {
+          d.dismiss();
+          listener.onCancel();
+        })
+        .create();
+  }
 
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.no), new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-        listener.onCancel();
-      }
-    });
+  public void show() {
+    dialog.show();
   }
 }

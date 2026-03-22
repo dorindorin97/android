@@ -19,13 +19,14 @@
 package org.csploit.android.gui.dialogs;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import android.text.Html;
-import androidx.core.text.HtmlCompat;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.csploit.android.R;
 import org.csploit.android.helpers.LoggingHelper;
@@ -35,33 +36,24 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class ChangelogDialog extends AlertDialog
-{
+public class ChangelogDialog {
   private static final String TAG = "ChangelogDialog";
-  private final String ERROR_HTML = getContext().getString(R.string.something_went_wrong_changelog);
 
-  private AlertDialog mLoader = null;
+  private final AlertDialog dialog;
 
   @SuppressLint("SetJavaScriptEnabled")
-  public ChangelogDialog(final AppCompatActivity activity){
-    super(activity);
+  public ChangelogDialog(final AppCompatActivity activity) {
+    final String ERROR_HTML = activity.getString(R.string.something_went_wrong_changelog);
 
-    this.setTitle("Changelog");
-
+    AlertDialog mLoader = new MaterialAlertDialogBuilder(activity)
+        .setTitle("")
+        .setMessage(activity.getString(R.string.loading_changelog))
+        .setCancelable(false)
+        .setView(new ProgressBar(activity))
+        .create();
+    mLoader.show();
 
     TextView view = new TextView(activity);
-
-    this.setView(view);
-
-    if(mLoader == null) {
-      AlertDialog.Builder loaderBuilder = new AlertDialog.Builder(activity);
-      loaderBuilder.setTitle("")
-                   .setMessage(getContext().getString(R.string.loading_changelog))
-                   .setCancelable(false)
-                   .setView(new ProgressBar(activity));
-      mLoader = loaderBuilder.create();
-      mLoader.show();
-    }
 
     try {
       view.setText(GitHubParser.getcSploitRepo().getReleaseBody(System.getAppVersionName()));
@@ -75,11 +67,15 @@ public class ChangelogDialog extends AlertDialog
 
     mLoader.dismiss();
 
-    this.setCancelable(false);
-    this.setButton(BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-      }
-    });
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle("Changelog")
+        .setView(view)
+        .setCancelable(false)
+        .setPositiveButton("Ok", (d, which) -> d.dismiss())
+        .create();
+  }
+
+  public void show() {
+    dialog.show();
   }
 }

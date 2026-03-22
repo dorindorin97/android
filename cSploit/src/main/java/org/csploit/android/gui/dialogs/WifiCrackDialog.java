@@ -18,54 +18,49 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.csploit.android.R;
 
-public class WifiCrackDialog extends AlertDialog{
-  private EditText mEditText = null;
-
-  public WifiCrackDialog(String title, String message, FragmentActivity activity, WifiCrackDialogListener wifiCrackDialogListener){
-    super(activity);
-
-    mEditText = new EditText(activity);
-    mEditText.setEnabled(true);
-    mEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
-    this.setTitle(title);
-    this.setMessage(message);
-    this.setView(mEditText);
-
-    final WifiCrackDialogListener listener = wifiCrackDialogListener;
-
-    this.setButton(BUTTON_POSITIVE, activity.getString(R.string.connect), new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        if(listener != null)
-          listener.onManualConnect(mEditText.getText() + "");
-      }
-    });
-
-    this.setButton(BUTTON_NEUTRAL, activity.getString(R.string.crack), new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        if (listener != null)
-          listener.onCrack();
-      }
-    });
-
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        dialog.dismiss();
-      }
-    });
-  }
-
-  public interface WifiCrackDialogListener{
+public class WifiCrackDialog {
+  public interface WifiCrackDialogListener {
     void onManualConnect(String key);
 
     void onCrack();
+  }
+
+  private final AlertDialog dialog;
+
+  public WifiCrackDialog(String title, String message, FragmentActivity activity, WifiCrackDialogListener wifiCrackDialogListener) {
+    final EditText mEditText = new EditText(activity);
+    mEditText.setEnabled(true);
+    mEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+    final WifiCrackDialogListener listener = wifiCrackDialogListener;
+
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setMessage(message)
+        .setView(mEditText)
+        .setPositiveButton(activity.getString(R.string.connect), (d, which) -> {
+          if (listener != null)
+            listener.onManualConnect(mEditText.getText() + "");
+        })
+        .setNeutralButton(activity.getString(R.string.crack), (d, which) -> {
+          if (listener != null)
+            listener.onCrack();
+        })
+        .setNegativeButton(activity.getString(R.string.cancel_dialog), (d, which) -> d.dismiss())
+        .create();
+  }
+
+  public void show() {
+    dialog.show();
   }
 }

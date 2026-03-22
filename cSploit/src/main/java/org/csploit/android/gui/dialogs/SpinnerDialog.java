@@ -18,59 +18,56 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.csploit.android.R;
 
-public class SpinnerDialog extends AlertDialog{
+public class SpinnerDialog {
   private int mSelected = 0;
+  private final AlertDialog dialog;
 
-  public SpinnerDialog(String title, String message, String[] items, int default_index, FragmentActivity activity, final SpinnerDialogListener listener){
-    super(activity);
-
+  public SpinnerDialog(String title, String message, String[] items, int default_index, FragmentActivity activity, final SpinnerDialogListener listener) {
     Spinner mSpinner = new Spinner(activity);
     mSpinner.setAdapter(new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, items));
 
-    mSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-      public void onItemSelected(AdapterView<?> adapter, View view, int position, long id){
+    mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+      public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
         mSelected = position;
       }
 
-      public void onNothingSelected(AdapterView<?> arg0){
+      public void onNothingSelected(AdapterView<?> arg0) {
       }
     });
 
     mSpinner.setSelection(default_index);
 
-    this.setTitle(title);
-    this.setMessage(message);
-    this.setView(mSpinner);
-
-    this.setButton(BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        listener.onItemSelected(mSelected);
-      }
-    });
-
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        dialog.dismiss();
-      }
-    });
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setMessage(message)
+        .setView(mSpinner)
+        .setPositiveButton("Ok", (d, which) -> listener.onItemSelected(mSelected))
+        .setNegativeButton(activity.getString(R.string.cancel_dialog), (d, which) -> d.dismiss())
+        .create();
   }
 
   public SpinnerDialog(String title, String message, String[] items, FragmentActivity activity, final SpinnerDialogListener listener) {
-    this(title,message,items,0,activity,listener);
+    this(title, message, items, 0, activity, listener);
   }
 
-  public interface SpinnerDialogListener{
+  public void show() {
+    dialog.show();
+  }
+
+  public interface SpinnerDialogListener {
     void onItemSelected(int index);
   }
 }

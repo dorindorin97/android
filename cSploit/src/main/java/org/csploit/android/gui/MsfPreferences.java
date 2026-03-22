@@ -1,21 +1,25 @@
 package org.csploit.android.gui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
 import android.text.InputType;
 import android.util.Patterns;
-import org.csploit.android.helpers.ToastHelper;
-import android.widget.Toast;
+import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 
 import org.csploit.android.R;
-import org.csploit.android.helpers.LoggingHelper;
 import org.csploit.android.core.System;
+import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import org.csploit.android.net.metasploit.MsfExploit;
 import org.csploit.android.net.metasploit.Option;
 import org.csploit.android.net.metasploit.Payload;
@@ -24,221 +28,253 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * activity fo setting exploit options.
+ * activity for setting exploit options.
  */
-
-public class MsfPreferences extends PreferenceActivity {
-
-  private Collection<Option> options;
-  private final Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
-
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-      Option opt = null;
-      String key;
-
-      key = preference.getKey();
-
-      for(Option o : options) {
-        if(o.getName().equals(key)) {
-          opt = o;
-          break;
-        }
-      }
-      if(opt==null)
-        return false;
-      switch (opt.getType()) {
-        case STRING:
-        case PATH:
-        case ENUM:
-          opt.setValue((String)newValue);
-          return true;
-        case ADDRESS:
-          if(Patterns.IP_ADDRESS.matcher((String)newValue).matches()) {
-            opt.setValue((String)newValue);
-            return true;
-          } else
-            ToastHelper.error(getApplicationContext(),getString(R.string.error_invalid_address_or_port));
-          break;
-        case INTEGER:
-          try {
-            int res = Integer.parseInt((String)newValue);
-            opt.setValue(""+res);
-            return true;
-          } catch ( NumberFormatException e) {
-            ToastHelper.error(getApplicationContext(),getString(R.string.pref_err_invalid_number));
-          }
-          break;
-        case BOOLEAN:
-          if((Boolean)newValue)
-            opt.setValue("true");
-          else
-            opt.setValue("false");
-          return true;
-        case PORT:
-          try {
-            int res = Integer.parseInt((String)newValue);
-            if(res <= 0 || res > 65535)
-              throw new RuntimeException();
-            opt.setValue(""+res);
-            return true;
-          } catch ( NumberFormatException e) {
-            ToastHelper.error(getApplicationContext(),getString(R.string.pref_err_invalid_number));
-          } catch (RuntimeException e) {
-            ToastHelper.error(getApplicationContext(),getString(R.string.invalid_port));
-          }
-          break;
-      }
-      return false;
-    }
-  };
-
+public class MsfPreferences extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // no actionbar in preferenceactivity
-    //getActionBar().setDisplayHomeAsUpEnabled(true);
 
-    setPreferenceScreen(createPreferenceHierarchy());
+    SharedPreferences themePrefs = getSharedPreferences("THEME", 0);
+    if (themePrefs.getBoolean("isDark", false))
+      setTheme(R.style.PrefsThemeDark);
+    else
+      setTheme(R.style.PrefsTheme);
+
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(android.R.id.content, new MsfPreferenceFragment())
+        .commit();
+
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
   }
 
-  private PreferenceScreen createPreferenceHierarchy() {
-    // Root
-    PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
-
-    String title = null;
-    PreferenceCategory cat_required = new PreferenceCategory(this);
-    PreferenceCategory cat_general = new PreferenceCategory(this);
-    PreferenceCategory cat_advanced = new PreferenceCategory(this);
-    PreferenceCategory cat_evasion = new PreferenceCategory(this);
-    ArrayList<Preference> required = new ArrayList<Preference>();
-    ArrayList<Preference> general = new ArrayList<Preference>();
-    ArrayList<Preference> advanced = new ArrayList<Preference>();
-    ArrayList<Preference> evasion = new ArrayList<Preference>();
-
-    Payload payload = System.getCurrentPayload();
-    MsfExploit exploit = (MsfExploit) System.getCurrentExploit();
-    System.setCurrentPayload(null);
-    System.setCurrentExploit(null);
-
-    if(payload != null) {
-      options = payload.getOptions();
-      title = payload.toString();
-    } else if(exploit!=null) {
-      options = exploit.getOptions();
-      title = exploit.toString();
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
     }
+    return super.onOptionsItemSelected(item);
+  }
 
-    if(options==null) {
-      options = new ArrayList<Option>();
-      title = getString(R.string.error);
-      String error_message;
+  public static class MsfPreferenceFragment extends PreferenceFragmentCompat {
 
-      if(exploit!=null)
-        error_message = String.format("cannot retrieve options for '%s'", exploit.getName());
-      else if(payload!=null)
-        error_message = String.format("cannot retrieve options for '%s'", payload.getName());
-      else
-        error_message = "called without Payload or MsfExploit";
+    private Collection<Option> options;
 
-      LoggingHelper.error(error_message);
-    }
+    private final Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
 
-    setTitle(title + " > " + getString(R.string.menu_settings));
-    cat_required.setTitle(R.string.required);
-    cat_general.setTitle(R.string.pref_general);
-    cat_advanced.setTitle(R.string.pref_advanced);
-    cat_evasion.setTitle(R.string.evasion);
+      public boolean onPreferenceChange(Preference preference, Object newValue) {
+        Option opt = null;
+        String key;
 
-    for(Option opt : options) {
-      Preference item = null;
-      int inputType = 0;
+        key = preference.getKey();
 
-      switch (opt.getType()) {
-        case ADDRESS:
-        case STRING:
-        case PATH:
-        case INTEGER:
-        case PORT:
-          item = new EditTextPreference(this);
-          item.setTitle(opt.getName());
-          ((EditTextPreference)item).setDialogTitle(opt.getName());
-          ((EditTextPreference)item).setDialogMessage(opt.getDescription());
-          item.setSummary(opt.getDescription());
-          item.setKey(opt.getName());
-          item.setDefaultValue(opt.getValue());
-          break;
-        case BOOLEAN:
-          item = new CheckBoxPreference(this);
-          item.setTitle(opt.getName());
-          item.setKey(opt.getName());
-          item.setSummary(opt.getDescription());
-          ((CheckBoxPreference)item).setChecked(opt.getValue().equals("true"));
-          break;
-        case ENUM:
-          item = new ListPreference(this);
-          ((ListPreference)item).setEntries(opt.getEnum());
-          ((ListPreference)item).setEntryValues(opt.getEnum());
-          ((ListPreference)item).setDialogTitle(opt.getName());
-          ((ListPreference)item).setValue(opt.getValue());
-          item.setKey(opt.getName());
-          item.setTitle(opt.getName());
-          item.setSummary(opt.getDescription());
-          break;
+        for (Option o : options) {
+          if (o.getName().equals(key)) {
+            opt = o;
+            break;
+          }
+        }
+        if (opt == null)
+          return false;
+        switch (opt.getType()) {
+          case STRING:
+          case PATH:
+          case ENUM:
+            opt.setValue((String) newValue);
+            return true;
+          case ADDRESS:
+            if (Patterns.IP_ADDRESS.matcher((String) newValue).matches()) {
+              opt.setValue((String) newValue);
+              return true;
+            } else
+              ToastHelper.error(requireContext().getApplicationContext(),
+                  getString(R.string.error_invalid_address_or_port));
+            break;
+          case INTEGER:
+            try {
+              int res = Integer.parseInt((String) newValue);
+              opt.setValue("" + res);
+              return true;
+            } catch (NumberFormatException e) {
+              ToastHelper.error(requireContext().getApplicationContext(),
+                  getString(R.string.pref_err_invalid_number));
+            }
+            break;
+          case BOOLEAN:
+            if ((Boolean) newValue)
+              opt.setValue("true");
+            else
+              opt.setValue("false");
+            return true;
+          case PORT:
+            try {
+              int res = Integer.parseInt((String) newValue);
+              if (res <= 0 || res > 65535)
+                throw new RuntimeException();
+              opt.setValue("" + res);
+              return true;
+            } catch (NumberFormatException e) {
+              ToastHelper.error(requireContext().getApplicationContext(),
+                  getString(R.string.pref_err_invalid_number));
+            } catch (RuntimeException e) {
+              ToastHelper.error(requireContext().getApplicationContext(),
+                  getString(R.string.invalid_port));
+            }
+            break;
+        }
+        return false;
+      }
+    };
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+      PreferenceScreen root = getPreferenceManager().createPreferenceScreen(requireContext());
+
+      String title = null;
+      PreferenceCategory cat_required = new PreferenceCategory(requireContext());
+      PreferenceCategory cat_general = new PreferenceCategory(requireContext());
+      PreferenceCategory cat_advanced = new PreferenceCategory(requireContext());
+      PreferenceCategory cat_evasion = new PreferenceCategory(requireContext());
+      ArrayList<Preference> required = new ArrayList<Preference>();
+      ArrayList<Preference> general = new ArrayList<Preference>();
+      ArrayList<Preference> advanced = new ArrayList<Preference>();
+      ArrayList<Preference> evasion = new ArrayList<Preference>();
+
+      Payload payload = System.getCurrentPayload();
+      MsfExploit exploit = (MsfExploit) System.getCurrentExploit();
+      System.setCurrentPayload(null);
+      System.setCurrentExploit(null);
+
+      if (payload != null) {
+        options = payload.getOptions();
+        title = payload.toString();
+      } else if (exploit != null) {
+        options = exploit.getOptions();
+        title = exploit.toString();
       }
 
-      switch (opt.getType()) {
-        case ADDRESS:
-          inputType=InputType.TYPE_CLASS_PHONE;
-          break;
-        case PATH:
-        case STRING:
-          inputType=InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-          break;
-        case PORT:
-        case INTEGER:
-          inputType=InputType.TYPE_CLASS_NUMBER;
-          break;
+      if (options == null) {
+        options = new ArrayList<Option>();
+        title = getString(R.string.error);
+        String error_message;
+
+        if (exploit != null)
+          error_message = String.format("cannot retrieve options for '%s'", exploit.getName());
+        else if (payload != null)
+          error_message = String.format("cannot retrieve options for '%s'", payload.getName());
+        else
+          error_message = "called without Payload or MsfExploit";
+
+        LoggingHelper.error(error_message);
       }
 
-      if(inputType!=0 && item instanceof EditTextPreference)
-        ((EditTextPreference)item).getEditText().setInputType(inputType);
-
-      if(opt.isAdvanced())
-        advanced.add(item);
-      else if(opt.isRequired())
-        required.add(item);
-      else if(opt.isEvasion())
-        evasion.add(item);
-      else
-        general.add(item);
-
-      if (item != null) {
-        item.setOnPreferenceChangeListener(listener);
+      if (getActivity() != null) {
+        getActivity().setTitle(title + " > " + getString(R.string.menu_settings));
       }
-    }
+      cat_required.setTitle(R.string.required);
+      cat_general.setTitle(R.string.pref_general);
+      cat_advanced.setTitle(R.string.pref_advanced);
+      cat_evasion.setTitle(R.string.evasion);
 
-    if(!required.isEmpty()) {
-      root.addPreference(cat_required);
-      for(Preference i : required)
-        cat_required.addPreference(i);
-    }
-    if(!general.isEmpty()) {
-      root.addPreference(cat_general);
-      for(Preference i : general)
-        cat_general.addPreference(i);
-    }
-    if(!advanced.isEmpty()) {
-      root.addPreference(cat_advanced);
-      for(Preference i : advanced)
-        cat_advanced.addPreference(i);
-    }
-    if(!evasion.isEmpty()) {
-      root.addPreference(cat_evasion);
-      for(Preference i : evasion)
-        cat_evasion.addPreference(i);
-    }
+      for (Option opt : options) {
+        Preference item = null;
+        int inputType = 0;
 
-    return root;
+        switch (opt.getType()) {
+          case ADDRESS:
+          case STRING:
+          case PATH:
+          case INTEGER:
+          case PORT:
+            item = new EditTextPreference(requireContext());
+            item.setTitle(opt.getName());
+            ((EditTextPreference) item).setDialogTitle(opt.getName());
+            ((EditTextPreference) item).setDialogMessage(opt.getDescription());
+            item.setSummary(opt.getDescription());
+            item.setKey(opt.getName());
+            item.setDefaultValue(opt.getValue());
+            break;
+          case BOOLEAN:
+            item = new CheckBoxPreference(requireContext());
+            item.setTitle(opt.getName());
+            item.setKey(opt.getName());
+            item.setSummary(opt.getDescription());
+            ((CheckBoxPreference) item).setChecked(opt.getValue().equals("true"));
+            break;
+          case ENUM:
+            item = new ListPreference(requireContext());
+            ((ListPreference) item).setEntries(opt.getEnum());
+            ((ListPreference) item).setEntryValues(opt.getEnum());
+            ((ListPreference) item).setDialogTitle(opt.getName());
+            ((ListPreference) item).setValue(opt.getValue());
+            item.setKey(opt.getName());
+            item.setTitle(opt.getName());
+            item.setSummary(opt.getDescription());
+            break;
+        }
+
+        switch (opt.getType()) {
+          case ADDRESS:
+            inputType = InputType.TYPE_CLASS_PHONE;
+            break;
+          case PATH:
+          case STRING:
+            inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+            break;
+          case PORT:
+          case INTEGER:
+            inputType = InputType.TYPE_CLASS_NUMBER;
+            break;
+        }
+
+        if (inputType != 0 && item instanceof EditTextPreference) {
+          final int finalInputType = inputType;
+          ((EditTextPreference) item).setOnBindEditTextListener(
+              editText -> editText.setInputType(finalInputType));
+        }
+
+        if (opt.isAdvanced())
+          advanced.add(item);
+        else if (opt.isRequired())
+          required.add(item);
+        else if (opt.isEvasion())
+          evasion.add(item);
+        else
+          general.add(item);
+
+        if (item != null) {
+          item.setOnPreferenceChangeListener(listener);
+        }
+      }
+
+      if (!required.isEmpty()) {
+        root.addPreference(cat_required);
+        for (Preference i : required)
+          cat_required.addPreference(i);
+      }
+      if (!general.isEmpty()) {
+        root.addPreference(cat_general);
+        for (Preference i : general)
+          cat_general.addPreference(i);
+      }
+      if (!advanced.isEmpty()) {
+        root.addPreference(cat_advanced);
+        for (Preference i : advanced)
+          cat_advanced.addPreference(i);
+      }
+      if (!evasion.isEmpty()) {
+        root.addPreference(cat_evasion);
+        for (Preference i : evasion)
+          cat_evasion.addPreference(i);
+      }
+
+      setPreferenceScreen(root);
+    }
   }
 }

@@ -18,55 +18,54 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import org.csploit.android.R;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
-public class ChoiceDialog extends AlertDialog{
-  public interface ChoiceDialogListener{
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.csploit.android.R;
+
+public class ChoiceDialog {
+  public interface ChoiceDialogListener {
     void onChoice(int choice);
   }
 
-  public ChoiceDialog(final FragmentActivity activity, String title, String[] choices, final ChoiceDialogListener listener){
-    super(activity);
+  private final AlertDialog dialog;
 
-    this.setTitle(title);
-
+  public ChoiceDialog(final FragmentActivity activity, String title, String[] choices, final ChoiceDialogListener listener) {
     LinearLayout layout = new LinearLayout(activity);
-
     layout.setPadding(10, 10, 10, 10);
 
-    for(int i = 0; i < choices.length; i++){
-      Button choice = new Button(activity);
+    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setNegativeButton(activity.getString(R.string.cancel_dialog), (d, which) -> d.dismiss());
 
+    dialog = builder.create();
+
+    for (int i = 0; i < choices.length; i++) {
+      Button choice = new Button(activity);
       choice.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0.5f));
       choice.setTag("" + i);
-      choice.setOnClickListener(new View.OnClickListener(){
+      choice.setOnClickListener(new View.OnClickListener() {
         @Override
-        public void onClick(View v){
-          ChoiceDialog.this.dismiss();
+        public void onClick(View v) {
+          dialog.dismiss();
           listener.onChoice(Integer.parseInt((String) v.getTag()));
         }
       });
-
       choice.setText(choices[i]);
       layout.addView(choice);
     }
 
-    setView(layout);
+    dialog.setView(layout);
+  }
 
-
-    this.setButton(BUTTON_NEGATIVE, activity.getString(R.string.cancel_dialog), new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        dialog.dismiss();
-      }
-    });
+  public void show() {
+    dialog.show();
   }
 }

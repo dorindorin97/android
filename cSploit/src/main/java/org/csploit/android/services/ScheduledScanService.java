@@ -86,9 +86,9 @@ public class ScheduledScanService extends Service {
     private static final String ACTION_CANCEL_SCAN = "org.csploit.android.CANCEL_SCHEDULED_SCAN";
 
     private static final String PREF_SCAN_ENABLED = "scheduled_scan_enabled";
-    private static final String PREF_SCAN_INTERVAL = "scheduled_scan_interval";
-    private static final String PREF_SCAN_TYPE = "scheduled_scan_type";
-    private static final String PREF_AUTO_EXPORT = "scheduled_scan_auto_export";
+    public static final String PREF_SCAN_INTERVAL = "scheduled_scan_interval";
+    public static final String PREF_SCAN_TYPE = "scheduled_scan_type";
+    public static final String PREF_AUTO_EXPORT = "scheduled_scan_auto_export";
     private static final String PREF_LAST_SCAN = "scheduled_scan_last_run";
 
     public enum ScanInterval {
@@ -450,6 +450,9 @@ public class ScheduledScanService extends Service {
                 pendingIntent
         );
 
+        // Also schedule via WorkManager for reliable background execution
+        scheduleWithWorkManager(context);
+
         LoggingHelper.info("Scheduled scan: " + scanType.name + " every " + interval.label);
     }
 
@@ -505,6 +508,26 @@ public class ScheduledScanService extends Service {
             }
         }
         return null;
+    }
+
+    /**
+     * Schedule periodic scans via WorkManager (reliable background execution).
+     * Delegates to {@link org.csploit.android.workers.ScanWorker#schedule(Context)}.
+     *
+     * @param context Application context
+     */
+    public static void scheduleWithWorkManager(@NonNull Context context) {
+        org.csploit.android.workers.ScanWorker.schedule(context);
+    }
+
+    /**
+     * Cancel the WorkManager-scheduled scan.
+     * Delegates to {@link org.csploit.android.workers.ScanWorker#cancel(Context)}.
+     *
+     * @param context Application context
+     */
+    public static void cancelWorkManager(@NonNull Context context) {
+        org.csploit.android.workers.ScanWorker.cancel(context);
     }
 
     /**

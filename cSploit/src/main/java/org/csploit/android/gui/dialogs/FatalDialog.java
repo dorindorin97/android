@@ -18,42 +18,42 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
-import android.text.Html;
 import androidx.core.text.HtmlCompat;
-import android.text.method.LinkMovementMethod;
+import androidx.fragment.app.FragmentActivity;
+
 import android.widget.TextView;
+import android.text.method.LinkMovementMethod;
 
-public class FatalDialog extends AlertDialog{
-  public FatalDialog(String title, String message, boolean html, final FragmentActivity activity){
-    super(activity);
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-    this.setTitle(title);
+public class FatalDialog {
+  private final AlertDialog dialog;
 
-    if(!html)
-      this.setMessage(message);
+  public FatalDialog(String title, String message, boolean html, final FragmentActivity activity) {
+    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+        .setTitle(title)
+        .setCancelable(false)
+        .setPositiveButton("Ok", (d, which) -> activity.finish());
 
-    else{
+    if (!html) {
+      builder.setMessage(message);
+    } else {
       TextView text = new TextView(activity);
-
       text.setMovementMethod(LinkMovementMethod.getInstance());
       text.setText(HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY));
       text.setPadding(10, 10, 10, 10);
-
-      this.setView(text);
+      builder.setView(text);
     }
 
-    this.setCancelable(false);
-    this.setButton(BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener(){
-      public void onClick(DialogInterface dialog, int id){
-        activity.finish();
-      }
-    });
+    dialog = builder.create();
   }
 
-  public FatalDialog(String title, String message, final FragmentActivity activity){
+  public FatalDialog(String title, String message, final FragmentActivity activity) {
     this(title, message, false, activity);
+  }
+
+  public void show() {
+    dialog.show();
   }
 }

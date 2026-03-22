@@ -18,12 +18,14 @@
  */
 package org.csploit.android.gui.dialogs;
 
-import android.content.DialogInterface;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.csploit.android.BuildConfig;
 import org.csploit.android.R;
@@ -31,21 +33,23 @@ import org.csploit.android.core.System;
 
 import java.text.DateFormat;
 
-public class AboutDialog extends AlertDialog {
-  public AboutDialog(FragmentActivity activity){
-    super(activity);
+public class AboutDialog {
+  private final AlertDialog dialog;
 
+  public AboutDialog(FragmentActivity activity) {
     DateFormat df = DateFormat.getDateTimeInstance();
     final View view = LayoutInflater.from(activity).inflate(R.layout.about_dialog, null);
     final TextView tv = (TextView) view.findViewById(R.id.buildinfo);
     tv.setText("Built by " + BuildConfig.BUILD_NAME + " on " + df.format(BuildConfig.BUILD_TIME));
-    this.setTitle(activity.getString(R.string.about_csploit_v_) + System.getAppVersionName());
-    this.setView(view);
 
-    this.setButton(BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        dialog.dismiss();
-      }
-    });
+    dialog = new MaterialAlertDialogBuilder(activity)
+        .setTitle(activity.getString(R.string.about_csploit_v_) + System.getAppVersionName())
+        .setView(view)
+        .setPositiveButton("Ok", (d, which) -> d.dismiss())
+        .create();
+  }
+
+  public void show() {
+    dialog.show();
   }
 }

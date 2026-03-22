@@ -39,7 +39,6 @@
         android:theme="@style/AppTheme"
         android:resizeableActivity="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="false"
         tools:targetApi="n">
 
@@ -68,11 +67,14 @@
         <!-- suppress AndroidDomInspection -->
         <service
             android:name=".services.UpdateService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <service
             android:name=".core.MultiAttackService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".WifiScannerActivity"
@@ -87,14 +89,17 @@
         <activity
             android:name=".gui.DirectoryPicker"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".gui.MsfPreferences"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".gui.Console"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".ActionActivity"
@@ -159,6 +164,7 @@
         <activity
             android:name=".gui.FileEdit"
             android:label="@string/title_activity_main"
+            android:exported="false"
             android:parentActivityName=".plugins.mitm.PasswordSniffer" >
         </activity>
         <provider
