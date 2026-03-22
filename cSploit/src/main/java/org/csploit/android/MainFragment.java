@@ -322,8 +322,11 @@ public class MainFragment extends Fragment {
                 return;
             } catch (System.SuException e) {
                 LoggingHelper.error("Root access denied. Make sure:\n1. Device is rooted\n2. Root manager (Magisk/SuperSU) is working\n3. cSploit has root permission granted");
-                onInitializationError(getString(R.string.only_4_root));
-                return;
+                if (!org.csploit.android.BuildConfig.DEBUG) {
+                    onInitializationError(getString(R.string.only_4_root));
+                    return;
+                }
+                // Debug: continue without root so DebugSeeder targets are visible
             } catch (System.DaemonException e) {
                 LoggingHelper.error("Daemon exception: " + e.getMessage());
                 onInitializationError(e.getMessage());
@@ -400,6 +403,9 @@ public class MainFragment extends Fragment {
 
             return !isFatal;
         }
+
+        // Re-seed debug targets after every System.init() since it clears mTargets
+        org.csploit.android.debug.DebugSeeder.seed();
 
         registerPlugins();
         return true;

@@ -193,6 +193,10 @@ public class UpdateChecker extends Thread
 
   private Update getMsfUpdate() {
     String localVersion = System.getLocalMsfVersion();
+
+    // MSF is not installed — nothing to update (would have to install first)
+    if (localVersion == null) return null;
+
     GitHubParser msfRepo = GitHubParser.getMsfRepo();
     Update update;
 

@@ -142,7 +142,7 @@ public class NMap extends Tool {
 
   public Child synScan( Target target, SynScanReceiver receiver, String custom ) throws ChildManager.ChildNotStartedException {
     validatePortSpec(custom);
-    StringBuilder command = new StringBuilder("-sS -P0 --privileged --send-ip --system-dns -vvv ");
+    StringBuilder command = new StringBuilder("-sS -Pn --privileged --send-ip --system-dns -vvv ");
 
     if( custom != null )
       command.append("-p ").append(custom).append(" ");

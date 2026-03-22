@@ -1,5 +1,7 @@
 package org.csploit.android.net.datasource;
 
+import org.csploit.android.BuildConfig;
+import org.csploit.android.helpers.ThreadHelper;
 import org.csploit.android.net.RemoteReader;
 import org.csploit.android.net.Target;
 
@@ -37,6 +39,35 @@ public class Search {
   }
 
   public static Future searchExploitForServices(Target target, Receiver<Target.Exploit> receiver) {
+    // In debug builds, both Rapid7 (Next.js migration) and ExploitDB (SPA/AJAX migration)
+    // no longer serve parseable HTML. Fire fake results immediately so the full UI flow
+    // can be exercised without network access.
+    if (BuildConfig.DEBUG) {
+      ThreadHelper.getSharedExecutor().execute(() -> {
+        int seq = 0;
+        for (Target.Port p : target.getOpenPorts()) {
+          String svc = p.getService();
+          if (svc == null) continue;
+          Target.Exploit rce = new Target.Exploit(
+              "[DEBUG] " + svc + " Remote Code Execution",
+              "https://www.exploit-db.com/exploits/99999/",
+              "Fake exploit for debug: " + svc + " service.",
+              p);
+          rce.setId("DBG-" + (seq++));
+          receiver.onItemFound(rce);
+          Target.Exploit privesc = new Target.Exploit(
+              "[DEBUG] " + svc + " Privilege Escalation",
+              "https://www.exploit-db.com/exploits/99998/",
+              "Fake privilege escalation for debug: " + svc + " service.",
+              p);
+          privesc.setId("DBG-" + (seq++));
+          receiver.onItemFound(privesc);
+        }
+        receiver.onEnd();
+      });
+      return null;
+    }
+
     RemoteReader.Job job = null;
 
     for(Target.Port p : target.getOpenPorts()) {
@@ -51,14 +82,11 @@ public class Search {
 
       String pref = org.csploit.android.core.System.getSettings().getString("SEARCH_EXDB", "BOTH");
 
-      if(pref.equals("EXDB")) {
-        EXPLOIT_DB.beginSearch(job, service, p, receiver);
-      } else if(pref.equals("MSF")) {
-        RAPID7.beginSearch(job, service, p, receiver);
-      } else {
-        RAPID7.beginSearch(job, service, p, receiver);
-        EXPLOIT_DB.beginSearch(job, service, p, receiver);
-      }
+      boolean useRapid7 = !pref.equals("EXDB");
+      boolean useExploitDb = !pref.equals("MSF");
+
+      if(useRapid7) RAPID7.beginSearch(job, service, p, receiver);
+      if(useExploitDb) EXPLOIT_DB.beginSearch(job, service, p, receiver);
     }
 
     if (job == null) {
