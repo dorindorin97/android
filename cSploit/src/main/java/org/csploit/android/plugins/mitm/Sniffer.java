@@ -315,11 +315,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
     mSortSpinner = (Spinner) findViewById(R.id.sortSpinner);
     mListView = (ListView) findViewById(R.id.listView);
     mAdapter = new StatListAdapter(R.layout.plugin_mitm_sniffer_list_item);
-    try {
-      mSampleTime = (int)(Double.parseDouble(System.getSettings().getString("PREF_SNIFFER_SAMPLE_TIME", "1.0")) * 1000);
-    } catch (NumberFormatException e) {
-      mSampleTime = 1000;
-    }
+    mSampleTime = (int)(Double.parseDouble(System.getSettings().getString("PREF_SNIFFER_SAMPLE_TIME", "1.0")) * 1000);
     mSpoofSession = new SpoofSession(false, false, null, null);
 
     mSortSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SORT));
@@ -511,9 +507,7 @@ public class Sniffer extends AppCompatActivity implements AdapterView.OnItemClic
    * Monitor a pcap file for changes, in order to let the user know that the capture is running.
    */
   private void startMonitoringPcapFile(){
-    Target sniffTarget = System.getCurrentTarget();
-    if(sniffTarget == null) return;
-    final String str_address = (sniffTarget.getType() == Target.Type.NETWORK) ? sniffTarget.getDisplayAddress().split("/")[0] : sniffTarget.getDisplayAddress();
+    final String str_address = (System.getCurrentTarget().getType() == Target.Type.NETWORK) ? System.getCurrentTarget().getDisplayAddress().split("/")[0] : System.getCurrentTarget().getDisplayAddress();
 
     final File pcapfile = new File(mPcapFileName);
     try{

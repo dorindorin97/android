@@ -48,13 +48,7 @@ public class TcpDump extends Tool{
     public abstract void onPacket(InetAddress src, InetAddress dst, int len);
   }
 
-  private static void validatePath(String path) throws ChildManager.ChildNotStartedException {
-    if (path != null && path.matches(".*[;&|`$<>(){}\"'\\\\\\n\\r].*"))
-      throw new ChildManager.ChildNotStartedException("Path contains unsafe characters");
-  }
-
   public Child sniff(String filter, String pcap, TcpDumpReceiver receiver) throws ChildManager.ChildNotStartedException {
-    validatePath(pcap);
 
     StringBuilder sb = new StringBuilder("-nvs 0 ");
 

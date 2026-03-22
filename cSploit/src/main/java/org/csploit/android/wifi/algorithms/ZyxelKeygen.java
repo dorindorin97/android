@@ -46,7 +46,7 @@ public class ZyxelKeygen extends Keygen{
       return null;
     }
     final String mac = getMacAddress();
-    if(mac == null || mac.length() != 12){
+    if(mac.length() != 12){
       setErrorMessage("The MAC address is invalid.");
       return null;
     }

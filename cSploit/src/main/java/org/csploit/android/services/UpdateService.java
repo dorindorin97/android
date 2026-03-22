@@ -774,9 +774,7 @@ public class UpdateService extends IntentService
               firstLine.write(buffer, 0, newline);
               firstLine.close();
 
-              String firstLineStr = new String(firstLine.toByteArray());
-              if (envPath != null) firstLineStr = firstLineStr.replace("/usr/bin/env", envPath);
-              byte[] newFirstLine = firstLineStr.getBytes();
+              byte[] newFirstLine = new String(firstLine.toByteArray()).replace("/usr/bin/env", envPath).getBytes();
 
               writeMe = new byte[newFirstLine.length + (count - newline)];
 

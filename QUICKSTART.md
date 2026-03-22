@@ -187,19 +187,12 @@ org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=512m
 ```
 android/
 ├── cSploit/
-│   ├── src/main/java/org/csploit/android/
-│   │   ├── (root)              # Activities & Fragments
-│   │   ├── adapters/           # List adapters
-│   │   ├── core/               # Core functionality (System, ChildManager)
-│   │   ├── events/             # Event classes
-│   │   ├── gui/                # Custom UI components
-│   │   ├── helpers/            # Utility helpers (17 classes)
-│   │   ├── net/                # Networking code
-│   │   ├── plugins/            # Feature plugins (PortScanner, MITM, etc.)
-│   │   ├── services/           # Background services
-│   │   ├── tools/              # Tool wrappers (NMap, Hydra, etc.)
-│   │   ├── update/             # Update handling
-│   │   └── wifi/               # WiFi key generators
+│   ├── src/main/java/          # Java source code
+│   │   └── org/csploit/android/
+│   │       ├── core/           # Core functionality
+│   │       ├── plugins/        # Feature plugins
+│   │       ├── gui/            # UI components
+│   │       └── tools/          # Tool wrappers
 │   ├── src/main/res/           # Resources
 │   │   ├── layout/            # XML layouts
 │   │   ├── drawable/          # Images & icons

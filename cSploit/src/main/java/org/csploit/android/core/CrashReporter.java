@@ -11,13 +11,6 @@ public class CrashReporter {
 
   private static void notifyNativeError(final ErrorReporter reporter, Throwable error) {
     try {
-      if (System.getTools() == null) {
-        reporter.putCustomData("coreVersion", System.getCoreVersion());
-        reporter.putCustomData("rubyVersion", System.getLocalRubyVersion());
-        reporter.putCustomData("msfVersion", System.getLocalMsfVersion());
-        reporter.handleException(error);
-        return;
-      }
       Child process = System.getTools().logcat.async(new Logcat.LibcReceiver() {
         @Override
         public void onLogcat(String logcat) {

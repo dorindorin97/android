@@ -127,6 +127,7 @@ public class ScheduledScanService extends Service {
     private PowerManager.WakeLock mWakeLock;
     private NotificationManager mNotificationManager;
     private final AtomicBoolean mScanning = new AtomicBoolean(false);
+    private volatile boolean mScanRunning = false;
     private BroadcastReceiver mCancelReceiver;
 
     @Override
@@ -200,13 +201,7 @@ public class ScheduledScanService extends Service {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        ScanType scanType;
-        try {
-            scanType = ScanType.valueOf(prefs.getString(PREF_SCAN_TYPE, ScanType.DISCOVERY.name()));
-        } catch (IllegalArgumentException e) {
-            LoggingHelper.warning("Invalid scan type in preferences, defaulting to DISCOVERY");
-            scanType = ScanType.DISCOVERY;
-        }
+        ScanType scanType = ScanType.valueOf(prefs.getString(PREF_SCAN_TYPE, ScanType.DISCOVERY.name()));
         boolean autoExport = prefs.getBoolean(PREF_AUTO_EXPORT, true);
 
         // Use ThreadHelper for managed thread execution
@@ -215,6 +210,7 @@ public class ScheduledScanService extends Service {
 
     private void stopScan() {
         mScanning.set(false);
+        mScanRunning = false;
 
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
@@ -301,11 +297,6 @@ public class ScheduledScanService extends Service {
 
     private void performPortScan() {
         List<Target> targets = System.getTargets();
-
-        if (System.getTools() == null) {
-            LoggingHelper.warning("Tools not initialized, skipping port scan");
-            return;
-        }
 
         for (Target target : targets) {
             if (!mScanning.get()) break;

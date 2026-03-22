@@ -83,23 +83,11 @@ public class Hydra extends Tool
       throw new ChildManager.ChildNotStartedException("Invalid service name: " + service);
   }
 
-  private static void validateUsername(String username) throws ChildManager.ChildNotStartedException {
-    if (username != null && username.matches(".*[;&|`$<>(){}\"'\\\\\\n\\r].*"))
-      throw new ChildManager.ChildNotStartedException("Username contains unsafe characters");
-  }
-
-  private static void validateCharset(String charset) throws ChildManager.ChildNotStartedException {
-    if (charset != null && charset.matches(".*[;&|`$<>(){}\"'\\\\\\n\\r].*"))
-      throw new ChildManager.ChildNotStartedException("Charset contains unsafe characters");
-  }
-
   public Child crack(Target target, int port, String service, String charset, int minlength, int maxlength, String username, String userWordlist, String passWordlist, AttemptReceiver receiver) throws ChildManager.ChildNotStartedException {
     validatePort(port);
     validateServiceName(service);
     validateFilePath(userWordlist);
     validateFilePath(passWordlist);
-    validateUsername(username);
-    validateCharset(charset);
 
     StringBuilder command = new StringBuilder("-F ");
 

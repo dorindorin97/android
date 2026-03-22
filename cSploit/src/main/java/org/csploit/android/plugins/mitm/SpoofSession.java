@@ -58,7 +58,6 @@ public class SpoofSession
   }
 
   public void start(Target target, final OnSessionReadyListener listener) throws ChildManager.ChildNotStartedException {
-    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
     this.stop();
 
     if(mWithProxy){
@@ -93,8 +92,7 @@ public class SpoofSession
       }
     }
 
-    org.csploit.android.net.Network network = System.getNetwork();
-    if(network != null && network.haveGateway()) {
+    if(System.getNetwork().haveGateway()) {
       mArpSpoofProcess = System.getTools().arpSpoof.spoof(target, new ArpSpoof.ArpSpoofReceiver() {
         @Override
         public void onError(String line) {
@@ -118,12 +116,10 @@ public class SpoofSession
   }
 
   public void start(final Target target, final OnAccountListener listener) throws ChildManager.ChildNotStartedException {
-    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
 
     this.stop();
 
-    org.csploit.android.net.Network network = System.getNetwork();
-    if(network != null && network.haveGateway()) {
+    if(System.getNetwork().haveGateway()) {
       mArpSpoofProcess =
               System.getTools().arpSpoof.spoof(target, new ArpSpoof.ArpSpoofReceiver() {
                 @Override
@@ -147,10 +143,8 @@ public class SpoofSession
   }
 
   public void start(final OnDNSSpoofedReceiver listener) throws ChildManager.ChildNotStartedException {
-    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
 
-    org.csploit.android.net.Network network = System.getNetwork();
-    if(network != null && network.haveGateway()) {
+    if(System.getNetwork().haveGateway()) {
       mArpSpoofProcess =
               System.getTools().arpSpoof.spoof(System.getCurrentTarget(), new ArpSpoof.ArpSpoofReceiver() {
                 @Override
@@ -192,7 +186,7 @@ public class SpoofSession
     }
     System.setForwarding(false);
 
-    if(mWithProxy && System.getTools() != null){
+    if(mWithProxy){
       System.getTools().ipTables.undoPortRedirect(80, System.HTTP_PROXY_PORT);
       if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true)){
         System.getTools().ipTables.undoPortRedirect(443, System.HTTPS_REDIR_PORT);
