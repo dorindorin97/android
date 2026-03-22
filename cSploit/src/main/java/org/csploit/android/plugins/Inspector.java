@@ -122,6 +122,11 @@ public class Inspector extends Plugin {
 
     try {
       Target target = System.getCurrentTarget();
+      if (target == null) { setStoppedState(); return; }
+      if (System.getTools() == null) {
+        ToastHelper.childNotStarted(Inspector.this, getString(R.string.child_not_started));
+        return;
+      }
 
       updateView();
 
@@ -153,15 +158,18 @@ public class Inspector extends Plugin {
     mDeviceOS = (TextView) findViewById(R.id.deviceOS);
     mDeviceServices = (TextView) findViewById(R.id.deviceServices);
 
-    mFocusedScan = System.getCurrentTarget().hasOpenPorts();
+    Target target = System.getCurrentTarget();
+    if(target == null) { finish(); return; }
 
-    mDeviceName.setText(System.getCurrentTarget().toString());
+    mFocusedScan = target.hasOpenPorts();
 
-    if(System.getCurrentTarget().getDeviceType() != null)
-      mDeviceType.setText(System.getCurrentTarget().getDeviceType());
+    mDeviceName.setText(target.toString());
 
-    if(System.getCurrentTarget().getDeviceOS() != null)
-      mDeviceOS.setText(System.getCurrentTarget().getDeviceOS());
+    if(target.getDeviceType() != null)
+      mDeviceType.setText(target.getDeviceType());
+
+    if(target.getDeviceOS() != null)
+      mDeviceOS.setText(target.getDeviceOS());
 
     empty = getText(R.string.unknown).toString();
 
@@ -180,7 +188,7 @@ public class Inspector extends Plugin {
     }
     );
 
-    mReceiver = new Receiver(System.getCurrentTarget());
+    mReceiver = new Receiver(target);
   }
 
   @Override
@@ -201,8 +209,9 @@ public class Inspector extends Plugin {
   public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem item = menu.findItem(R.id.focused_scan);
     if(item != null) {
+      Target menuTarget = System.getCurrentTarget();
       item.setChecked(mFocusedScan);
-      item.setEnabled(System.getCurrentTarget().hasOpenPorts());
+      item.setEnabled(menuTarget != null && menuTarget.hasOpenPorts());
     }
     return super.onPrepareOptionsMenu(menu);
   }

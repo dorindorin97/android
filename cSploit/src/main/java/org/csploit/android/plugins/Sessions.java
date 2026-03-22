@@ -68,7 +68,8 @@ public class Sessions extends Plugin {
       if(s.haveShell())
         availableChoices.add(R.string.open_shell);
       if(s.isMeterpreter()) {
-        String deviceOS = System.getCurrentTarget().getDeviceOS();
+        Target sessionTarget = System.getCurrentTarget();
+        String deviceOS = sessionTarget != null ? sessionTarget.getDeviceOS() : null;
         if(deviceOS != null && deviceOS.toLowerCase().contains("windows"))
           availableChoices.add(R.string.clear_event_log);
       }
@@ -109,7 +110,8 @@ public class Sessions extends Plugin {
               });
           } else if (selectedChoice == R.string.delete) {
               s.stopSession();
-              System.getCurrentTarget().getSessions().remove(s);
+              Target deleteTarget = System.getCurrentTarget();
+              if (deleteTarget != null) deleteTarget.getSessions().remove(s);
               mAdapter.notifyDataSetChanged();
           }
         }
@@ -122,6 +124,7 @@ public class Sessions extends Plugin {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
       Session s = mAdapter.getItem(position);
+      if(s == null) return;
       if(s.haveShell()) {
         System.setCurrentSession(s);
         startActivity(new Intent(Sessions.this,Console.class));
@@ -149,6 +152,10 @@ public class Sessions extends Plugin {
       return;
 		}
 
+    if(System.getCurrentTarget() == null) {
+      UIHelper.finish(Sessions.this, getString(R.string.error), getString(R.string.error));
+      return;
+    }
     mResults = System.getCurrentTarget().getSessions();
 
     mListView = (ListView) findViewById(android.R.id.list);
@@ -161,7 +168,9 @@ public class Sessions extends Plugin {
     mListView.setOnItemLongClickListener(longClickListener);
 
     ConcurrencyHelper.submitAsync(() -> {
-      System.getMsfRpc().updateSessions();
+      RPCClient rpc = System.getMsfRpc();
+      if(rpc == null) return null;
+      rpc.updateSessions();
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
