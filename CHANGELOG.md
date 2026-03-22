@@ -5,42 +5,51 @@ All notable changes to the cSploit project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### 🐛 Fixed
-
-#### Null-dereference crashes after process death
-Fixed `NullPointerException` crashes that occurred when Android restored Activities
-after the background process was killed. `System.getTools()` and
-`System.getCurrentTarget()` can return `null` in any Activity following process
-death — all call sites must guard before dereferencing.
-
-**Files fixed:**
-- `Inspector.java` — `getTools()` null guard in `setStartedState()`
-- `LoginCracker.java` — `getTools()` null guard in `setStartedState()`; `getCurrentTarget()` null guard in `ProtocolAdapter` constructor
-- `PortScanner.java` — `getTools()` null guard in `setStartedState()`; `getCurrentTarget()` null guard in `onCreate()`
-- `Sessions.java` — `getCurrentTarget()` null guards in long-click and delete handlers
-- `Traceroute.java` — `getTools()` null guard in `setStartedState()`
-- `SpoofSession.java` — `getTools()` null guard added to all three `start()` overloads and `stop()`; prevents cascading NPEs in all MITM activities
-- `MITM.java` — `getTools()` null guard in connection-kill setup
-- `NetworkRadar.java` — `getTools()` null guard in background auto-scan
-- `MultiAttackService.java` — `getTools()` null guards in `scan()` and `inspect()`
-- `MsfRpcdService.java` — `getTools()` null guard before `msfrpcd.async()` call
-- `SettingsFragment.java` — `getTools()` null guard in `measureMsfSize()`
-
----
-
 ## [1.8.0-stable] - 2025-01-06
 
 ### 🚀 Added
 
-#### Helper Utilities
-- **Network Utilities**: NetworkHelper, HttpHelper, ConnectionMonitor
-- **Security Utilities**: SecureCredentialsHelper, EncryptedStorageHelper, SecurityChecker
-- **Target Management**: ScanResultExporter
-- **UI Utilities**: ToastHelper, UIHelper, AnimationHelper, PendingIntentHelper
-- **System Utilities**: DeviceHelper, AppHelper, ThreadHelper
-- **Core Utilities**: ConcurrencyHelper, LoggingHelper, PreferencesHelper
+#### Comprehensive Helper Utilities (136+ Classes)
+- **Network Utilities (43)**: NetworkAnalyzer, NetworkDiagnostics, NetworkMonitor, SubnetHelper, ArpHelper, DnsHelper, DnsProtocolHelper, MacVendorHelper, FirewallHelper, PcapHelper, InterfaceHelper, GeoIPHelper, RoutingHelper, TrafficMonitor, ProxyHelper, PortHelper, BannerGrabber, WhoIsHelper, TracerouteHelper, PacketHelper, ServiceEnumerator, FtpHelper, SmtpHelper, SshHelper, TelnetHelper, SnmpHelper, LdapHelper, ImapHelper, IrcHelper, and more
+- **Security Utilities (18)**: VulnerabilityScanner, ExploitMatcher, ServiceFingerprinter, AuthTokenHelper, SecureCredentialsHelper, PortScanOptimizer, HostTracker, SslHelper, SecurityAuditHelper, PayloadHelper, HashHelper, CredentialHelper, RegexHelper, and more
+- **Target Management (8)**: TargetHelper, TargetGroupManager, ScanProgressTracker, ReportGenerator, OutputFormatter, and more
+- **UI Utilities (15)**: ToastHelper, DialogHelper, NotificationHelper, AnimationHelper, ColorHelper, and more
+- **System Utilities (16)**: ProcessHelper, ShellHelper, CommandBuilder, DeviceHelper, WifiHelper, UserAgentHelper, and more
+- **Performance Utilities (10)**: PerformanceMonitor, MetricsCollector, RateLimiter, ThreadPoolManager, and more
+- **Core Utilities (15)**: ConcurrencyHelper, ValidationHelper, LoggingHelper, StringHelper, JsonHelper, and more
+
+#### Iteration 11 Additions
+- `TelnetHelper` - Telnet protocol operations, banner parsing, option negotiation, and server fingerprinting
+- `DnsProtocolHelper` - Low-level DNS protocol implementation with query building and response parsing
+- `SnmpHelper` - SNMP v1/v2c queries, community string testing, and device information gathering
+- `LdapHelper` - LDAP protocol operations, anonymous bind testing, and Active Directory detection
+- `ImapHelper` - IMAP protocol analysis, capability enumeration, and security assessment
+- `IrcHelper` - IRC server fingerprinting, IRCD type detection, and security analysis
+
+#### Iteration 10 Additions
+- `TracerouteHelper` - Traceroute output parsing, hop analysis, and anomaly detection
+- `FtpHelper` - FTP protocol operations, banner parsing, and server fingerprinting
+- `SmtpHelper` - SMTP protocol operations, user enumeration, and vulnerability checks
+- `SshHelper` - SSH banner parsing, algorithm analysis, and security assessment
+- `PacketHelper` - TCP/IP packet parsing, header extraction, and checksum calculation
+- `ServiceEnumerator` - Network service identification with 70+ known service mappings
+
+#### Iteration 9 Additions
+- `PayloadHelper` - Payload generation, encoding (Base64, Hex, URL), and obfuscation
+- `WhoIsHelper` - WHOIS domain and IP lookups with registrar parsing
+- `UserAgentHelper` - Browser/device User-Agent database with random generation
+- `HashHelper` - Cryptographic hashing (MD5, SHA-1, SHA-256, SHA-512) with file support
+- `CredentialHelper` - Credential validation, password strength checking, common password detection
+- `RegexHelper` - Security-focused regex patterns (IP, MAC, URL, email, CVE, etc.)
+
+#### Iteration 8 Additions
+- `BannerGrabber` - Network service banner grabbing with protocol detection
+- `TrafficMonitor` - Real-time network traffic monitoring with anomaly detection
+- `ProxyHelper` - SOCKS/HTTP proxy configuration and testing
+- `PortHelper` - Comprehensive port scanning with service database
+- `SecurityAuditHelper` - Security auditing with vulnerability scoring
+- `SslHelper` - SSL/TLS certificate analysis and security checks
+- `RoutingHelper` - Routing table management utilities
 
 #### Code Quality Improvements
 - Fixed all deprecated AsyncTask usages
@@ -54,6 +63,10 @@ death — all call sites must guard before dereferencing.
 
 #### Version Update
 - Version bumped to 1.8.0-stable from 1.7.1-stable
+- Total helper classes: 136+ (was 130)
+- Total lines of helper code: ~40,000+
+- Total helper classes: 120+ (was 114)
+- Total lines of helper code: ~35,000+
 
 ---
 

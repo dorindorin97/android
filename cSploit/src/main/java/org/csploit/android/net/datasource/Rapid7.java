@@ -100,12 +100,7 @@ class Rapid7
         if(label.startsWith("CVE-")) {
           ref = new CVE(new String(label.substring(4).toCharArray()));
         } else if(label.startsWith("OSVDB-")) {
-          try {
-            ref = new OSVDB(Integer.parseInt(label.substring(6)));
-          } catch (NumberFormatException e) {
-            LoggingHelper.warning("Invalid OSVDB id in reference: " + label);
-            continue;
-          }
+          ref = new OSVDB(Integer.parseInt(label.substring(6)));
         } else {
           ref = new Link(new String(label.toCharArray()),
                   new String(link.toCharArray()));
@@ -134,12 +129,7 @@ class Rapid7
       if(!matcher.find())
         return null;
 
-      try {
-        return MsfExploit.Ranking.valueOf(matcher.group(2));
-      } catch (IllegalArgumentException e) {
-        LoggingHelper.warning("Unknown MSF ranking: " + matcher.group(2));
-        return MsfExploit.Ranking.Normal;
-      }
+      return MsfExploit.Ranking.valueOf(matcher.group(2));
     }
 
     public static MsfExploit parsePage(String html) {

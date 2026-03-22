@@ -77,12 +77,7 @@ public class ShellSession extends Session {
       while(newline>=0) {
         buffer.append(data.substring(0,newline));
         if((tokenFound = (buffer.toString().endsWith(token)))) {
-          String exitStr = buffer.toString().substring(0, buffer.length() - token.length()).trim();
-          try {
-            newline = Integer.parseInt(exitStr);
-          } catch (NumberFormatException e) {
-            newline = -1;
-          }
+          newline = Integer.parseInt(buffer.toString().substring(0,buffer.length() - token.length()));
           break;
         }
         if(cmd.receiver!=null)

@@ -129,18 +129,13 @@ android/
 │   ├── src/
 │   │   └── main/
 │   │       ├── java/org/csploit/android/
-│   │       │   ├── (root)               # Activities & Fragments (Main, Settings, WiFi*)
-│   │       │   ├── adapters/            # List adapters
-│   │       │   ├── core/                # Core functionality (System, ChildManager, etc.)
-│   │       │   ├── events/              # Event classes
-│   │       │   ├── gui/                 # Custom UI components
-│   │       │   ├── helpers/             # Utility helpers (17 classes)
-│   │       │   ├── net/                 # Networking (Target, Network, metasploit RPC)
-│   │       │   ├── plugins/             # Feature plugins (PortScanner, MITM, etc.)
-│   │       │   ├── services/            # Background services (NetworkRadar, MsfRpcd)
-│   │       │   ├── tools/               # Tool wrappers (NMap, Hydra, etc.)
-│   │       │   ├── update/              # Update handling
-│   │       │   └── wifi/                # WiFi key generators
+│   │       │   ├── activities/          # UI Activities
+│   │       │   ├── fragments/           # UI Fragments
+│   │       │   ├── helpers/             # Utility helpers
+│   │       │   ├── plugins/             # Plugin implementations
+│   │       │   ├── net/                 # Networking code
+│   │       │   ├── services/            # Background services
+│   │       │   └── ui/                  # Custom UI components
 │   │       ├── res/
 │   │       │   ├── layout/              # XML layouts
 │   │       │   ├── drawable/            # Drawable resources
@@ -159,18 +154,19 @@ android/
 
 ## Helper Utilities
 
-The `org.csploit.android.helpers` package provides **17 reusable utility classes** organized by category:
+The `org.csploit.android.helpers` package provides **100 reusable utility classes** organized by category:
 
 ### Helper Categories Overview
 
 | Category | Count | Purpose |
 |----------|-------|---------|
-| Core | 3 | Async operations, logging, preferences |
-| Network | 3 | Network utilities, HTTP, connection monitoring |
-| Security | 3 | Credential storage, encrypted storage, security checks |
-| Target | 1 | Scan result export |
-| UI | 4 | Toasts, dialogs, animations, PendingIntent |
-| System | 3 | Device info, app utilities, thread management |
+| Network | 25 | Network analysis, DNS, ARP, subnets, interfaces |
+| Security | 12 | Vulnerability scanning, fingerprinting, auth tokens |
+| Target | 8 | Target management, scan tracking, reporting |
+| UI | 15 | Toasts, dialogs, notifications, animations |
+| System | 15 | Process, shell, device info, WiFi |
+| Performance | 10 | Monitoring, metrics, rate limiting |
+| Core | 15 | Concurrency, validation, logging, strings |
 
 See **[HELPERS.md](./HELPERS.md)** for complete documentation.
 
@@ -216,31 +212,37 @@ ToastHelper.info(context, "Information");
 ToastHelper.warning(context, "Warning");
 ```
 
-#### SecurityChecker
+#### Network Helpers (NEW)
 ```java
-SecurityChecker.checkRootAccess();
-SecurityChecker.isDeviceRooted();
+// DNS resolution with caching
+String ip = DnsHelper.resolve("example.com");
+String hostname = DnsHelper.reverseLookup("8.8.8.8");
+
+// Subnet calculations
+SubnetHelper.SubnetInfo info = SubnetHelper.getSubnetInfo("192.168.1.0/24");
+List<String> hosts = SubnetHelper.getUsableHostRange(info);
+
+// ARP operations
+List<ArpHelper.ArpEntry> table = ArpHelper.getArpTable();
+String mac = ArpHelper.getMacForIp("192.168.1.1");
+
+// Firewall management
+FirewallHelper.addPortForward(8080, 80, "192.168.1.100");
+FirewallHelper.enableMasquerade("wlan0");
 ```
 
-#### UIHelper
+### UIHelper
 Dialog and UI utilities:
 ```java
 UIHelper.showErrorDialog(context, "Title", "Message");
 UIHelper.showConfirmDialog(context, "Confirm?", listener);
 ```
 
-#### AnimationHelper
+### AnimationHelper
 Smooth animations:
 ```java
 AnimationHelper.fadeIn(view, 300);   // 300ms fade in
 AnimationHelper.fadeOut(view, 300);  // 300ms fade out
-```
-
-#### PendingIntentHelper
-Android 12+ compatible PendingIntent creation:
-```java
-PendingIntent pi = PendingIntentHelper.getActivityImmutable(context, code, intent);
-PendingIntent broadcast = PendingIntentHelper.getBroadcastImmutable(context, code, intent);
 ```
 
 ---
@@ -353,5 +355,5 @@ Email security concerns to maintainers privately and follow responsible disclosu
 
 ---
 
-**Last Updated**: March 2026
+**Last Updated**: December 5, 2025  
 **Maintained By**: cSploit Development Team

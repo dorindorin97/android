@@ -416,8 +416,7 @@ public class System {
 
     mCoreInitialized = true;
     Services.getNetworkRadar().onAutoScanChanged();
-    Network coreNetwork = getNetwork();
-    if (coreNetwork != null) coreNetwork.onCoreAttached();
+    getNetwork().onCoreAttached();
   }
 
   public static void setIfname(String ifname) {
@@ -452,7 +451,7 @@ public class System {
   }
 
   public static boolean checkNetworking(final FragmentActivity current) {
-    if (mNetwork == null || !mNetwork.isConnected()) {
+    if (!mNetwork.isConnected()) {
 
       Intent intent = new Intent();
       intent.putExtra(WifiScannerFragment.CONNECTED, false);
@@ -1313,9 +1312,7 @@ public class System {
   }
 
   public static Collection<Exploit> getCurrentExploits() {
-    Target target = getCurrentTarget();
-    if(target == null) return new ArrayList<>();
-    return target.getExploits();
+    return getCurrentTarget().getExploits();
   }
 
   public static boolean isForwardingEnabled() {

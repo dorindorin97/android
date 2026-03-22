@@ -89,7 +89,6 @@ public class NetworkRadar extends NativeService implements MenuControllableServi
       @Override
       public void run() {
         try {
-          if (System.getTools() == null) return;
           System.getTools().nmap.synScan(target, new ScanReceiver(target));
         } catch (ChildManager.ChildNotStartedException e) {
           LoggingHelper.e(TAG, "Network radar scan failed", e);

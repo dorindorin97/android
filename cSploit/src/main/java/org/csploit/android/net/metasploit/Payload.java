@@ -76,9 +76,7 @@ public class Payload {
       }
 
       if(entry.getKey().equals("LHOST")) {
-        org.csploit.android.net.Network lhostNet = System.getNetwork();
-        if(lhostNet != null && lhostNet.getLocalAddress() != null)
-          o.setValue(lhostNet.getLocalAddress().getHostAddress());
+        o.setValue(System.getNetwork().getLocalAddress().getHostAddress());
       }
 
       options.add(o);

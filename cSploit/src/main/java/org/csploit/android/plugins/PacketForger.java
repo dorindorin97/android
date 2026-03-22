@@ -91,8 +91,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 		mSendButton = (ToggleButton) findViewById(R.id.sendButton);
 		Button mSendWOL = (Button) findViewById(R.id.sendWOL);
 
-		Target pfTarget = System.getCurrentTarget();
-		if (pfTarget == null || pfTarget.getType() != Type.ENDPOINT)
+		if (System.getCurrentTarget().getType() != Type.ENDPOINT)
 			mSendWOL.setVisibility(View.INVISIBLE);
 
 		mProtocol.setAdapter(new ArrayAdapter<String>(this,
@@ -216,9 +215,7 @@ public class PacketForger extends Plugin implements OnClickListener {
 			return null;
 			});
 			} else {
-				Target wolTarget = System.getCurrentTarget();
-			if (wolTarget == null) return;
-			Endpoint endpoint = wolTarget.getEndpoint();
+				Endpoint endpoint = System.getCurrentTarget().getEndpoint();
 
 				byte[] mac = endpoint.getHardware();
 				int i;
