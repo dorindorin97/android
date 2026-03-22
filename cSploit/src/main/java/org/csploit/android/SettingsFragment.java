@@ -204,6 +204,7 @@ public class SettingsFragment extends Fragment {
         }
 
         private void measureMsfSize() {
+            if (System.getTools() == null) return;
             try {
                 System.getTools().raw.async(String.format("du -xsm '%s' '%s'", System.getRubyPath(), System.getMsfPath()),
                         new Raw.RawReceiver() {
