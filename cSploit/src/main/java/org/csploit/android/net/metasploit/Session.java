@@ -113,7 +113,9 @@ public class Session extends Thread {
   }
 
   public boolean equals(Object o) {
-    return (o!=null && o.getClass() == this.getClass() && ((Session)o).getUuid().equals(this.mUuid));
+    if(o == null || o.getClass() != this.getClass()) return false;
+    String otherUuid = ((Session)o).getUuid();
+    return otherUuid != null ? otherUuid.equals(this.mUuid) : this.mUuid == null;
   }
 
   public String toString() {

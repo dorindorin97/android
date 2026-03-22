@@ -78,7 +78,8 @@ public class RPCClient
 
     login(username, password);
 
-    mRemote = !(host.equals("127.0.0.1") || System.getNetwork().isInternal(host));
+    org.csploit.android.net.Network network = System.getNetwork();
+    mRemote = !(host.equals("127.0.0.1") || (network != null && network.isInternal(host)));
   }
 
   protected void writeCall(String methodName, Object[] args) throws IOException {
@@ -117,6 +118,7 @@ public class RPCClient
     {
       if(unpk!=null)
         unpk.close();
+      is.close();
     }
   }
 
@@ -348,7 +350,9 @@ public class RPCClient
             String file,filename,func;
             int line;
             Matcher matcher;
-            for(String str : (ArrayList<String>)hout.get("error_backtrace"))
+            ArrayList<String> errorBacktrace = (ArrayList<String>)hout.get("error_backtrace");
+            if(errorBacktrace == null) errorBacktrace = new ArrayList<String>();
+            for(String str : errorBacktrace)
             {
               try
               {

@@ -114,6 +114,7 @@ public class MultiAttackService extends IntentService {
 
     private void scan() throws InterruptedException {
       try {
+        if (System.getTools() == null) return;
         process = System.getTools().nmap.synScan(target, new NMap.SynScanReceiver() {
           @Override
           public void onPortFound(int port, String protocol) {
@@ -128,6 +129,7 @@ public class MultiAttackService extends IntentService {
 
     private void inspect() throws InterruptedException {
       try {
+        if (System.getTools() == null) return;
         process = System.getTools().nmap.inpsect(target, new NMap.InspectionReceiver() {
           @Override
           public void onOpenPortFound(int port, String protocol) {
@@ -361,7 +363,9 @@ public class MultiAttackService extends IntentService {
 
     while(mRunning) {
       try {
-        executorService.awaitTermination(1, TimeUnit.SECONDS);
+        if(executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+          break; // all tasks completed normally
+        }
       } catch (InterruptedException e) {
         break;
       }

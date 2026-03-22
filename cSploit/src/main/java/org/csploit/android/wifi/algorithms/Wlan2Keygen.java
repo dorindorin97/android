@@ -42,7 +42,7 @@ public class Wlan2Keygen extends Keygen{
   @Override
   public List<String> getKeys(){
     char[] key = new char[26];
-    if(getMacAddress().length() != 12){
+    if(getMacAddress() == null || getMacAddress().length() != 12){
       setErrorMessage("The MAC address is invalid.");
       return null;
     }
