@@ -269,7 +269,19 @@ public class System {
     int ret = -1;
 
     LoggingHelper.debug("Starting core daemon with su...");
-    
+
+    // Write the app's auth token to the users file so the daemon accepts our login
+    Context tokenCtx = getContextSafe();
+    if (tokenCtx != null) {
+      String token = SecureCredentialsHelper.getOrCreateDaemonToken(tokenCtx);
+      File usersFile = new File(getCorePath(), "users");
+      try (FileWriter fw = new FileWriter(usersFile)) {
+        fw.write("android:" + token + "\n");
+      } catch (IOException e) {
+        LoggingHelper.error("Failed to write daemon users file: " + e.getMessage());
+      }
+    }
+
     try {
       Process shell = new ProcessBuilder("su").start();
       writer = new DataOutputStream(shell.getOutputStream());
@@ -550,6 +562,13 @@ public class System {
     int minApi = (currentApi >= Build.VERSION_CODES.JELLY_BEAN ?
             Build.VERSION_CODES.JELLY_BEAN : Build.VERSION_CODES.GINGERBREAD);
     String abi = Build.CPU_ABI;
+
+    // Fall back to 32-bit ABI for 64-bit devices (releases are ARM32-only)
+    if ("arm64-v8a".equals(abi)) {
+      abi = "armeabi-v7a";
+    } else if ("x86_64".equals(abi)) {
+      abi = "x86";
+    }
 
     return String.format("android%d.%s", minApi, abi);
   }
@@ -919,7 +938,6 @@ public class System {
   public synchronized static ToolBox getTools() {
     if (mTools == null) {
       mTools = new ToolBox();
-      mTools.reload();
     }
     return mTools;
   }

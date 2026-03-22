@@ -19,6 +19,8 @@
 package org.csploit.android;
 
 import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
 import org.csploit.android.helpers.LoggingHelper;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -34,7 +36,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
-import android.text.ClipboardManager;
+import android.content.ClipboardManager;
+import android.content.ClipData;
 import android.text.Html;
 import androidx.core.text.HtmlCompat;
 import android.view.LayoutInflater;
@@ -130,7 +133,7 @@ public class WifiScannerFragment extends ListFragment
         if(mCurrentKey != null){
             mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + getString(R.string.connected_to2) + mCurrentKey + getString(R.string.connected_to3), HtmlCompat.FROM_HTML_MODE_LEGACY));
             ToastHelper.success(getActivity(), getString(R.string.wifi_key_copied));
-            mClipboard.setText(mCurrentKey);
+            mClipboard.setPrimaryClip(ClipData.newPlainText("wifi_key", mCurrentKey));
         } else
             mStatusText.setText(HtmlCompat.fromHtml(getString(R.string.connected_to) + mCurrentAp.SSID + "</b> !", HtmlCompat.FROM_HTML_MODE_LEGACY));
 
@@ -164,12 +167,14 @@ public class WifiScannerFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-        Boolean isDark = themePrefs.getBoolean("isDark", false);
-        if (isDark)
-            getActivity().setTheme(R.style.DarkTheme);
-        else
-            getActivity().setTheme(R.style.AppTheme);
+        android.app.Activity a = getActivity();
+        if (a != null) {
+            SharedPreferences themePrefs = a.getSharedPreferences("THEME", 0);
+            if (themePrefs.getBoolean("isDark", false))
+                a.setTheme(R.style.DarkTheme);
+            else
+                a.setTheme(R.style.AppTheme);
+        }
         setHasOptionsMenu(true);
     }
 
@@ -182,18 +187,19 @@ public class WifiScannerFragment extends ListFragment
 
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
-        SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-        Boolean isDark = themePrefs.getBoolean("isDark", false);
-        if (isDark) {
-            getActivity().setTheme(R.style.DarkTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window_dark));
+        android.app.Activity a = getActivity();
+        if (a != null) {
+            SharedPreferences themePrefs = a.getSharedPreferences("THEME", 0);
+            if (themePrefs.getBoolean("isDark", false)) {
+                a.setTheme(R.style.DarkTheme);
+                v.setBackgroundColor(ContextCompat.getColor(a, R.color.background_window_dark));
+            } else {
+                a.setTheme(R.style.AppTheme);
+                v.setBackgroundColor(ContextCompat.getColor(a, R.color.background_window));
+            }
         }
-        else {
-            getActivity().setTheme(R.style.AppTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window));
-        }
-        mWifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-        mClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        mWifiManager = (WifiManager) requireActivity().getSystemService(Context.WIFI_SERVICE);
+        mClipboard = (ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         mWifiMatcher = new WirelessMatcher(getResources().openRawResource(R.raw.alice));
         mScanReceiver = new ScanReceiver();
         mConnectionReceiver = new ConnectionReceiver();
@@ -207,20 +213,27 @@ public class WifiScannerFragment extends ListFragment
 
         if(!mWifiManager.isWifiEnabled()){
             mStatusText.setText( getString(R.string.wifi_activating_iface) );
-            mWifiManager.setWifiEnabled(true);
-            mStatusText.setText(getString(R.string.wifi_activated));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // API 29+: setWifiEnabled() no longer works, guide user to Settings
+                startActivity(new Intent(Settings.Panel.ACTION_WIFI));
+            } else {
+                //noinspection deprecation
+                mWifiManager.setWifiEnabled(true);
+                mStatusText.setText(getString(R.string.wifi_activated));
+            }
         }
 
-        mScanReceiver.register(getActivity());
+        mScanReceiver.register(requireActivity());
 
         if(mMenu != null) {
             MenuItem menuScan = mMenu.findItem(R.id.scan);
-            MenuItemCompat.setActionView(menuScan, new ProgressBar(getActivity()));
+            MenuItemCompat.setActionView(menuScan, new ProgressBar(requireContext()));
         }
 
         mStatusText.setText( getString(R.string.wifi_scanning) );
         mScanning = true;
 
+        //noinspection deprecation
         mWifiManager.startScan();
     }
 
@@ -423,7 +436,7 @@ public class WifiScannerFragment extends ListFragment
 
         if(mScanning) {
             MenuItem menuScan = mMenu.findItem(R.id.scan);
-            MenuItemCompat.setActionView(menuScan, new ProgressBar(getActivity()));
+            MenuItemCompat.setActionView(menuScan, new ProgressBar(requireContext()));
         }
         super.onCreateOptionsMenu(menu, mi);
     }
@@ -433,9 +446,10 @@ public class WifiScannerFragment extends ListFragment
         if(item.getItemId() == R.id.scan){
             if(mMenu != null){
                 MenuItem menuScan = mMenu.findItem(R.id.scan);
-                MenuItemCompat.setActionView(menuScan, new ProgressBar(getActivity()));
+                MenuItemCompat.setActionView(menuScan, new ProgressBar(requireContext()));
             }
 
+            //noinspection deprecation
             mWifiManager.startScan();
 
             mStatusText.setText(getString(R.string.scanning));

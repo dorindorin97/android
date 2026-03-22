@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import org.csploit.android.R;
 import org.csploit.android.helpers.LoggingHelper;
@@ -130,7 +131,7 @@ public class MultiAttackService extends IntentService {
     private void inspect() throws InterruptedException {
       try {
         if (System.getTools() == null) return;
-        process = System.getTools().nmap.inpsect(target, new NMap.InspectionReceiver() {
+        process = System.getTools().nmap.inspect(target, new NMap.InspectionReceiver() {
           @Override
           public void onOpenPortFound(int port, String protocol) {
             target.addOpenPort(port, Network.Protocol.fromString(protocol));
@@ -235,7 +236,7 @@ public class MultiAttackService extends IntentService {
     };
     mContentIntent = null;
     // register our receiver
-    registerReceiver(mReceiver,new IntentFilter(NOTIFICATION_CANCELLED));
+    ContextCompat.registerReceiver(this, mReceiver, new IntentFilter(NOTIFICATION_CANCELLED), ContextCompat.RECEIVER_NOT_EXPORTED);
     // set common notification actions - use PendingIntentHelper for Android 12+ compatibility
     mBuilder.setDeleteIntent(PendingIntentHelper.getBroadcastImmutable(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED)));
     mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, 0, new Intent()));

@@ -65,18 +65,21 @@ public class SettingsFragment extends Fragment {
     public static final String SETTINGS_MSF_CHANGED = "SettingsActivity.MSF_CHANGED";
     public static final String SETTINGS_MSF_BRANCHES_AVAILABLE = "SettingsActivity.MSF_MSF_BRANCHES_AVAILABLE";
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-        if (themePrefs.getBoolean("isDark", false))
-            getActivity().setTheme(R.style.PrefsThemeDark);
-        else
-            getActivity().setTheme(R.style.PrefsTheme);
         super.onCreate(savedInstanceState);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new PrefsFrag())
-                .commitAllowingStateLoss();
+        android.app.Activity a = getActivity();
+        if (a != null) {
+            SharedPreferences themePrefs = a.getSharedPreferences("THEME", 0);
+            if (themePrefs.getBoolean("isDark", false))
+                a.setTheme(R.style.PrefsThemeDark);
+            else
+                a.setTheme(R.style.PrefsTheme);
+            ((androidx.fragment.app.FragmentActivity) a).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, new PrefsFrag())
+                    .commitAllowingStateLoss();
+        }
     }
 
 
@@ -105,26 +108,31 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onViewCreated(View v, Bundle savedInstanceState) {
                 super.onViewCreated(v, savedInstanceState);
-                SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-                Boolean isDark = themePrefs.getBoolean("isDark", false);
-                if (isDark) {
-                    getActivity().setTheme(R.style.PrefsThemeDark);
-                    v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window_dark));
-                } else {
-                    getActivity().setTheme(R.style.PrefsTheme);
-                    v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window));
+                android.app.Activity a = getActivity();
+                if (a != null) {
+                    SharedPreferences themePrefs = a.getSharedPreferences("THEME", 0);
+                    if (themePrefs.getBoolean("isDark", false)) {
+                        a.setTheme(R.style.PrefsThemeDark);
+                        v.setBackgroundColor(ContextCompat.getColor(a, R.color.background_window_dark));
+                    } else {
+                        a.setTheme(R.style.PrefsTheme);
+                        v.setBackgroundColor(ContextCompat.getColor(a, R.color.background_window));
+                    }
                 }
             }
 
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            SharedPreferences themePrefs = getActivity().getBaseContext().getSharedPreferences("THEME", 0);
-            if (themePrefs.getBoolean("isDark", false))
-                getContext().setTheme(R.style.PrefsThemeDark);
-            else
-                getActivity().setTheme(R.style.PrefsTheme);
             super.onCreate(savedInstanceState);
+            android.app.Activity a = getActivity();
+            if (a != null) {
+                SharedPreferences themePrefs = a.getSharedPreferences("THEME", 0);
+                if (themePrefs.getBoolean("isDark", false))
+                    a.setTheme(R.style.PrefsThemeDark);
+                else
+                    a.setTheme(R.style.PrefsTheme);
+            }
 
             mSavePath = getPreferenceScreen().findPreference("PREF_SAVE_PATH");
             mWipeMSF = getPreferenceScreen().findPreference("PREF_MSF_WIPE");
@@ -177,7 +185,12 @@ public class SettingsFragment extends Fragment {
             new ConfirmDialog(getString(R.string.warning), message.toString(), getActivity(), new ConfirmDialog.ConfirmDialogListener() {
                 @Override
                 public void onConfirm() {
-                    getActivity().sendBroadcast(new Intent(SETTINGS_WIPE_START));
+                    android.app.Activity a = getActivity();
+                    if (a != null) {
+                        Intent si = new Intent(SETTINGS_WIPE_START);
+                        si.setPackage(a.getPackageName());
+                        a.sendBroadcast(si);
+                    }
                 }
 
                 @Override
@@ -191,9 +204,13 @@ public class SettingsFragment extends Fragment {
             new ConfirmDialog(getString(R.string.warning), getString(R.string.delete_previous_location), getActivity(), new ConfirmDialog.ConfirmDialogListener() {
                 @Override
                 public void onConfirm() {
-                    Intent i = new Intent(SETTINGS_WIPE_START);
-                    i.putExtra(SETTINGS_WIPE_DIR, oldDir.getAbsolutePath());
-                    getActivity().sendBroadcast(i);
+                    android.app.Activity a = getActivity();
+                    if (a != null) {
+                        Intent i = new Intent(SETTINGS_WIPE_START);
+                        i.setPackage(a.getPackageName());
+                        i.putExtra(SETTINGS_WIPE_DIR, oldDir.getAbsolutePath());
+                        a.sendBroadcast(i);
+                    }
                 }
 
                 @Override
@@ -517,7 +534,7 @@ public class SettingsFragment extends Fragment {
             IntentFilter filter = new IntentFilter();
             filter.addAction(SETTINGS_WIPE_DONE);
             filter.addAction(SETTINGS_MSF_BRANCHES_AVAILABLE);
-            getActivity().registerReceiver(mReceiver, filter);
+            ContextCompat.registerReceiver(getActivity(), mReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
         }
 
         private void getMsfBranches() {
@@ -535,7 +552,12 @@ public class SettingsFragment extends Fragment {
             mBranchesWaiter = ConcurrencyHelper.submitAsync(() -> {
                 try {
                     GitHubParser.getMsfRepo().getBranches();
-                    getActivity().sendBroadcast(new Intent(SETTINGS_MSF_BRANCHES_AVAILABLE));
+                    android.app.Activity a = getActivity();
+                    if (a != null) {
+                        Intent bi = new Intent(SETTINGS_MSF_BRANCHES_AVAILABLE);
+                        bi.setPackage(a.getPackageName());
+                        a.sendBroadcast(bi);
+                    }
                 } catch (JSONException e) {
                     LoggingHelper.e(TAG, "Error", e);
                 } catch (IOException e) {
@@ -603,7 +625,10 @@ public class SettingsFragment extends Fragment {
     }
 
     public void onBackPressed() {
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+        android.app.Activity a = getActivity();
+        if (a != null) {
+            a.finish();
+            a.overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+        }
     }
 }

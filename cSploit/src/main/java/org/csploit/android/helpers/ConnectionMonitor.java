@@ -32,6 +32,8 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.core.content.ContextCompat;
+
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -169,7 +171,8 @@ public final class ConnectionMonitor {
                 }
             };
             IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            context.registerReceiver(mLegacyReceiver, filter);
+            ContextCompat.registerReceiver(context, mLegacyReceiver, filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED);
         }
         
         // Update initial state

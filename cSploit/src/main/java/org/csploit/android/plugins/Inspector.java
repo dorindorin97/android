@@ -72,9 +72,10 @@ public class Inspector extends Plugin {
       mProcess = null;
     }
 
-    mActivity.setVisibility(View.INVISIBLE);
+    if (mActivity != null) mActivity.setVisibility(View.INVISIBLE);
     mRunning = false;
-    mStartButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
+    android.graphics.drawable.Drawable playDrawable = ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp);
+    if (playDrawable != null) mStartButton.setImageDrawable(playDrawable);
   }
 
   private void write_services()
@@ -130,10 +131,11 @@ public class Inspector extends Plugin {
 
       updateView();
 
-      mProcess = System.getTools().nmap.inpsect( target, mReceiver, mFocusedScan);
-      mStartButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
+      mProcess = System.getTools().nmap.inspect( target, mReceiver, mFocusedScan);
+      android.graphics.drawable.Drawable stopDrawable = ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp);
+      if (stopDrawable != null) mStartButton.setImageDrawable(stopDrawable);
 
-      mActivity.setVisibility(View.VISIBLE);
+      if (mActivity != null) mActivity.setVisibility(View.VISIBLE);
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
       LoggingHelper.e(TAG, "Inspector child process failed", e);

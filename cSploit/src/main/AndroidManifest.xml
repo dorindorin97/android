@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.csploit.android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Network permissions -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <!-- Storage permissions - updated for modern Android -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -17,19 +16,27 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    
+
     <!-- Other permissions -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WAKE_LOCK" tools:node="replace"/>
-    
+
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    
+
     <!-- Nearby WiFi devices for Android 13+ -->
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
         android:usesPermissionFlags="neverForLocation"
         tools:targetApi="33" />
+
+    <!-- Location required for WiFi scanning on API 28+ -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Foreground service permission for API 28+ -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:name=".CSploitApplication"
@@ -54,7 +61,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data android:name="WindowManagerPreference:SuppressWindowControlNavigationButton" android:value="true" />
@@ -64,7 +70,6 @@
                 android:minWidth="480dp" />
         </activity>
 
-        <!-- suppress AndroidDomInspection -->
         <service
             android:name=".services.UpdateService"
             android:enabled="true"
@@ -76,15 +81,27 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name=".services.ScheduledScanService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <service
+            android:name=".services.MsfRpcdService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".WifiScannerActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/Theme.AppCompat.Light"
-
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".gui.DirectoryPicker"
@@ -104,62 +121,77 @@
         <activity
             android:name=".ActionActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.RouterPwn"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.Traceroute"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.PortScanner"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.Inspector"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.Sessions"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.ExploitFinder"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.MITM"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.Sniffer"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.PasswordSniffer"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.DNSSpoofing"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.hijacker.Hijacker"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.hijacker.HijackerWebView"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.LoginCracker"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.PacketForger"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
             android:name=".gui.FileEdit"

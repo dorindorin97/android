@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-        <item name="actionBarStyle">@style/Theme.CSploitActionBarStyle</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="android:windowBackground">@color/background_window</item>
         <item name="colorPrimary">@color/app_color</item>
         <!-- theme UI controls like checkboxes and text fields -->

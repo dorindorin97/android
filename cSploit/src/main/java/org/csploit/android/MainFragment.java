@@ -194,14 +194,17 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
-        SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-        Boolean isDark = themePrefs.getBoolean("isDark", false);
-        if (isDark) {
-            getActivity().setTheme(R.style.DarkTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window_dark));
-        } else {
-            getActivity().setTheme(R.style.AppTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window));
+        android.app.Activity activity = getActivity();
+        if (activity != null) {
+            SharedPreferences themePrefs = activity.getSharedPreferences("THEME", 0);
+            Boolean isDark = themePrefs.getBoolean("isDark", false);
+            if (isDark) {
+                activity.setTheme(R.style.DarkTheme);
+                v.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_window_dark));
+            } else {
+                activity.setTheme(R.style.AppTheme);
+                v.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_window));
+            }
         }
         mEmptyTextView = (TextView) v.findViewById(R.id.emptyTextView);
         lv = (ListView) v.findViewById(R.id.android_list);
@@ -220,16 +223,12 @@ public class MainFragment extends Fragment {
                 Target target = (Target) mTargetAdapter.getItem(position);
                 System.setCurrentTarget(target);
 
-                ThreadHelper.getSharedExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        startActivityForResult(new Intent(getActivity(),
-                                ActionActivity.class), WIFI_CONNECTION_REQUEST);
-
-                        getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
-                    }
-                });
+                android.app.Activity clickActivity = getActivity();
+                if (clickActivity != null) {
+                    startActivityForResult(new Intent(clickActivity,
+                            ActionActivity.class), WIFI_CONNECTION_REQUEST);
+                    clickActivity.overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                }
 
                 ToastHelper.status(getActivity(),
                         getString(R.string.selected_) + System.getCurrentTarget());
@@ -260,11 +259,14 @@ public class MainFragment extends Fragment {
 
         System.setTargetListObserver(mTargetAdapter);
 
-        mRadarReceiver.register(getActivity());
-        mUpdateReceiver.register(getActivity());
-        mWipeReceiver.register(getActivity());
-        mMsfReceiver.register(getActivity());
-        mConnectivityReceiver.register(getActivity());
+        android.app.Activity regActivity = getActivity();
+        if (regActivity != null) {
+            mRadarReceiver.register(regActivity);
+            mUpdateReceiver.register(regActivity);
+            mWipeReceiver.register(regActivity);
+            mMsfReceiver.register(regActivity);
+            mConnectivityReceiver.register(regActivity);
+        }
 
         init();
         startAllServices();
@@ -277,10 +279,8 @@ public class MainFragment extends Fragment {
     }
 
     private void notifyMenuChanged() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            getActivity().invalidateOptionsMenu();
-        else
-            configureMenu();
+        android.app.Activity a = getActivity();
+        if (a != null) a.invalidateOptionsMenu();
     }
 
     /**
@@ -351,11 +351,12 @@ public class MainFragment extends Fragment {
         mMenu = menu;
         configureMenu();
         super.onCreateOptionsMenu(menu, inflater);
-        getActivity().onCreateOptionsMenu(menu);
+        if (getActivity() != null) getActivity().onCreateOptionsMenu(menu);
     }
 
     private boolean isConnectivityAvailable() {
-        return Network.isConnectivityAvailable(getActivity()) || Network.isWifiConnected(getActivity());
+        android.app.Activity a = getActivity();
+        return a != null && (Network.isConnectivityAvailable(a) || Network.isWifiConnected(a));
     }
 
     public void configureMenu() {
@@ -381,12 +382,13 @@ public class MainFragment extends Fragment {
         Services.getMsfRpcdService().buildMenuItem(item);
 
         mMenu = menu;
-        getActivity().onPrepareOptionsMenu(menu);
+        if (getActivity() != null) getActivity().onPrepareOptionsMenu(menu);
     }
 
     private boolean initSystem() {
         // retry
         try {
+            if (getActivity() == null) return false;
             System.init(getActivity().getApplicationContext());
         } catch (Exception e) {
             boolean isFatal = !(e instanceof NoRouteToHostException);
@@ -677,7 +679,12 @@ public class MainFragment extends Fragment {
             new UpdateChecker(getActivity()).start();
             mIsUpdateDownloading = true;
         } else {
-            getActivity().sendBroadcast(new Intent(UPDATE_NOT_AVAILABLE));
+            android.app.Activity ucActivity = getActivity();
+            if (ucActivity != null) {
+                Intent ucIntent = new Intent(UPDATE_NOT_AVAILABLE);
+                ucIntent.setPackage(ucActivity.getPackageName());
+                ucActivity.sendBroadcast(ucIntent);
+            }
             mIsUpdateDownloading = false;
         }
     }
@@ -762,10 +769,16 @@ public class MainFragment extends Fragment {
 
             mRadarReceiver.unregister();
             mUpdateReceiver.unregister();
+            mWipeReceiver.unregister();
+            mMsfReceiver.unregister();
+            mConnectivityReceiver.unregister();
 
-            startActivityForResult(new Intent(getActivity(),
-                    WifiScannerActivity.class), WIFI_CONNECTION_REQUEST);
-            getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+            android.app.Activity wifiActivity = getActivity();
+            if (wifiActivity != null) {
+                startActivityForResult(new Intent(wifiActivity,
+                        WifiScannerActivity.class), WIFI_CONNECTION_REQUEST);
+                wifiActivity.overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+            }
             return true;
         } else if (itemId == R.id.new_session) {
             new ConfirmDialog(getString(R.string.warning),
@@ -1196,12 +1209,22 @@ public class MainFragment extends Fragment {
                     System.getTools().raw.async("rm -rf '" + path + "'", new Child.EventReceiver() {
                         @Override
                         public void onEnd(int exitCode) {
-                            getActivity().sendBroadcast(new Intent(SettingsFragment.SETTINGS_WIPE_DONE));
+                            android.app.Activity a = getActivity();
+                            if (a != null) {
+                                Intent wi = new Intent(SettingsFragment.SETTINGS_WIPE_DONE);
+                                wi.setPackage(a.getPackageName());
+                                a.sendBroadcast(wi);
+                            }
                         }
 
                         @Override
                         public void onDeath(int signal) {
-                            getActivity().sendBroadcast(new Intent(SettingsFragment.SETTINGS_WIPE_DONE));
+                            android.app.Activity a = getActivity();
+                            if (a != null) {
+                                Intent wi = new Intent(SettingsFragment.SETTINGS_WIPE_DONE);
+                                wi.setPackage(a.getPackageName());
+                                a.sendBroadcast(wi);
+                            }
                         }
 
                         @Override
@@ -1271,7 +1294,7 @@ public class MainFragment extends Fragment {
                             onInitializationError(getString(R.string.mandatory_update));
                         }
                     }
-                    );
+                    ).show();
                 }
             });
         }

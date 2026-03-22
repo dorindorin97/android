@@ -64,14 +64,16 @@ public class Traceroute extends Plugin {
       mProcess.kill();
       mProcess = null;
     }
-		mTraceProgress.setVisibility(View.INVISIBLE);
+		if (mTraceProgress != null) mTraceProgress.setVisibility(View.INVISIBLE);
 		mRunning = false;
-		mTraceFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
+		android.graphics.drawable.Drawable playD = ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp);
+		if (playD != null) mTraceFloatingActionButton.setImageDrawable(playD);
 	}
 
 	private void setStartedState() {
-		mListAdapter.clear();
-		mTraceFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
+		if (mListAdapter != null) mListAdapter.clear();
+		android.graphics.drawable.Drawable stopD = ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp);
+		if (stopD != null) mTraceFloatingActionButton.setImageDrawable(stopD);
 
     org.csploit.android.net.Target traceTarget = System.getCurrentTarget();
     if(traceTarget == null) return;

@@ -45,6 +45,7 @@ public abstract class NativeService implements Service {
     assert context != null;
 
     Intent intent = new Intent(action);
+    intent.setPackage(context.getPackageName());
     if(extraKey != null) {
       intent.putExtra(extraKey, extraValue);
     }

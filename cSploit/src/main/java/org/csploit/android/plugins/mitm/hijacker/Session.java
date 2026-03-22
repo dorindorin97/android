@@ -72,7 +72,7 @@ public class Session
   private static String decodeLine( BufferedReader reader ) throws IOException {
     String line = reader.readLine();
 
-    return line.equals("null") ? null : line;
+    return (line == null || line.equals("null")) ? null : line;
   }
 
   private static boolean decodeBoolean( BufferedReader reader ) throws IOException {
@@ -111,7 +111,10 @@ public class Session
         session.mUserAgent = decodeLine( reader );
 
         for( int i = 0, ncookies = decodeInteger( reader ); i < ncookies; i++ ) {
-          ArrayList<HttpCookie> cookies = RequestParser.parseRawCookie(reader.readLine());
+          String rawCookie = reader.readLine();
+          if (rawCookie == null) break;
+          ArrayList<HttpCookie> cookies = RequestParser.parseRawCookie(rawCookie);
+          if (cookies == null) continue;
           for (HttpCookie cookie : cookies) {
             session.mCookies.put(cookie.getName(), cookie);
           }

@@ -19,13 +19,16 @@
 package org.csploit.android.services;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -133,6 +136,7 @@ public class UpdateService extends IntentService
    */
   private void sendError(int message) {
     Intent i = new Intent(ERROR);
+    i.setPackage(getPackageName());
     i.putExtra(MESSAGE, message);
     sendBroadcast(i);
   }
@@ -142,6 +146,7 @@ public class UpdateService extends IntentService
    */
   private void sendDone() {
     Intent i = new Intent(DONE);
+    i.setPackage(getPackageName());
     i.putExtra(UPDATE, mCurrentTask);
     sendBroadcast(i);
   }
@@ -262,8 +267,20 @@ public class UpdateService extends IntentService
         }
       }
     };
-    // register our receiver
-    registerReceiver(mReceiver,new IntentFilter(NOTIFICATION_CANCELLED));
+    // Create notification channel required on API 26+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      String channelId = getBaseContext().getString(R.string.csploitChannelId);
+      if (mNotificationManager.getNotificationChannel(channelId) == null) {
+        NotificationChannel channel = new NotificationChannel(
+            channelId,
+            getString(R.string.app_name),
+            NotificationManager.IMPORTANCE_LOW);
+        mNotificationManager.createNotificationChannel(channel);
+      }
+    }
+    // register our receiver (not exported - internal use only)
+    ContextCompat.registerReceiver(this, mReceiver, new IntentFilter(NOTIFICATION_CANCELLED),
+        ContextCompat.RECEIVER_NOT_EXPORTED);
     // set common notification actions - use PendingIntentHelper for Android 12+ compatibility
     mBuilder.setDeleteIntent(PendingIntentHelper.getBroadcastImmutable(this, CANCEL_CODE, new Intent(NOTIFICATION_CANCELLED)));
     mBuilder.setContentIntent(PendingIntentHelper.getActivityImmutable(this, 0, new Intent()));
@@ -953,7 +970,7 @@ public class UpdateService extends IntentService
       if (!haveLocalFile())
         downloadFile();
 
-      if (mCurrentTask instanceof CoreUpdate)
+      if (mCurrentTask instanceof CoreUpdate && System.isCoreInitialized())
         System.shutdownCoreDaemon();
 
       extract();

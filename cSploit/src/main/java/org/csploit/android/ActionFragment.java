@@ -46,49 +46,50 @@ public class ActionFragment extends Fragment {
 
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
-        SharedPreferences themePrefs = getActivity().getSharedPreferences("THEME", 0);
-        Boolean isDark = themePrefs.getBoolean("isDark", false);
-        if (isDark) {
-            getActivity().setTheme(R.style.DarkTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window_dark));
-        }
-        else {
-            getActivity().setTheme(R.style.AppTheme);
-            v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background_window));
+        android.app.Activity activity = getActivity();
+        if (activity != null) {
+            SharedPreferences themePrefs = activity.getSharedPreferences("THEME", 0);
+            if (themePrefs.getBoolean("isDark", false)) {
+                activity.setTheme(R.style.DarkTheme);
+                v.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_window_dark));
+            } else {
+                activity.setTheme(R.style.AppTheme);
+                v.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_window));
+            }
         }
         mTarget = org.csploit.android.core.System.getCurrentTarget();
 
         if (mTarget != null) {
-            getActivity().setTitle("cSploit > " + mTarget);
-            androidx.appcompat.app.ActionBar ab = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
-            theList = (ListView) getActivity().findViewById(R.id.android_list);
+            if (activity != null) {
+                activity.setTitle("cSploit > " + mTarget);
+                androidx.appcompat.app.ActionBar ab = ((AppCompatActivity) activity).getSupportActionBar();
+                if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+                theList = (ListView) activity.findViewById(R.id.android_list);
+            }
             mAvailable = System.getPluginsForTarget();
             ActionsAdapter mActionsAdapter = new ActionsAdapter();
-            theList.setAdapter(mActionsAdapter);
-            theList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            if (theList != null) theList.setAdapter(mActionsAdapter);
+            if (theList != null) theList.setOnItemClickListener(new ListView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    if (System.checkNetworking(getActivity())) {
+                    android.app.Activity a = getActivity();
+                    if (a == null || !(a instanceof androidx.fragment.app.FragmentActivity)) return;
+                    if (System.checkNetworking((androidx.fragment.app.FragmentActivity) a)) {
                         Plugin plugin = mAvailable.get(position);
                         System.setCurrentPlugin(plugin);
 
                         if (plugin.hasLayoutToShow()) {
-                            ToastHelper.status(getActivity(), getString(R.string.selected) + getString(plugin.getName()));
+                            ToastHelper.status(a, getString(R.string.selected) + getString(plugin.getName()));
 
-                            startActivity(new Intent(
-                                    getActivity(),
-                                    plugin.getClass()
-                            ));
-                            getActivity().overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                            startActivity(new Intent(a, plugin.getClass()));
+                            a.overridePendingTransition(R.anim.fadeout, R.anim.fadein);
                         } else
-                            plugin.onActionClick(getActivity().getApplicationContext());
+                            plugin.onActionClick(a.getApplicationContext());
                     }
                 }
             });
         } else {
-            UIHelper.finish(getActivity(), getString(R.string.warning), getString(R.string.something_went_wrong));
+            UIHelper.finish(activity, getString(R.string.warning), getString(R.string.something_went_wrong));
         }
     }
 

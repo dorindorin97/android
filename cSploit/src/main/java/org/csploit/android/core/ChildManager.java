@@ -1,7 +1,5 @@
 package org.csploit.android.core;
 
-import android.content.Context;
-
 import org.csploit.android.helpers.LoggingHelper;
 
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import org.csploit.android.events.ChildEnd;
 import org.csploit.android.events.Event;
 import org.csploit.android.events.Newline;
 import org.csploit.android.events.StderrNewline;
-import org.csploit.android.helpers.SecureCredentialsHelper;
 
 /**
  * a class that manage spawned commands
@@ -95,25 +92,13 @@ public class ChildManager {
 
     c = new Child();
 
-    // Check if client is connected, try to reconnect if not
-    if (!Client.isConnected()) {
-      LoggingHelper.warning("Client not connected, attempting to reconnect...");
-      try {
-        System.initCore();
-      } catch (Exception e) {
-        LoggingHelper.error("Failed to reconnect to daemon: " + e.getMessage());
-        throw new ChildNotStartedException("Daemon not connected: " + e.getMessage());
-      }
+    // Daemon must be initialized via System.initCore() before use
+    if (!System.isCoreInitialized()) {
+      throw new ChildNotStartedException("core not initialized");
     }
 
-    // Check if authenticated
-    if (!Client.isAuthenticated()) {
-      LoggingHelper.warning("Client not authenticated, attempting to login...");
-      Context ctx = System.getContext();
-      String token = ctx != null ? SecureCredentialsHelper.getOrCreateDaemonToken(ctx) : "";
-      if (!Client.Login("android", token)) {
-        throw new ChildNotStartedException("Failed to authenticate with daemon");
-      }
+    if (!Client.isConnected()) {
+      throw new ChildNotStartedException("daemon disconnected");
     }
 
     c.id = Client.StartCommand(handler, cmd, env);

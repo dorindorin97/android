@@ -133,9 +133,10 @@ public class PortScanner extends Plugin {
     }
     saveCustomParameters();
 
-    AnimationHelper.fadeOut(mScanProgress, 300, () -> mScanProgress.setVisibility(View.INVISIBLE));
+    if (mScanProgress != null) AnimationHelper.fadeOut(mScanProgress, 300, () -> { if (mScanProgress != null) mScanProgress.setVisibility(View.INVISIBLE); });
     mRunning = false;
-    mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
+    android.graphics.drawable.Drawable playD = ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp);
+    if (playD != null) mScanFloatingActionButton.setImageDrawable(playD);
 
     if (mPortList.size() == 0)
       ToastHelper.status(this, getString(R.string.no_open_ports));
@@ -164,7 +165,8 @@ public class PortScanner extends Plugin {
       LoggingHelper.e(TAG, "Port scanner child process failed", e);
       ToastHelper.error(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage());
     }
-    mScanFloatingActionButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp));
+    android.graphics.drawable.Drawable stopD = ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp);
+    if (stopD != null) mScanFloatingActionButton.setImageDrawable(stopD);
   }
 
   private void createPortList() {

@@ -147,7 +147,8 @@ public class MsfPreferences extends AppCompatActivity {
       ArrayList<Preference> evasion = new ArrayList<Preference>();
 
       Payload payload = System.getCurrentPayload();
-      MsfExploit exploit = (MsfExploit) System.getCurrentExploit();
+      org.csploit.android.net.Target.Exploit rawExploit = System.getCurrentExploit();
+      MsfExploit exploit = (rawExploit instanceof MsfExploit) ? (MsfExploit) rawExploit : null;
       System.setCurrentPayload(null);
       System.setCurrentExploit(null);
 

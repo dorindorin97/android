@@ -1,28 +1,35 @@
 apply plugin: 'com.android.application'
 
+configurations.all {
+    exclude group: 'com.google.guava', module: 'listenablefuture'
+    resolutionStrategy {
+        force 'com.google.guava:guava:33.5.0-android'
+    }
+}
+
 dependencies {
     // AndroidX dependencies - latest stable versions
     // Note: removed androidx.legacy:legacy-support-v4 - use AndroidX APIs directly
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-common:2.7.0'
-    implementation 'androidx.core:core-ktx:1.13.1'
+    // multidex not needed for minSdk >= 21 (native multidex support)
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-common:2.10.0'
+    implementation 'androidx.core:core-ktx:1.18.0'
 
     // Security library for encrypted preferences and secure credential storage
     // Provides AES-256-GCM encryption for sensitive data
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
-    implementation 'androidx.work:work-runtime:2.9.1'
-    implementation 'com.google.guava:guava:27.0.1-android'
+    implementation 'androidx.work:work-runtime:2.11.1'
+    implementation 'com.google.guava:guava:33.5.0-android'
 
     // Apache Commons - updated versions with security fixes
-    implementation 'org.apache.commons:commons-compress:1.26.2'
-    implementation 'commons-net:commons-net:3.11.1'
+    implementation 'org.apache.commons:commons-compress:1.28.0'
+    implementation 'commons-net:commons-net:3.13.0'
     
     // Other dependencies - updated versions
     implementation 'com.github.zafarkhaja:java-semver:0.9.0'
@@ -34,46 +41,46 @@ dependencies {
     implementation 'org.tukaani:xz:1.9'
     
     // ACRA crash reporting - updated
-    implementation 'ch.acra:acra-core:5.11.3'
-    implementation 'ch.acra:acra-http:5.11.3'
-    implementation 'ch.acra:acra-notification:5.11.3'
+    implementation 'ch.acra:acra-core:5.13.1'
+    implementation 'ch.acra:acra-http:5.13.1'
+    implementation 'ch.acra:acra-notification:5.13.1'
     
     // Testing
     testImplementation 'junit:junit:4.13.2'
 
     // JUnit5 (Jupiter) for unit tests
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-    testImplementation 'org.junit.vintage:junit-vintage-engine:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.14.3'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.14.3'
 
     // Mockito for mocking
-    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
 
     // AssertJ for better assertions
-    testImplementation 'org.assertj:assertj-core:3.26.3'
+    testImplementation 'org.assertj:assertj-core:3.27.7'
 
     // Android testing - AndroidX Test
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation 'androidx.test:runner:1.6.2'
-    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
 
     // Mockito for Android tests
     androidTestImplementation 'org.mockito:mockito-android:5.2.0'
 
     // Robolectric for unit tests that need Android context
-    testImplementation 'org.robolectric:robolectric:4.13'
+    testImplementation 'org.robolectric:robolectric:4.16.1'
 }
 
 android {
-    compileSdkVersion 35
-    buildToolsVersion '34.0.0'
+    compileSdkVersion 36
+    // buildToolsVersion omitted - AGP 9.1.0 uses 36.0.0 by default
     namespace 'org.csploit.android'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     // Enable buildConfig feature for custom BuildConfig fields
@@ -90,7 +97,7 @@ android {
 
     defaultConfig {
         minSdkVersion 23  // Updated minimum SDK for better security and features
-        targetSdkVersion 35  // Latest target SDK
+        targetSdkVersion 36  // Latest target SDK
         versionCode 6
         versionName "1.8.0-stable"
         if(System.getenv("NIGHTLY_BUILD")) {

@@ -235,10 +235,13 @@ public class MITM extends Plugin
               MITM.this.runOnUiThread(new Runnable(){
                 @Override
                 public void run(){
-                  System.getProxy().setFilter(new Proxy.ProxyFilter(){
+                  Proxy proxy238 = System.getProxy();
+                  if (proxy238 == null) return;
+                  proxy238.setFilter(new Proxy.ProxyFilter(){
                     @Override
                     public String onDataReceived(String headers, String data){
-                      String resource = System.getServer().getResourceURL();
+                      org.csploit.android.net.http.server.Server srv = System.getServer();
+                      String resource = (srv != null) ? srv.getResourceURL() : "";
 
                       // handle img tags
                       data = data.replaceAll
@@ -311,7 +314,8 @@ public class MITM extends Plugin
           mSpoofSession.start(new OnSessionReadyListener(){
             @Override
             public void onSessionReady(){
-              System.getProxy().setFilter(new Proxy.ProxyFilter(){
+              Proxy proxy314 = System.getProxy();
+              if (proxy314 != null) proxy314.setFilter(new Proxy.ProxyFilter(){
                 @Override
                 public String onDataReceived(String headers, String data){
                   return data.replaceAll("(?i)</head>", code + "</head>");

@@ -53,6 +53,7 @@ public class UpdateChecker extends Thread
 
   private void send(String msg, Update update) {
     Intent intent = new Intent(msg);
+    intent.setPackage(mContext.getPackageName());
 
     if(update != null)
       intent.putExtra(UpdateService.UPDATE, update);

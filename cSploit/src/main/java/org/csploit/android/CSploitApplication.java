@@ -21,7 +21,6 @@ package org.csploit.android;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.multidex.MultiDex;
 
 import org.acra.ACRA;
 import org.acra.config.CoreConfigurationBuilder;
@@ -143,12 +142,6 @@ public class CSploitApplication extends Application {
     } catch (Exception e) {
       LoggingHelper.w(TAG, "Failed to start ConnectionMonitor", e);
     }
-  }
-
-  @Override
-  protected void attachBaseContext(Context base) {
-    super.attachBaseContext(base);
-    MultiDex.install(this);
   }
 
   @Override
