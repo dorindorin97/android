@@ -58,6 +58,7 @@ public class SpoofSession
   }
 
   public void start(Target target, final OnSessionReadyListener listener) throws ChildManager.ChildNotStartedException {
+    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
     this.stop();
 
     if(mWithProxy){
@@ -117,6 +118,7 @@ public class SpoofSession
   }
 
   public void start(final Target target, final OnAccountListener listener) throws ChildManager.ChildNotStartedException {
+    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
 
     this.stop();
 
@@ -145,6 +147,7 @@ public class SpoofSession
   }
 
   public void start(final OnDNSSpoofedReceiver listener) throws ChildManager.ChildNotStartedException {
+    if (System.getTools() == null) throw new ChildManager.ChildNotStartedException("tools not initialized");
 
     org.csploit.android.net.Network network = System.getNetwork();
     if(network != null && network.haveGateway()) {
@@ -189,7 +192,7 @@ public class SpoofSession
     }
     System.setForwarding(false);
 
-    if(mWithProxy){
+    if(mWithProxy && System.getTools() != null){
       System.getTools().ipTables.undoPortRedirect(80, System.HTTP_PROXY_PORT);
       if(System.getSettings().getBoolean("PREF_HTTPS_REDIRECT", true)){
         System.getTools().ipTables.undoPortRedirect(443, System.HTTPS_REDIR_PORT);

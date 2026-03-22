@@ -68,7 +68,8 @@ public class Sessions extends Plugin {
       if(s.haveShell())
         availableChoices.add(R.string.open_shell);
       if(s.isMeterpreter()) {
-        String deviceOS = System.getCurrentTarget().getDeviceOS();
+        Target sessionTarget = System.getCurrentTarget();
+        String deviceOS = sessionTarget != null ? sessionTarget.getDeviceOS() : null;
         if(deviceOS != null && deviceOS.toLowerCase().contains("windows"))
           availableChoices.add(R.string.clear_event_log);
       }
@@ -109,7 +110,8 @@ public class Sessions extends Plugin {
               });
           } else if (selectedChoice == R.string.delete) {
               s.stopSession();
-              System.getCurrentTarget().getSessions().remove(s);
+              Target deleteTarget = System.getCurrentTarget();
+              if (deleteTarget != null) deleteTarget.getSessions().remove(s);
               mAdapter.notifyDataSetChanged();
           }
         }

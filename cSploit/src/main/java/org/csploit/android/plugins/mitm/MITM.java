@@ -576,7 +576,7 @@ public class MITM extends Plugin
 
               try {
                 org.csploit.android.net.Network ckNetwork = System.getNetwork();
-                if(ckNetwork != null && ckNetwork.haveGateway()) {
+                if(ckNetwork != null && ckNetwork.haveGateway() && System.getTools() != null) {
                 mConnectionKillerProcess = System.getTools().arpSpoof.spoof(ckTarget, new ArpSpoof.ArpSpoofReceiver() {
 
                   @Override
