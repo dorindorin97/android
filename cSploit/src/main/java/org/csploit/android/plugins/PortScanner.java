@@ -67,6 +67,7 @@ public class PortScanner extends Plugin {
   private ProgressBar mScanProgress = null;
   private boolean mRunning = false;
   private ArrayList<String> mPortList = new ArrayList<>();
+  private ArrayList<Integer> mPortNumbers = new ArrayList<>();
   private ArrayAdapter<String> mListAdapter = null;
   private Receiver mScanReceiver = null;
   private String mCustomPorts = null;
@@ -143,6 +144,12 @@ public class PortScanner extends Plugin {
   private void setStartedState() {
     createPortList();
 
+    if (System.getTools() == null) {
+      LoggingHelper.e(TAG, "Tools not initialized");
+      ToastHelper.error(PortScanner.this, getString(R.string.child_not_started));
+      return;
+    }
+
     try {
       if (mShowCustomParameters) {
         mProcess = System.getTools().nmap
@@ -162,7 +169,9 @@ public class PortScanner extends Plugin {
 
   private void createPortList() {
     mPortList.clear();
+    mPortNumbers.clear();
 
+    if (System.getCurrentTarget() == null) return;
     for (Port p : System.getCurrentTarget().getOpenPorts()) {
       int pNumber = p.getNumber();
       String resolvedProtocol = System.getProtocolByPort(pNumber);
@@ -173,8 +182,10 @@ public class PortScanner extends Plugin {
       else
         str = p.getProtocol().toString().toLowerCase() + " : " + pNumber;
 
-      if (!mPortList.contains(str))
+      if (!mPortList.contains(str)) {
         mPortList.add(str);
+        mPortNumbers.add(pNumber);
+      }
     }
 
   }
@@ -218,6 +229,7 @@ public class PortScanner extends Plugin {
     createPortList();
 
     final Target target = System.getCurrentTarget();
+    if (target == null) { finish(); return; }
     final String cmdlineRep = target.getCommandLineRepresentation();
 
     mScanReceiver = new Receiver(target);
@@ -229,7 +241,8 @@ public class PortScanner extends Plugin {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view,
                                      int position, long id) {
-        int portNumber = target.getOpenPorts().get(position).getNumber();
+        if (position >= mPortNumbers.size()) return false;
+        int portNumber = mPortNumbers.get(position);
 
         if(!urlFormats.containsKey(portNumber)) {
           portNumber = 0;

@@ -278,6 +278,7 @@ public class Hijacker extends AppCompatActivity {
 			View row = convertView;
 			SessionHolder holder;
 			Session session = getByPosition(position);
+			if (session == null) return row != null ? row : new View(Hijacker.this);
 
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) Hijacker.this

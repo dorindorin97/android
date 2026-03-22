@@ -28,6 +28,7 @@ import org.csploit.android.net.metasploit.Session;
 import org.csploit.android.net.reference.Reference;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -366,7 +367,8 @@ public class Target implements Comparable<Target>
           // determine if the 'address' part is an ip address or a host name
           if(IP_PATTERN.matcher(address).find()){
             // internal ip address
-            if(System.getNetwork().isInternal(address)){
+            org.csploit.android.net.Network net = System.getNetwork();
+            if(net != null && net.isInternal(address)){
               target = new Target(new Endpoint(address, null));
               target.setPort(port);
             }
@@ -570,7 +572,7 @@ public class Target implements Comparable<Target>
         return mEndpoint.equals(target.getEndpoint());
 
       else if(mType == Type.REMOTE)
-        return mHostname.equals(target.getHostname());
+        return mHostname == null ? target.getHostname() == null : mHostname.equals(target.getHostname());
     }
 
     return false;
@@ -620,7 +622,7 @@ public class Target implements Comparable<Target>
 
       return desc.trim();
     } else if(mType == Type.REMOTE)
-      return mAddress.getHostAddress();
+      return mAddress != null ? mAddress.getHostAddress() : (mHostname != null ? mHostname : "");
 
     return "";
   }

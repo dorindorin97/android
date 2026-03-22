@@ -67,12 +67,18 @@ adb root
 android/
 ├── cSploit/
 │   ├── src/main/java/org/csploit/android/
-│   │   ├── activities/      ← UI screens
-│   │   ├── fragments/       ← UI fragments
-│   │   ├── helpers/         ← Utilities ⭐
-│   │   ├── plugins/         ← Plugin code
+│   │   ├── (root)           ← Activities & Fragments
+│   │   ├── adapters/        ← List adapters
+│   │   ├── core/            ← Core (System, ChildManager)
+│   │   ├── events/          ← Event classes
+│   │   ├── gui/             ← Custom UI components
+│   │   ├── helpers/         ← Utilities ⭐ (17 classes)
 │   │   ├── net/             ← Network code
-│   │   └── services/        ← Background services
+│   │   ├── plugins/         ← Plugin code
+│   │   ├── services/        ← Background services
+│   │   ├── tools/           ← Tool wrappers
+│   │   ├── update/          ← Update handling
+│   │   └── wifi/            ← WiFi key generators
 │   ├── src/main/res/
 │   │   ├── layout/          ← XML layouts
 │   │   ├── drawable/        ← Images
@@ -85,7 +91,7 @@ android/
 ## ✅ Before Submitting Code
 
 - [ ] Compiles without errors: `./gradlew clean assembleDebug`
-- [ ] Uses appropriate helper classes (ConcurrencyHelper, ValidationHelper, etc.)
+- [ ] Uses appropriate helper classes (ConcurrencyHelper, LoggingHelper, ToastHelper, etc.)
 - [ ] Has proper error logging (LoggingHelper, not silent catch blocks)
 - [ ] No deprecated APIs used
 - [ ] Input validation present
@@ -94,36 +100,37 @@ android/
 - [ ] Code is readable with meaningful names
 - [ ] Commit message is descriptive: `type: description`
 
-## 🔍 Helper Classes (100 Total)
+## 🔍 Helper Classes (17 Total)
 
 ### Core Helpers
 | Helper | Use | Example |
 |--------|-----|---------|
 | **ConcurrencyHelper** | Background tasks | `ConcurrencyHelper.executeAsync(...)` |
-| **ValidationHelper** | Input validation | `ValidationHelper.isValidIPv4(ip)` |
-| **LoggingHelper** | Logging | `LoggingHelper.d("TAG", "msg")` |
+| **LoggingHelper** | Logging | `LoggingHelper.e("TAG", "msg", e)` |
+| **PreferencesHelper** | Preferences | `PreferencesHelper.getString(key, def)` |
+
+### Network & Security Helpers
+| Helper | Use | Example |
+|--------|-----|---------|
+| **NetworkHelper** | Network utilities | `NetworkHelper.isConnected(ctx)` |
+| **HttpHelper** | HTTP requests | `HttpHelper.get(url)` |
+| **ConnectionMonitor** | Connection state | `new ConnectionMonitor(ctx)` |
+| **SecureCredentialsHelper** | Credential storage | `creds.retrieveCredential(key, def)` |
+| **EncryptedStorageHelper** | Encrypted storage | `EncryptedStorageHelper.put(key, val)` |
+| **SecurityChecker** | Security checks | `SecurityChecker.isDeviceRooted()` |
+
+### UI & System Helpers
+| Helper | Use | Example |
+|--------|-----|---------|
 | **ToastHelper** | Toast messages | `ToastHelper.success(ctx, "OK")` |
 | **UIHelper** | Dialogs, UI | `UIHelper.showErrorDialog(...)` |
 | **AnimationHelper** | Animations | `AnimationHelper.fadeIn(view, 300)` |
+| **PendingIntentHelper** | PendingIntent | `PendingIntentHelper.getActivityImmutable(...)` |
+| **DeviceHelper** | Device info | `DeviceHelper.getAndroidVersion()` |
+| **AppHelper** | App utilities | `AppHelper.getVersionName(ctx)` |
+| **ThreadHelper** | Thread/executor | `ThreadHelper.getSharedExecutor()` |
 
-### Network Helpers (NEW)
-| Helper | Use | Example |
-|--------|-----|---------|
-| **DnsHelper** | DNS resolution | `DnsHelper.resolve("example.com")` |
-| **SubnetHelper** | Subnet calculations | `SubnetHelper.getSubnetInfo("192.168.1.0/24")` |
-| **ArpHelper** | ARP table ops | `ArpHelper.getArpTable()` |
-| **MacVendorHelper** | MAC vendor lookup | `MacVendorHelper.getVendor(mac)` |
-| **FirewallHelper** | iptables rules | `FirewallHelper.addPortForward(...)` |
-| **InterfaceHelper** | Network interfaces | `InterfaceHelper.listInterfaces()` |
-
-### Security Helpers (NEW)
-| Helper | Use | Example |
-|--------|-----|---------|
-| **AuthTokenHelper** | Token management | `AuthTokenHelper.generateToken(...)` |
-| **HostTracker** | Host tracking | `HostTracker.track(ip, mac)` |
-| **ProcessHelper** | Process mgmt | `ProcessHelper.kill(pid)` |
-
-See **[HELPERS.md](./HELPERS.md)** for complete documentation of all 100 helpers.
+See **[HELPERS.md](./HELPERS.md)** for complete documentation.
 
 ## 🏗️ Gradle Build Types
 
@@ -164,7 +171,7 @@ See **[HELPERS.md](./HELPERS.md)** for complete documentation of all 100 helpers
 | **Target SDK** | 33 (Android 13) |
 | **JDK** | 17+ |
 | **cSploit** | 1.8.0-stable |
-| **Helpers** | 100 classes |
+| **Helpers** | 17 classes |
 
 ## 🔗 External Resources
 
@@ -233,6 +240,6 @@ cat cSploit/build/test-results/testDebugUnitTest/
 
 **Print this page or save as bookmark!** 🚀
 
-**Last Updated**: December 6, 2025  
-**Version**: 1.8.0-stable  
+**Last Updated**: March 2026
+**Version**: 1.8.0-stable
 **Maintained By**: cSploit Development Team

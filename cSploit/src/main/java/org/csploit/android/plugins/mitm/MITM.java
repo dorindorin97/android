@@ -196,6 +196,7 @@ public class MITM extends Plugin
 
     if(request == SELECT_PICTURE && result == RESULT_OK){
       try{
+        if(intent == null) return;
         Uri uri = intent.getData();
         String fileName = null,
           mimeType = null;
@@ -565,16 +566,18 @@ public class MITM extends Plugin
           final ProgressBar activity = (ProgressBar) v.findViewById(R.id.itemActivity);
 
           if(activity.getVisibility() == View.INVISIBLE){
-            if (System.getCurrentTarget().getType() != Target.Type.ENDPOINT) {
+            org.csploit.android.net.Target ckTarget = System.getCurrentTarget();
+            if (ckTarget == null || ckTarget.getType() != Target.Type.ENDPOINT) {
               UIHelper.error(MITM.this, getString(R.string.error), getString(R.string.mitm_connection_kill_error));
-            } else if(!System.getNetwork().haveGateway() && !System.getNetwork().isTetheringEnabled()) {
+            } else if(System.getNetwork() == null || (!System.getNetwork().haveGateway() && !System.getNetwork().isTetheringEnabled())) {
               UIHelper.error(MITM.this, getString(R.string.error), "Connection killer requires a gateway or active Tethering");
             } else {
               setStoppedState();
 
               try {
-                if(System.getNetwork().haveGateway()) {
-                mConnectionKillerProcess = System.getTools().arpSpoof.spoof(System.getCurrentTarget(), new ArpSpoof.ArpSpoofReceiver() {
+                org.csploit.android.net.Network ckNetwork = System.getNetwork();
+                if(ckNetwork != null && ckNetwork.haveGateway() && System.getTools() != null) {
+                mConnectionKillerProcess = System.getTools().arpSpoof.spoof(ckTarget, new ArpSpoof.ArpSpoofReceiver() {
 
                   @Override
                   public void onStart(String cmd) {
@@ -612,7 +615,8 @@ public class MITM extends Plugin
               mConnectionKillerProcess = null;
             }
 
-            if(!System.getNetwork().haveGateway() && System.getNetwork().isTetheringEnabled()) {
+            org.csploit.android.net.Network net617 = System.getNetwork();
+            if(net617 != null && !net617.haveGateway() && net617.isTetheringEnabled()) {
               System.setForwarding(true);
             }
 
@@ -622,7 +626,8 @@ public class MITM extends Plugin
       }, new Action.ActionEnabler() {
       @Override
       public boolean isEnabled() {
-        return System.getNetwork().haveGateway() || System.getNetwork().isTetheringEnabled();
+        org.csploit.android.net.Network net = System.getNetwork();
+        return net != null && (net.haveGateway() || net.isTetheringEnabled());
       }
     }));
 

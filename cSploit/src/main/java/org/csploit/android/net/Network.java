@@ -341,6 +341,7 @@ public class Network implements Comparable<Network> {
   }
 
   public byte[] getGatewayHardware() {
+    if(mWifiInfo == null) return null;
     return Endpoint.parseMacAddress(mWifiInfo.getBSSID());
   }
 
