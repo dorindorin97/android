@@ -8,14 +8,17 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-common:2.7.0'
     implementation 'androidx.core:core-ktx:1.13.1'
 
     // Security library for encrypted preferences and secure credential storage
     // Provides AES-256-GCM encryption for sensitive data
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
     implementation 'androidx.work:work-runtime:2.9.1'
-    implementation 'com.google.guava:guava:33.2.0-android'
+    implementation 'com.google.guava:guava:27.0.1-android'
 
     // Apache Commons - updated versions with security fixes
     implementation 'org.apache.commons:commons-compress:1.26.2'
