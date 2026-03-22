@@ -20,6 +20,7 @@ package org.csploit.android.plugins;
 
 import android.content.Context;
 import org.csploit.android.helpers.LoggingHelper;
+import org.csploit.android.helpers.ToastHelper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;

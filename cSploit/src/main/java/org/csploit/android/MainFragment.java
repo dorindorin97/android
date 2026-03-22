@@ -148,7 +148,7 @@ public class MainFragment extends Fragment {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                android.app.Activity currentActivity = getActivity();
+                androidx.fragment.app.FragmentActivity currentActivity = (androidx.fragment.app.FragmentActivity) getActivity();
                 if (currentActivity == null || !isAdded()) {
                     return;
                 }
@@ -514,7 +514,7 @@ public class MainFragment extends Fragment {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                android.app.Activity currentActivity = getActivity();
+                androidx.fragment.app.FragmentActivity currentActivity = (androidx.fragment.app.FragmentActivity) getActivity();
                 if (currentActivity == null || !isAdded()) {
                     return;
                 }
@@ -1240,7 +1240,7 @@ public class MainFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    android.app.Activity currentActivity = getActivity();
+                    androidx.fragment.app.FragmentActivity currentActivity = (androidx.fragment.app.FragmentActivity) getActivity();
                     if (currentActivity == null || !isAdded()) {
                         return;
                     }

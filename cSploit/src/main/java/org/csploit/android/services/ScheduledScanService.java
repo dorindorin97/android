@@ -210,7 +210,9 @@ public class ScheduledScanService extends Service {
         boolean autoExport = prefs.getBoolean(PREF_AUTO_EXPORT, true);
 
         // Use ThreadHelper for managed thread execution
-        ThreadHelper.executeBackground(() -> performScan(scanType, autoExport));
+        final ScanType finalScanType = scanType;
+        final boolean finalAutoExport = autoExport;
+        ThreadHelper.executeBackground(() -> performScan(finalScanType, finalAutoExport));
     }
 
     private void stopScan() {

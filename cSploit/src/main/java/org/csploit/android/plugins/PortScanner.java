@@ -322,7 +322,7 @@ public class PortScanner extends Plugin {
                               throw new IllegalArgumentException(
                                       getString(R.string.port_must_be_greater));
                           }
-                        } catch (IllegalArgumentException | NumberFormatException e) {
+                        } catch (IllegalArgumentException e) {
                           UIHelper.error(PortScanner.this, "Error", e.toString());
                           return;
                         }

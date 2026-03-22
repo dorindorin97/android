@@ -334,7 +334,7 @@ public class UpdateService extends IntentService
     long total;
     short old_percentage,percentage;
     CountingInputStream counter;
-    ArchiveInputStream is;
+    ArchiveInputStream is = null;
     byte[] buffer;
     String rootDirectory;
 

@@ -13,7 +13,7 @@ dependencies {
 
     // Security library for encrypted preferences and secure credential storage
     // Provides AES-256-GCM encryption for sensitive data
-    implementation 'androidx.security:security-crypto:1.0.0'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
     
     // Apache Commons - updated versions with security fixes
     implementation 'org.apache.commons:commons-compress:1.24.0'
