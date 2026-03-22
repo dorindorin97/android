@@ -144,6 +144,12 @@ public class PortScanner extends Plugin {
   private void setStartedState() {
     createPortList();
 
+    if (System.getTools() == null) {
+      LoggingHelper.e(TAG, "Tools not initialized");
+      ToastHelper.error(PortScanner.this, getString(R.string.child_not_started));
+      return;
+    }
+
     try {
       if (mShowCustomParameters) {
         mProcess = System.getTools().nmap
@@ -223,6 +229,7 @@ public class PortScanner extends Plugin {
     createPortList();
 
     final Target target = System.getCurrentTarget();
+    if (target == null) { finish(); return; }
     final String cmdlineRep = target.getCommandLineRepresentation();
 
     mScanReceiver = new Receiver(target);

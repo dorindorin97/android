@@ -122,6 +122,11 @@ public class Inspector extends Plugin {
 
     try {
       Target target = System.getCurrentTarget();
+      if (target == null) { setStoppedState(); return; }
+      if (System.getTools() == null) {
+        ToastHelper.childNotStarted(Inspector.this, getString(R.string.child_not_started));
+        return;
+      }
 
       updateView();
 
@@ -204,8 +209,9 @@ public class Inspector extends Plugin {
   public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem item = menu.findItem(R.id.focused_scan);
     if(item != null) {
+      Target menuTarget = System.getCurrentTarget();
       item.setChecked(mFocusedScan);
-      item.setEnabled(System.getCurrentTarget().hasOpenPorts());
+      item.setEnabled(menuTarget != null && menuTarget.hasOpenPorts());
     }
     return super.onPrepareOptionsMenu(menu);
   }

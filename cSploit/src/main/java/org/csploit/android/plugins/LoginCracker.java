@@ -161,6 +161,11 @@ public class LoginCracker extends Plugin {
 
     mAccountFound = false;
 
+    if (System.getTools() == null) {
+      ToastHelper.childNotStarted(LoginCracker.this, getString(R.string.child_not_started));
+      return;
+    }
+
     try {
       mStartButton.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_stop_24dp));
       mProcess =
@@ -420,7 +425,8 @@ public class LoginCracker extends Plugin {
     }
 
     public ProtocolAdapter() {
-      mOpenPorts = System.getCurrentTarget().getOpenPorts();
+      Target adapterTarget = System.getCurrentTarget();
+      mOpenPorts = adapterTarget != null ? adapterTarget.getOpenPorts() : new java.util.ArrayList<>();
       mProtocols = new ArrayList<String>(Arrays.asList(PROTOCOLS));
 
       // first sort alphabetically
