@@ -426,11 +426,11 @@ public class RemoteReader implements Runnable {
           stream = ((HttpURLConnection) connection).getErrorStream();
           if (stream == null) {
             // getErrorStream() returns null when no error body is available
-            notifier = new Notifier(task, e.getMessage().getBytes(), true);
+            notifier = new Notifier(task, String.valueOf(e.getMessage()).getBytes(), true);
           }
           isError = true;
         } else {
-          notifier = new Notifier(task, e.getMessage().getBytes(), true);
+          notifier = new Notifier(task, String.valueOf(e.getMessage()).getBytes(), true);
         }
       }
 
@@ -439,9 +439,9 @@ public class RemoteReader implements Runnable {
           // Always close the stream; close connection after reading
           notifier = new Notifier(task, IOUtils.toByteArray(stream), isError);
         } catch (IOException e) {
-          notifier = new Notifier(task, e.getMessage().getBytes(), true);
+          notifier = new Notifier(task, String.valueOf(e.getMessage()).getBytes(), true);
         } catch (IllegalStateException e) {
-          notifier = new Notifier(task, e.getMessage().getBytes(), true);
+          notifier = new Notifier(task, String.valueOf(e.getMessage()).getBytes(), true);
         } finally {
           if (stream != null) {
             try { stream.close(); } catch (IOException ignored) {}

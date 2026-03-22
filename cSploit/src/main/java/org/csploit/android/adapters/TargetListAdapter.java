@@ -130,6 +130,9 @@ public class TargetListAdapter extends BaseAdapter implements Runnable, System.T
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (inflater == null) {
+                inflater = LayoutInflater.from(context);
+            }
             row = inflater.inflate(R.layout.target_list_item, parent, false);
 
             if (isDarkTheme) {

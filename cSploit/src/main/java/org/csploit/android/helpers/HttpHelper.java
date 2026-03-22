@@ -381,8 +381,13 @@ public final class HttpHelper {
             // Set request body for POST/PUT/PATCH
             if (config.body != null) {
                 connection.setDoOutput(true);
-                connection.getOutputStream().write(config.body);
-                connection.getOutputStream().flush();
+                OutputStream os = connection.getOutputStream();
+                try {
+                    os.write(config.body);
+                    os.flush();
+                } finally {
+                    os.close();
+                }
             }
             
             // Get response
