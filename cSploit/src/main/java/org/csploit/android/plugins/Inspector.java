@@ -138,8 +138,20 @@ public class Inspector extends Plugin {
       if (mActivity != null) mActivity.setVisibility(View.VISIBLE);
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
-      LoggingHelper.e(TAG, "Inspector child process failed", e);
-      ToastHelper.childNotStarted(Inspector.this, getString(R.string.child_not_started));
+      if (org.csploit.android.BuildConfig.DEBUG) {
+        LoggingHelper.d(TAG, "nmap unavailable in debug build, using mock inspect");
+        Target target2 = System.getCurrentTarget();
+        if (target2 != null) {
+          mProcess = System.getTools().nmap.mockInspect(target2, mReceiver);
+          android.graphics.drawable.Drawable stopD = ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp);
+          if (stopD != null) mStartButton.setImageDrawable(stopD);
+          if (mActivity != null) mActivity.setVisibility(View.VISIBLE);
+          mRunning = true;
+        }
+      } else {
+        LoggingHelper.e(TAG, "Inspector child process failed", e);
+        ToastHelper.childNotStarted(Inspector.this, getString(R.string.child_not_started));
+      }
     }
   }
 

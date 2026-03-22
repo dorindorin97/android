@@ -162,8 +162,14 @@ public class PortScanner extends Plugin {
 
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
-      LoggingHelper.e(TAG, "Port scanner child process failed", e);
-      ToastHelper.error(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage());
+      if (org.csploit.android.BuildConfig.DEBUG) {
+        LoggingHelper.d(TAG, "nmap unavailable in debug build, using mock scan");
+        mProcess = System.getTools().nmap.mockSynScan(System.getCurrentTarget(), mScanReceiver);
+        mRunning = true;
+      } else {
+        LoggingHelper.e(TAG, "Port scanner child process failed", e);
+        ToastHelper.error(PortScanner.this, getString(R.string.child_not_started) + "\n" + e.getLocalizedMessage());
+      }
     }
     android.graphics.drawable.Drawable stopD = ContextCompat.getDrawable(this, R.drawable.ic_stop_24dp);
     if (stopD != null) mScanFloatingActionButton.setImageDrawable(stopD);

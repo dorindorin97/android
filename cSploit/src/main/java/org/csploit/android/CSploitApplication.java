@@ -29,6 +29,7 @@ import org.acra.config.NotificationConfigurationBuilder;
 import org.acra.data.StringFormat;
 import org.acra.sender.HttpSender;
 import org.csploit.android.core.System;
+import org.csploit.android.debug.DebugSeeder;
 import org.csploit.android.helpers.PreferencesHelper;
 import org.csploit.android.helpers.HttpHelper;
 import org.csploit.android.helpers.LoggingHelper;
@@ -82,6 +83,9 @@ public class CSploitApplication extends Application {
       if (!(e instanceof NoRouteToHostException))
         LoggingHelper.e(TAG, "Failed to initialize system", e);
     }
+
+    // Seed fake targets for debug builds so UI can be exercised without real hardware
+    DebugSeeder.seed();
 
     // load system modules even if the initialization failed
     System.registerPlugin(new RouterPwn());

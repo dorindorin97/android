@@ -86,8 +86,14 @@ public class Traceroute extends Plugin {
 
       mRunning = true;
     } catch (ChildManager.ChildNotStartedException e) {
-      LoggingHelper.e(TAG, "Traceroute child process failed", e);
-      ToastHelper.childNotStarted(Traceroute.this, getString(R.string.child_not_started));
+      if (org.csploit.android.BuildConfig.DEBUG) {
+        LoggingHelper.d(TAG, "nmap unavailable in debug build, using mock trace");
+        System.getTools().nmap.mockTrace(traceTarget, mTraceReceiver);
+        mRunning = true;
+      } else {
+        LoggingHelper.e(TAG, "Traceroute child process failed", e);
+        ToastHelper.childNotStarted(Traceroute.this, getString(R.string.child_not_started));
+      }
     }
   }
 

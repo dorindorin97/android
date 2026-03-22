@@ -212,4 +212,65 @@ public class NMap extends Tool {
 
     return super.async( cmd, receiver);
   }
+
+  // -------------------------------------------------------------------------
+  // Mock scan methods — instant fake results for debug builds.
+  // Fires the same receiver callbacks a real scan would, just immediately.
+  // Returns null (no process to kill); callers already guard with != null.
+  // -------------------------------------------------------------------------
+
+  /** Fires fake port-found results then onEnd, bypassing the nmap binary. */
+  public Child mockSynScan(Target target, SynScanReceiver receiver) {
+    org.csploit.android.helpers.ThreadHelper.getSharedExecutor().execute(() -> {
+      receiver.onStart("mock nmap -sS " + target.getCommandLineRepresentation());
+      for (Target.Port p : target.getOpenPorts()) {
+        receiver.onPortFound(p.getNumber(), p.getProtocol().name().toLowerCase());
+      }
+      // If no ports pre-seeded, emit a sensible default set
+      if (target.getOpenPorts().isEmpty()) {
+        receiver.onPortFound(22,   "tcp");
+        receiver.onPortFound(80,   "tcp");
+        receiver.onPortFound(443,  "tcp");
+        receiver.onPortFound(8080, "tcp");
+      }
+      receiver.onEnd(0);
+    });
+    return null;
+  }
+
+  /** Fires fake service/OS results then onEnd, bypassing the nmap binary. */
+  public Child mockInspect(Target target, InspectionReceiver receiver) {
+    org.csploit.android.helpers.ThreadHelper.getSharedExecutor().execute(() -> {
+      receiver.onStart("mock nmap -sV -O " + target.getCommandLineRepresentation());
+      if (!target.getOpenPorts().isEmpty()) {
+        for (Target.Port p : target.getOpenPorts()) {
+          String svc     = p.getService()  != null && !p.getService().isEmpty()  ? p.getService()  : "unknown";
+          String version = p.getVersion()  != null && !p.getVersion().isEmpty()  ? p.getVersion()  : "";
+          receiver.onServiceFound(p.getNumber(), p.getProtocol().name().toLowerCase(), svc, version);
+        }
+      } else {
+        receiver.onServiceFound(22,   "tcp", "ssh",  "OpenSSH 7.4");
+        receiver.onServiceFound(80,   "tcp", "http", "Apache httpd 2.4.6");
+        receiver.onServiceFound(443,  "tcp", "https","nginx 1.12");
+        receiver.onServiceFound(8080, "tcp", "http", "Apache Tomcat 8.5");
+      }
+      String os = target.getDeviceOS();
+      receiver.onOsFound(os != null && !os.isEmpty() ? os : "Linux 4.x");
+      receiver.onDeviceFound("general purpose");
+      receiver.onEnd(0);
+    });
+    return null;
+  }
+
+  /** Fires fake traceroute hops then onEnd, bypassing the nmap binary. */
+  public Child mockTrace(Target target, TraceReceiver receiver) {
+    org.csploit.android.helpers.ThreadHelper.getSharedExecutor().execute(() -> {
+      receiver.onStart("mock nmap --traceroute " + target.getCommandLineRepresentation());
+      receiver.onHop(1, 1_200,  "192.168.1.1", "gateway.local");
+      receiver.onHop(2, 8_500,  "10.0.0.1",   "isp-edge.net");
+      receiver.onHop(3, 14_000, target.getCommandLineRepresentation(), target.toString());
+      receiver.onEnd(0);
+    });
+    return null;
+  }
 }

@@ -10,6 +10,8 @@
         <item name="colorControlHighlight">@color/selectable_blue</item>
         <item name="android:colorBackground">@color/background_window</item>
         <item name="android:animation">@style/AppAnimation</item>
+        <!-- Opt out of Android 15 forced edge-to-edge so legacy layouts are not obscured by system bars -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <!-- this dark theme needs a lot of help and support in the app overall -->
@@ -24,6 +26,7 @@
         <item name="android:windowBackground">@color/background_window_dark</item>
         <item name="android:colorBackground">#ff21272b</item>
         <item name="android:animation">@style/AppAnimation</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="PrefsTheme" parent="AppTheme">

@@ -583,16 +583,22 @@ public class SettingsFragment extends Fragment {
         }
 
         private void onMsfBranchesAvailable() {
-            String[] branches;
             boolean hasRelease = false;
 
             try {
-                branches = GitHubParser.getMsfRepo().getBranches();
+                String[] allBranches = GitHubParser.getMsfRepo().getBranches();
+                // Only show stable branches; filter out feature/dev branches
+                java.util.ArrayList<String> stable = new java.util.ArrayList<>();
+                for (String b : allBranches) {
+                    if (b.equals("master") || b.equals("release") || b.equals("main")) {
+                        stable.add(b);
+                        if (b.equals("release")) hasRelease = true;
+                    }
+                }
+                // Fall back to all branches if none matched
+                String[] branches = stable.isEmpty() ? allBranches : stable.toArray(new String[0]);
                 mMsfBranch.setEntryValues(branches);
                 mMsfBranch.setEntries(branches);
-                for (int i = 0; !hasRelease && i < branches.length; i++) {
-                    hasRelease = branches[i].equals("release");
-                }
                 mMsfBranch.setDefaultValue((hasRelease ? "release" : "master"));
                 mMsfBranch.setEnabled(true);
             } catch (JSONException e) {
