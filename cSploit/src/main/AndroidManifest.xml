@@ -159,6 +159,21 @@
             android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
+            android:name=".plugins.DnsScanner"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name=".plugins.SslInspector"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name=".plugins.NetworkScanner"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
             android:name=".plugins.mitm.MITM"
             android:configChanges="orientation|screenSize"
             android:exported="false"

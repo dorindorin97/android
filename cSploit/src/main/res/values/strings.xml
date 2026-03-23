@@ -557,4 +557,20 @@
     <string name="web_scan_info">INFO</string>
     <string name="web_scan_warning">WARN</string>
     <string name="web_scan_vuln">VULN</string>
+
+    <!-- DNS Scanner -->
+    <string name="dns_scanner">DNS scanner</string>
+    <string name="dns_scanner_desc">Enumerate DNS records: A, AAAA, MX, NS, TXT, CNAME, PTR and attempt zone transfer.</string>
+
+    <!-- SSL Inspector -->
+    <string name="ssl_inspector">SSL inspector</string>
+    <string name="ssl_inspector_desc">Analyse TLS certificate, cipher suite, protocol version and check for known vulnerabilities.</string>
+
+    <!-- Network Scanner -->
+    <string name="net_scanner">Network scanner</string>
+    <string name="net_scanner_desc">Discover live hosts on the local subnet via ICMP ping sweep.</string>
+    <string name="net_scan_tap_to_start">Tap ▶ to scan subnet</string>
+    <string name="net_scan_scanning">Scanning subnet…</string>
+    <string name="net_scan_none">No live hosts found.</string>
+    <string name="net_scan_found">live hosts found</string>
 </resources>
