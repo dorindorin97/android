@@ -52,6 +52,9 @@ import org.csploit.android.plugins.ArpScanner;
 import org.csploit.android.plugins.HttpFuzzer;
 import org.csploit.android.plugins.WhoisLookup;
 import org.csploit.android.plugins.PingTool;
+import org.csploit.android.plugins.SshAuditor;
+import org.csploit.android.plugins.SnmpScanner;
+import org.csploit.android.plugins.HashIdentifier;
 import org.csploit.android.plugins.mitm.MITM;
 import org.csploit.android.services.Services;
 
@@ -113,6 +116,9 @@ public class CSploitApplication extends Application {
     System.registerPlugin(new HttpFuzzer());
     System.registerPlugin(new WhoisLookup());
     System.registerPlugin(new PingTool());
+    System.registerPlugin(new SshAuditor());
+    System.registerPlugin(new SnmpScanner());
+    System.registerPlugin(new HashIdentifier());
     System.registerPlugin(new LoginCracker());
     System.registerPlugin(new Sessions());
     System.registerPlugin(new MITM());

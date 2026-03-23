@@ -204,6 +204,21 @@
             android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
+            android:name=".plugins.SshAuditor"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name=".plugins.SnmpScanner"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name=".plugins.HashIdentifier"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
+        <activity
             android:name=".plugins.mitm.MITM"
             android:configChanges="orientation|screenSize"
             android:exported="false"

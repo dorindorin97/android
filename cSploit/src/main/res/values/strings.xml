@@ -608,4 +608,10 @@
     <string name="ping_tool">Ping</string>
     <string name="ping_tool_desc">Send ICMP echo requests and display RTT statistics with packet loss.</string>
     <string name="ping_count_label">Count:</string>
+    <string name="ssh_auditor">SSH Auditor</string>
+    <string name="ssh_auditor_desc">Connect to SSH and enumerate supported algorithms, flagging weak KEX, ciphers, MACs, and outdated versions.</string>
+    <string name="snmp_scanner">SNMP Scanner</string>
+    <string name="snmp_scanner_desc">Probe SNMP with common community strings and read sysDescr, sysName, sysLocation, sysContact, and sysUpTime.</string>
+    <string name="hash_identifier">Hash Identifier</string>
+    <string name="hash_identifier_desc">Identify hash types offline by length, character set, and prefix. Shows hashcat mode and john format.</string>
 </resources>
