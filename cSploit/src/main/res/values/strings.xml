@@ -593,4 +593,19 @@
     <string name="arp_scanning">Scanning…</string>
     <string name="arp_none">No ARP entries found.</string>
     <string name="arp_found">hosts found</string>
+
+    <!-- HTTP Fuzzer -->
+    <string name="http_fuzzer">HTTP fuzzer</string>
+    <string name="http_fuzzer_desc">Fuzz web endpoints with SQLi, XSS, LFI, path traversal and command injection payloads.</string>
+    <string name="http_fuzzer_url_hint">http://target/path</string>
+
+    <!-- Whois Lookup -->
+    <string name="whois_lookup">Whois lookup</string>
+    <string name="whois_lookup_desc">Query WHOIS servers for domain registration and IP ownership information.</string>
+    <string name="whois_tap_to_start">Tap ▶ to run WHOIS query</string>
+
+    <!-- Ping Tool -->
+    <string name="ping_tool">Ping</string>
+    <string name="ping_tool_desc">Send ICMP echo requests and display RTT statistics with packet loss.</string>
+    <string name="ping_count_label">Count:</string>
 </resources>

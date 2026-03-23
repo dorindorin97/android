@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/pingControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ping_count_label"
+            android:textSize="14sp"
+            android:paddingEnd="8dp" />
+
+        <EditText
+            android:id="@+id/pingCountInput"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/pingScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/pingControls"
+        android:layout_above="@+id/pingDivider"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/pingOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:textColor="#333333" />
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/pingDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/pingActivity"
+        android:background="#E0E0E0" />
+
+    <ProgressBar
+        android:id="@+id/pingActivity"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:indeterminate="false"
+        android:max="10"
+        android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pingToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play_arrow_24dp"
+        app:backgroundTint="@color/app_color" />
+
+</RelativeLayout>
