@@ -548,4 +548,13 @@
     <string name="storage_permission_title">Storage Permission Required</string>
     <string name="storage_permission_message">cSploit needs access to all files to store configuration, tools, and session data.\n\nPlease enable \"Allow access to manage all files\" on the next screen.</string>
     <string name="grant_permission">Grant Permission</string>
+
+    <!-- Web Scanner (Nikto) -->
+    <string name="web_scanner">Web scanner</string>
+    <string name="web_scanner_desc">Scan web services for vulnerabilities (nikto-style checks).</string>
+    <string name="web_scan_no_http">No HTTP/HTTPS ports found on target.</string>
+    <string name="web_scan_no_findings">No issues found.</string>
+    <string name="web_scan_info">INFO</string>
+    <string name="web_scan_warning">WARN</string>
+    <string name="web_scan_vuln">VULN</string>
 </resources>

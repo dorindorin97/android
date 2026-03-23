@@ -52,7 +52,7 @@ public class GitHubParser {
 
   private static GitHubParser msfRepo = new GitHubParser("cSploit", "android.MSF");
   private static GitHubParser cSploitRepo = new GitHubParser("cSploit", "android");
-  private static GitHubParser coreRepo = new GitHubParser("cSploit", "android.native");
+  private static GitHubParser coreRepo = new GitHubParser("dorindorin97", "android.native");
   private static GitHubParser rubyRepo = new GitHubParser("cSploit", "android.native.ruby");
 
   public synchronized static GitHubParser getMsfRepo() {

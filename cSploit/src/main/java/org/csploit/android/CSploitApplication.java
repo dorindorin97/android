@@ -42,6 +42,7 @@ import org.csploit.android.plugins.PortScanner;
 import org.csploit.android.plugins.RouterPwn;
 import org.csploit.android.plugins.Sessions;
 import org.csploit.android.plugins.Traceroute;
+import org.csploit.android.plugins.WebScanner;
 import org.csploit.android.plugins.mitm.MITM;
 import org.csploit.android.services.Services;
 
@@ -93,6 +94,7 @@ public class CSploitApplication extends Application {
     System.registerPlugin(new PortScanner());
     System.registerPlugin(new Inspector());
     System.registerPlugin(new ExploitFinder());
+    System.registerPlugin(new WebScanner());
     System.registerPlugin(new LoginCracker());
     System.registerPlugin(new Sessions());
     System.registerPlugin(new MITM());
