@@ -37,6 +37,11 @@
     <!-- Foreground service permission for API 28+ -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
         android:name=".CSploitApplication"
@@ -218,6 +223,23 @@
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.SmbScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.MdnsSsdpDiscovery" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.RdpFingerprinter" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.RpcScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.HttpHeaderAnalyzer" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.DirBruteForcer" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.VhostScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.JwtAnalyzer" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.PasswordGenerator" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.HeartbleedChecker" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.TelnetScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.TftpScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.Ipv6Scanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.UdpScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.CertTransparency" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.WifiAnalyzer" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
+        <activity android:name=".plugins.BluetoothScanner" android:configChanges="orientation|screenSize" android:exported="false" android:label="@string/title_activity_main" />
         <activity
             android:name=".plugins.mitm.MITM"
             android:configChanges="orientation|screenSize"

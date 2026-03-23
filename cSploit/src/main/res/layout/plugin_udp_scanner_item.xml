@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+    <TextView android:id="@+id/udpItemPort" android:layout_width="60dp" android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold" android:fontFamily="monospace" />
+    <TextView android:id="@+id/udpItemService" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="13sp" />
+    <TextView android:id="@+id/udpItemStatus" android:layout_width="100dp" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="#555555" android:gravity="end" />
+</LinearLayout>

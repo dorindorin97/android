@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView android:id="@+id/ctItemSubdomain" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:fontFamily="monospace" />
+    <TextView android:id="@+id/ctItemMeta" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" android:textColor="#888888" />
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/dirBruteUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:hint="http://target/"
+        android:inputType="textUri"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:background="?android:attr/editTextBackground" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dirBruteUrl"
+        android:layout_above="@+id/dirBruteDivider"
+        android:divider="#E0E0E0"
+        android:dividerHeight="1dp"
+        android:padding="4dp" />
+
+    <View
+        android:id="@+id/dirBruteDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/dirBruteActivity"
+        android:background="#E0E0E0" />
+
+    <ProgressBar
+        android:id="@+id/dirBruteActivity"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:indeterminate="false"
+        android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/dirBruteToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play_arrow_24dp"
+        app:backgroundTint="@color/app_color" />
+
+</RelativeLayout>
