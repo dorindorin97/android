@@ -46,6 +46,9 @@ import org.csploit.android.plugins.WebScanner;
 import org.csploit.android.plugins.DnsScanner;
 import org.csploit.android.plugins.SslInspector;
 import org.csploit.android.plugins.NetworkScanner;
+import org.csploit.android.plugins.BannerGrabber;
+import org.csploit.android.plugins.SubdomainScanner;
+import org.csploit.android.plugins.ArpScanner;
 import org.csploit.android.plugins.mitm.MITM;
 import org.csploit.android.services.Services;
 
@@ -101,6 +104,9 @@ public class CSploitApplication extends Application {
     System.registerPlugin(new DnsScanner());
     System.registerPlugin(new SslInspector());
     System.registerPlugin(new NetworkScanner());
+    System.registerPlugin(new BannerGrabber());
+    System.registerPlugin(new SubdomainScanner());
+    System.registerPlugin(new ArpScanner());
     System.registerPlugin(new LoginCracker());
     System.registerPlugin(new Sessions());
     System.registerPlugin(new MITM());

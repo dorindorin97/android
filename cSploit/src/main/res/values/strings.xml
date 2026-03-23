@@ -573,4 +573,24 @@
     <string name="net_scan_scanning">Scanning subnet…</string>
     <string name="net_scan_none">No live hosts found.</string>
     <string name="net_scan_found">live hosts found</string>
+
+    <!-- Banner Grabber -->
+    <string name="banner_grabber">Banner grabber</string>
+    <string name="banner_grabber_desc">Grab raw TCP banners from open ports to identify service versions.</string>
+
+    <!-- Subdomain Scanner -->
+    <string name="subdomain_scanner">Subdomain scanner</string>
+    <string name="subdomain_scanner_desc">Enumerate common subdomains via DNS to discover hidden services.</string>
+    <string name="subdomain_tap_to_start">Tap ▶ to enumerate subdomains</string>
+    <string name="subdomain_scanning">Scanning subdomains…</string>
+    <string name="subdomain_none">No subdomains found.</string>
+    <string name="subdomain_found">subdomains found</string>
+
+    <!-- ARP Scanner -->
+    <string name="arp_scanner">ARP scanner</string>
+    <string name="arp_scanner_desc">Discover hosts and MAC addresses on the local network via ARP cache.</string>
+    <string name="arp_tap_to_start">Tap ▶ to scan ARP table</string>
+    <string name="arp_scanning">Scanning…</string>
+    <string name="arp_none">No ARP entries found.</string>
+    <string name="arp_found">hosts found</string>
 </resources>

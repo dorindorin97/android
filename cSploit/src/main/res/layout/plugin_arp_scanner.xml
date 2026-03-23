@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/arpSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:textColor="@color/app_color"
+        android:text="@string/arp_tap_to_start" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/arpSummary"
+        android:layout_above="@+id/arpDivider"
+        android:divider="#E0E0E0"
+        android:dividerHeight="1dp"
+        android:padding="4dp" />
+
+    <View
+        android:id="@+id/arpDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/arpActivity"
+        android:background="#E0E0E0" />
+
+    <ProgressBar
+        android:id="@+id/arpActivity"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/arpToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play_arrow_24dp"
+        app:backgroundTint="@color/app_color" />
+
+</RelativeLayout>
