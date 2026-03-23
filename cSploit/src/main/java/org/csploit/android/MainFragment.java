@@ -326,7 +326,8 @@ public class MainFragment extends Fragment {
                     onInitializationError(getString(R.string.only_4_root));
                     return;
                 }
-                // Debug: continue without root so DebugSeeder targets are visible
+                // Debug: pretend daemon is up so we reach initSystem() and DebugSeeder runs
+                mIsDaemonBeating = true;
             } catch (System.DaemonException e) {
                 LoggingHelper.error("Daemon exception: " + e.getMessage());
                 onInitializationError(e.getMessage());
