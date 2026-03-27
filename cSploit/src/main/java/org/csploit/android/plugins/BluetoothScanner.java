@@ -199,7 +199,7 @@ public class BluetoothScanner extends Plugin {
         }
         try { unregisterReceiver(mReceiver); } catch (Exception ignored) {}
         runOnUiThread(() -> {
-            mProgress.setVisibility(View.GONE);
+            mProgress.setVisibility(View.INVISIBLE);
             mFab.setImageDrawable(ContextCompat.getDrawable(BluetoothScanner.this, R.drawable.ic_play_arrow_24dp));
         });
     }

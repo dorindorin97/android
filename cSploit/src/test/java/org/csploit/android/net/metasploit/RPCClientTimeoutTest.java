@@ -27,26 +27,28 @@ public class RPCClientTimeoutTest {
         final int[] capturedConnect = {-1};
         final int[] capturedRead = {-1};
 
-        // Subclass to intercept the connection before any actual network call
-        RPCClient client = new RPCClient("127.0.0.1", "user", "pass", 55553, false) {
-            @Override
-            protected void writeCall(String methodName, Object[] args) throws IOException {
-                URL u = new URL("http", "127.0.0.1", 55553, "/api/");
-                URLConnection conn = u.openConnection();
-                // Apply the same timeout config that writeCall() should apply
-                conn.setConnectTimeout(10_000);
-                conn.setReadTimeout(30_000);
-                capturedConnect[0] = conn.getConnectTimeout();
-                capturedRead[0] = conn.getReadTimeout();
-                // Don't actually connect
-                throw new IOException("test-stop");
-            }
-        };
-
+        // Subclass to intercept the connection before any actual network call.
+        // The constructor calls login() → writeCall(), so we catch the IOException
+        // thrown from writeCall() here; capturedConnect/capturedRead are set before
+        // the throw, so the assertions below still verify the timeout values.
         try {
+            RPCClient client = new RPCClient("127.0.0.1", "user", "pass", 55553, false) {
+                @Override
+                protected void writeCall(String methodName, Object[] args) throws IOException {
+                    URL u = new URL("http", "127.0.0.1", 55553, "/api/");
+                    URLConnection conn = u.openConnection();
+                    // Apply the same timeout config that writeCall() should apply
+                    conn.setConnectTimeout(10_000);
+                    conn.setReadTimeout(30_000);
+                    capturedConnect[0] = conn.getConnectTimeout();
+                    capturedRead[0] = conn.getReadTimeout();
+                    // Don't actually connect
+                    throw new IOException("test-stop");
+                }
+            };
             client.call("core.version");
         } catch (Exception ignored) {
-            // Expected — we threw IOException("test-stop") above
+            // Expected — we threw IOException("test-stop") from writeCall()
         }
 
         assertEquals("Connect timeout must be 10s", 10_000, capturedConnect[0]);

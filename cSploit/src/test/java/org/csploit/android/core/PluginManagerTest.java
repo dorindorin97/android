@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -121,14 +123,14 @@ public class PluginManagerTest {
         MockPlugin plugin = new MockPlugin();
         manager.registerPlugin(plugin);
 
-        Plugin found = manager.findPluginByClass(MockPlugin.class.getName());
+        IPlugin found = manager.findPluginByClass(MockPlugin.class.getName());
         assertThat(found).isEqualTo(plugin);
     }
 
     @Test
     @DisplayName("Should return null for non-existent class name")
     void testFindNonExistentByClassName() {
-        Plugin found = manager.findPluginByClass("com.example.NonExistent");
+        IPlugin found = manager.findPluginByClass("com.example.NonExistent");
         assertThat(found).isNull();
     }
 
@@ -138,14 +140,14 @@ public class PluginManagerTest {
         MockPlugin plugin = new MockPlugin();
         manager.registerPlugin(plugin);
 
-        Plugin found = manager.findPluginBySimpleName("MockPlugin");
+        IPlugin found = manager.findPluginBySimpleName("MockPlugin");
         assertThat(found).isEqualTo(plugin);
     }
 
     @Test
     @DisplayName("Should return null for non-existent simple name")
     void testFindNonExistentBySimpleName() {
-        Plugin found = manager.findPluginBySimpleName("NonExistent");
+        IPlugin found = manager.findPluginBySimpleName("NonExistent");
         assertThat(found).isNull();
     }
 
@@ -207,7 +209,7 @@ public class PluginManagerTest {
     /**
      * Mock Plugin for testing.
      */
-    static class MockPlugin implements Plugin {
+    static class MockPlugin implements IPlugin {
         @Override
         public void onTargetSelected(Object target) {
             // No-op for testing

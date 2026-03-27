@@ -265,7 +265,7 @@ public class RemoteReader implements Runnable {
     String key = host.toLowerCase(Locale.US);
     synchronized (readerMap) {
       RemoteReader existing = readerMap.get(key);
-      if (existing != null && existing.running) {
+      if (existing != null) {
         return existing;
       }
       RemoteReader r = new RemoteReader(host);

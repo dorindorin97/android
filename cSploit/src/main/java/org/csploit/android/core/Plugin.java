@@ -37,7 +37,7 @@ import java.util.Arrays;
  * Base class for all cSploit plugins.
  * Provides common functionality for plugin activities.
  */
-public abstract class Plugin extends AppCompatActivity {
+public abstract class Plugin extends AppCompatActivity implements IPlugin {
   public static final int NO_LAYOUT = -1;
   protected static final String TAG = "Plugin";
 
@@ -147,6 +147,24 @@ public abstract class Plugin extends AppCompatActivity {
   protected void onDestroy() {
     stopProcess();
     super.onDestroy();
+  }
+
+  @Override
+  public void onTargetSelected(Object target) {
+    // Override in subclasses that need target selection notification
+  }
+
+  @Override
+  public boolean supportsTargetType(String targetType) {
+    for (Target.Type type : mAllowedTargetTypes) {
+      if (type.name().equalsIgnoreCase(targetType)) return true;
+    }
+    return false;
+  }
+
+  @Override
+  public String getPluginName() {
+    return getClass().getSimpleName();
   }
 
   public void onActionClick(Context context) {

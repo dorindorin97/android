@@ -286,7 +286,7 @@ public class Target implements Comparable<Target>
   private String mDeviceType = null;
   private String mDeviceOS = null;
   private String mAlias = null;
-  private boolean mConnected = true;
+  private boolean mConnected = false;
   private boolean mSelected = false;
   private final ArrayList<Exploit> exploits = new ArrayList<Target.Exploit>();
   private ArrayList<Session> mSessions = new ArrayList<Session>();
@@ -521,6 +521,11 @@ public class Target implements Comparable<Target>
       }
       return mEndpoint.compareTo(another.mEndpoint);
     }
+  }
+
+  public Target(String address){
+    mUuid = UUID.randomUUID().toString();
+    setEndpoint(new Endpoint(address));
   }
 
   public Target(Network net){

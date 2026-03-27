@@ -20,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import org.csploit.android.net.Target;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SessionManagerTest {
 
     private SessionManager sessionManager;
-    private ArrayList<Object> mockTargets;
+    private ArrayList<Target> mockTargets;
 
     @TempDir
     Path tempDir;

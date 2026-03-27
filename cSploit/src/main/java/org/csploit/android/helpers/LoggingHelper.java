@@ -239,10 +239,14 @@ public final class LoggingHelper {
         );
 
         // Log to Android logger
-        if (throwable != null) {
-            Log.println(level.level, TAG, logMessage + "\n" + getStackTrace(throwable));
-        } else {
-            Log.println(level.level, TAG, logMessage);
+        try {
+            if (throwable != null) {
+                Log.println(level.level, TAG, logMessage + "\n" + getStackTrace(throwable));
+            } else {
+                Log.println(level.level, TAG, logMessage);
+            }
+        } catch (RuntimeException ignored) {
+            // android.util.Log not available in unit test environments
         }
     }
 
@@ -268,10 +272,14 @@ public final class LoggingHelper {
         String logMessage = message != null ? message : "(null)";
 
         // Log to Android logger
-        if (throwable != null) {
-            Log.println(level.level, logTag, logMessage + "\n" + getStackTrace(throwable));
-        } else {
-            Log.println(level.level, logTag, logMessage);
+        try {
+            if (throwable != null) {
+                Log.println(level.level, logTag, logMessage + "\n" + getStackTrace(throwable));
+            } else {
+                Log.println(level.level, logTag, logMessage);
+            }
+        } catch (RuntimeException ignored) {
+            // android.util.Log not available in unit test environments
         }
     }
 

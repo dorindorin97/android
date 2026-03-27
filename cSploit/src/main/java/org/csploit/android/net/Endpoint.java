@@ -34,6 +34,7 @@ public class Endpoint implements Comparable<Endpoint>
   private static final String TAG = "Endpoint";
   private InetAddress mAddress = null;
   private byte[] mHardware = null;
+  private int mPort = 0;
 
   public static byte[] parseMacAddress(String macAddress){
     if(macAddress != null && !macAddress.equals("null") && !macAddress.isEmpty()){
@@ -55,7 +56,12 @@ public class Endpoint implements Comparable<Endpoint>
   }
 
   public Endpoint(String address){
-    this(address, null);
+    this(address, (String) null);
+  }
+
+  public Endpoint(String address, int port){
+    this(address, (String) null);
+    this.mPort = port;
   }
 
   public Endpoint(InetAddress address, @Nullable byte[] hardware){
@@ -139,6 +145,14 @@ public class Endpoint implements Comparable<Endpoint>
     } catch (IndexOutOfBoundsException e) {
       return "";
     }
+  }
+
+  public int getPort(){
+    return mPort;
+  }
+
+  public void setPort(int port){
+    this.mPort = port;
   }
 
   public void setHardware(byte[] hardware){

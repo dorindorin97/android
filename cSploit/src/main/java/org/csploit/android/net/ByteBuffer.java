@@ -86,10 +86,11 @@ public class ByteBuffer{
   }
 
   public int indexOf(byte[] pattern, int start){
+    if (mBuffer == null || pattern == null || pattern.length == 0) return -1;
     int i, j, plen = pattern.length, stop = mBuffer.length - plen;
 
     loop:
-    for(i = start; i < stop; i++){
+    for(i = start; i <= stop; i++){
       if(pattern[0] == mBuffer[i]){
         for(j = 1; j < plen; j++){
           if(pattern[j] != mBuffer[i + j])

@@ -59,6 +59,11 @@ public class DebugSeeder {
     server.setDeviceOS("Windows Server 2016");
     System.addOrderedTarget(server);
 
+    // --- Target 3: remote hostname (for REMOTE-only plugins) ---
+    Target remote = new Target("debug-remote.example.com", 0);
+    remote.setAlias("debug-remote.example.com");
+    System.addOrderedTarget(remote);
+
     // Pre-select the first target so plugins open immediately
     System.setCurrentTarget(pc);
   }

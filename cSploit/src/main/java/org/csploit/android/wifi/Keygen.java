@@ -27,6 +27,7 @@ import java.util.List;
 public abstract class Keygen implements Comparable<Keygen>{
   // Constants used for different security types
   public static final String PSK = "PSK";
+  public static final String WPA = "PSK";
   public static final String WEP = "WEP";
   public static final String EAP = "EAP";
   public static final String OPEN = "Open";
@@ -66,6 +67,7 @@ public abstract class Keygen implements Comparable<Keygen>{
   }
 
   public String getMacAddress(){
+    if (macAddress == null) return null;
     return macAddress.replace(":", "");
   }
 

@@ -173,7 +173,7 @@ public class CertTransparency extends Plugin {
             mJob.cancel(true);
         }
         runOnUiThread(() -> {
-            mProgress.setVisibility(View.GONE);
+            mProgress.setVisibility(View.INVISIBLE);
             mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
         });
     }

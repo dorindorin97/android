@@ -18,8 +18,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PluginManager {
     private static final String TAG = "PluginManager";
 
-    private final List<Plugin> registeredPlugins;
-    private volatile Plugin currentPlugin;
+    private final List<IPlugin> registeredPlugins;
+    private volatile IPlugin currentPlugin;
 
     public PluginManager() {
         this.registeredPlugins = new CopyOnWriteArrayList<>();
@@ -32,7 +32,7 @@ public class PluginManager {
      * @param plugin The plugin to register
      * @throws IllegalArgumentException if plugin is null
      */
-    public void registerPlugin(@NonNull Plugin plugin) {
+    public void registerPlugin(@NonNull IPlugin plugin) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -49,7 +49,7 @@ public class PluginManager {
      * @param plugin The plugin to unregister
      * @return true if plugin was registered and removed, false otherwise
      */
-    public boolean unregisterPlugin(@NonNull Plugin plugin) {
+    public boolean unregisterPlugin(@NonNull IPlugin plugin) {
         if (plugin == null) {
             return false;
         }
@@ -70,7 +70,7 @@ public class PluginManager {
      * @return Unmodifiable list of registered plugins
      */
     @NonNull
-    public List<Plugin> getAllPlugins() {
+    public List<IPlugin> getAllPlugins() {
         return Collections.unmodifiableList(new ArrayList<>(registeredPlugins));
     }
 
@@ -80,7 +80,7 @@ public class PluginManager {
      * @return The current plugin or null if none is active
      */
     @Nullable
-    public Plugin getCurrentPlugin() {
+    public IPlugin getCurrentPlugin() {
         return currentPlugin;
     }
 
@@ -90,7 +90,7 @@ public class PluginManager {
      * @param plugin The plugin to set as current
      * @return true if successfully set, false otherwise
      */
-    public boolean setCurrentPlugin(@Nullable Plugin plugin) {
+    public boolean setCurrentPlugin(@Nullable IPlugin plugin) {
         if (plugin != null && !registeredPlugins.contains(plugin)) {
             Log.w(TAG, "Attempting to set unregistered plugin as current");
             return false;
@@ -118,7 +118,7 @@ public class PluginManager {
      * @param plugin The plugin to check
      * @return true if plugin is registered
      */
-    public boolean isPluginRegistered(@NonNull Plugin plugin) {
+    public boolean isPluginRegistered(@NonNull IPlugin plugin) {
         return registeredPlugins.contains(plugin);
     }
 
@@ -138,8 +138,8 @@ public class PluginManager {
      * @return The plugin if found, null otherwise
      */
     @Nullable
-    public Plugin findPluginByClass(@NonNull String className) {
-        for (Plugin plugin : registeredPlugins) {
+    public IPlugin findPluginByClass(@NonNull String className) {
+        for (IPlugin plugin : registeredPlugins) {
             if (plugin.getClass().getName().equals(className)) {
                 return plugin;
             }
@@ -154,8 +154,8 @@ public class PluginManager {
      * @return The plugin if found, null otherwise
      */
     @Nullable
-    public Plugin findPluginBySimpleName(@NonNull String simpleName) {
-        for (Plugin plugin : registeredPlugins) {
+    public IPlugin findPluginBySimpleName(@NonNull String simpleName) {
+        for (IPlugin plugin : registeredPlugins) {
             if (plugin.getClass().getSimpleName().equals(simpleName)) {
                 return plugin;
             }
@@ -171,12 +171,16 @@ public class PluginManager {
      */
     public int getPluginCountByTargetType(@NonNull String targetType) {
         int count = 0;
-        for (Plugin plugin : registeredPlugins) {
-            for (Target.Type type : plugin.getAllowedTargetTypes()) {
-                if (type.name().equals(targetType)) {
-                    count++;
-                    break;
+        for (IPlugin plugin : registeredPlugins) {
+            if (plugin instanceof Plugin) {
+                for (Target.Type type : ((Plugin) plugin).getAllowedTargetTypes()) {
+                    if (type.name().equals(targetType)) {
+                        count++;
+                        break;
+                    }
                 }
+            } else if (plugin.supportsTargetType(targetType)) {
+                count++;
             }
         }
         return count;

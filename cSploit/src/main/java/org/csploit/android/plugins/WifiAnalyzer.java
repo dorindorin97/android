@@ -198,7 +198,7 @@ public class WifiAnalyzer extends Plugin {
     private void stopScan() {
         mScanning = false;
         try { unregisterReceiver(mScanReceiver); } catch (Exception ignored) {}
-        mProgress.setVisibility(View.GONE);
+        mProgress.setVisibility(View.INVISIBLE);
         mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_24dp));
     }
 
