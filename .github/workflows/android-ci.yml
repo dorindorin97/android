@@ -16,9 +16,10 @@ on:
         default: ''
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Shared setup steps are duplicated across jobs because GitHub Actions does not
-# support true YAML anchors between jobs. Extract to a composite action if this
-# grows further (.github/actions/build-setup/).
+# NOTE: The cSploit/jni submodule tree contains a nested nmap submodule whose
+# pinned commit is not publicly reachable.  Rather than failing on recursive
+# submodule clone, all build jobs skip submodule checkout and rely on the
+# pre-built .so files already committed to cSploit/src/main/jniLibs/.
 # ─────────────────────────────────────────────────────────────────────────────
 
 jobs:
@@ -29,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -54,6 +57,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -83,7 +88,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
+          # Skip recursive submodules — nested nmap submodule has an
+          # unreachable commit; pre-built .so libs in jniLibs/ are used instead.
+          submodules: false
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -91,22 +98,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: true
-
-      - name: Build JNI libraries
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          cd cSploit
-          chmod +x build-jni-libs.sh
-          ./build-jni-libs.sh
-          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
 
       - name: Grant execute permission
         run: chmod +x gradlew
@@ -124,7 +115,9 @@ jobs:
         run: |
           mkdir -p dist
           find cSploit/build/outputs/apk/debug -name "*.apk" | head -1 | \
-            xargs -I{} cp {} "dist/cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
+            xargs -I{} cp {} \
+            "dist/cSploit-debug-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
+          ls -lh dist/
 
       - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
@@ -149,7 +142,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
+          # Skip recursive submodules — nested nmap submodule has an
+          # unreachable commit; pre-built .so libs in jniLibs/ are used instead.
+          submodules: false
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -157,22 +152,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: true
-
-      - name: Build JNI libraries
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          cd cSploit
-          chmod +x build-jni-libs.sh
-          ./build-jni-libs.sh
-          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
 
       - name: Grant execute permission
         run: chmod +x gradlew
@@ -285,7 +264,7 @@ jobs:
             **Commit:** `${{ steps.version.outputs.sha_short }}` &nbsp;·&nbsp; **Built:** ${{ steps.version.outputs.date }}
 
             > ℹ️ If the release APK was signed with a *self-signed* key (no `KEYSTORE_BASE64` secret configured),
-            > you must enable **"Install from unknown sources"** on your device, or install via ADB:
+            > you must enable **"Install from unknown sources"** or install via ADB:
             > ```
             > adb install cSploit-${{ steps.tag.outputs.name }}-release.apk
             > ```
@@ -307,7 +286,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
+          submodules: false
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -316,29 +295,12 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: true
-
-      - name: Build JNI libraries
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          cd cSploit
-          chmod +x build-jni-libs.sh
-          ./build-jni-libs.sh
-          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
-
       - name: Grant execute permission
         run: chmod +x gradlew
 
       - name: Get PR info
         id: pr
-        run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build debug APK
         run: ./gradlew clean assembleDebug --stacktrace
@@ -347,7 +309,8 @@ jobs:
         run: |
           mkdir -p dist
           find cSploit/build/outputs/apk/debug -name "*.apk" | head -1 | \
-            xargs -I{} cp {} "dist/cSploit-PR${{ github.event.pull_request.number }}-${{ steps.pr.outputs.sha_short }}.apk"
+            xargs -I{} cp {} \
+            "dist/cSploit-PR${{ github.event.pull_request.number }}-${{ steps.pr.outputs.sha_short }}.apk"
 
       - name: Upload PR APK
         uses: actions/upload-artifact@v4
@@ -378,7 +341,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
+          submodules: false
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -386,22 +349,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: true
-
-      - name: Build JNI libraries
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          cd cSploit
-          chmod +x build-jni-libs.sh
-          ./build-jni-libs.sh
-          ls -la src/main/jniLibs/*/lib*.so || (echo "ERROR: JNI libraries not built!" && exit 1)
 
       - name: Grant execute permission
         run: chmod +x gradlew
@@ -422,7 +369,8 @@ jobs:
         run: |
           mkdir -p dist
           find cSploit/build/outputs/apk/debug -name "*.apk" | head -1 | \
-            xargs -I{} cp {} "dist/cSploit-nightly-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
+            xargs -I{} cp {} \
+            "dist/cSploit-nightly-${{ steps.version.outputs.date }}-${{ steps.version.outputs.sha_short }}.apk"
 
       - name: Upload nightly APK
         uses: actions/upload-artifact@v4
