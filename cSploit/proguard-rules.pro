@@ -153,11 +153,7 @@
     public static int v(...);
     public static int d(...);
     public static int i(...);
-}
-
-# Keep our LoggingHelper functional
--keep class org.csploit.android.helpers.LoggingHelper {
-    public static *;
+    public static int println(int, java.lang.String, java.lang.String);
 }
 
 # ==================== Optimization ====================

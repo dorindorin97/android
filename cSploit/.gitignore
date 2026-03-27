@@ -2,6 +2,7 @@ obj
 libs
 dist
 *.so
+!src/main/jniLibs/**/*.so
 *.jks
 *.tar.*
 *.zip
